@@ -56,16 +56,6 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
-
 	<modules>
 		<module>core</module>
 		<module>core-ui</module>
@@ -73,5 +63,6 @@
 		<module>navigator</module>
 		<module>zerodha</module>
 		<module>data</module>
+		<module>launcher</module>
 	</modules>
 </project>
