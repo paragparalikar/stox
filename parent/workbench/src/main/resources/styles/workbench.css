@@ -1,0 +1,61 @@
+.menu-bar{
+	-fx-background-color:transparent;
+	-fx-pref-height:3em;
+	-fx-alignment:center;
+}
+
+.title-label{
+	-fx-graphic-text-gap:1em;
+	-fx-padding: 0 1em 0 1em;
+}
+
+.title-top,
+.title-bottom{
+	-fx-spacing:0.5em;
+}
+.snap-to-grid-group Line {
+	-fx-stroke: shape-light;
+}
+
+.snap-to-grid-rectangle {
+	-fx-fill: shape-light;
+}
+
+.search-field{
+	-fx-padding:0.2em 0 0.2em 0.5em;
+}
+
+
+.scrip-link-context-menu {
+	-fx-padding: 0;
+	-fx-border-width:0;
+	-fx-background-color: transparent;
+}
+
+.scrip-link-button, .scrip-link-menu-item {
+	-fx-padding: 2;
+	-fx-content-display: graphic-only;
+	-fx-background-color: transparent;
+	-fx-pref-width:2em;
+	-fx-background-radius:0.5em;
+	-fx-border-radius:0.5em;
+}
+
+.scrip-link-button Circle, .scrip-link-menu-item Circle {
+	link-color: black;
+	-fx-fill: radial-gradient(center 50% 16%, radius 50%, reflect, papayawhip,
+		link-color 80%);
+}
+
+.view{
+	-fx-border-width:0;
+	-fx-background-color:background-lightest;
+}
+
+.view.primary{
+	-fx-border-color:background-primary;
+}
+
+.view.danger{
+	-fx-border-color:background-danger;
+}

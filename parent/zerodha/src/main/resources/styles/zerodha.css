@@ -1,0 +1,8 @@
+.zerodha-login-modal{
+	-fx-pref-height:20em;
+}
+
+
+.zerodha-login-modal .container .content{
+	-fx-alignment:center;
+}

@@ -1,0 +1,19 @@
+.debug{
+	-fx-border-color:red;
+	-fx-border-width:1px;
+}
+.fa {
+	-fx-font-family: 'FontAwesome';
+}
+
+.fa:hover {
+	-fx-text-fill: text-darkest;
+}
+
+.fa:pressed {
+	-fx-effect: dropshadow(gaussian, derive(background-light, -70%), 0.1em, 0.0,
+		0.07em, 0.07em);
+}
+
+
+

@@ -1,0 +1,37 @@
+.root{
+	background-primary:#337ab7;
+	text-primary:white;
+	
+	background-success:#5cb85c;
+	text-success:white;
+	background-info:#5bc0de;
+	text-info:white;
+	background-warning:#eea236;
+	text-warning:white;
+	background-danger:#d9534f;
+	text-danger:white;
+	
+	shape-lightest:white;
+	shape-lighter:#dddddd;
+	shape-light:#bbbbbb;
+	shape-neutral:gray;
+	shape-dark:#505050;
+	shape-darker:#303030;
+	shape-darkest:black;
+	
+	background-lightest:white;
+	background-lighter:#dddddd;
+	background-light:#bbbbbb;
+	background-dark:#505050;
+	background-darker:#303030;
+	background-darkest:black;
+	
+	text-lightest:white;
+	text-lighter:#dddddd;
+	text-light:#bbbbbb;
+	text-dark:gray;
+	text-darker:#303030;
+	text-darkest:black;
+	
+	-fx-body-color : background-light;
+}
