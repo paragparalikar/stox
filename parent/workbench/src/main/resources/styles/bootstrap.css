@@ -76,7 +76,7 @@
 	-fx-border-radius:0;
 	-fx-padding: 0 0.5em 0 0.5em;
 }
-.title .label{
+.title > .label{
 	-fx-font-size:1.2em;
 	-fx-graphic-text-gap:0.5em;
 	-fx-padding: 0 0.5em 0 0.5em;
@@ -143,8 +143,8 @@
 
 
 /* primary */
-.primary.button, .primary.title,
-.primary.menu-button, .primary.menu-button .label, .primary.menu-button .context-menu{
+.primary.button, .primary.toggle-button, .primary.title,
+.primary.menu-button, .primary.menu-button > .label, .primary.menu-button > .context-menu{
 	-fx-background-color:background-primary;
 	-fx-border-color:background-primary;
 	-fx-text-fill:text-primary;
@@ -153,9 +153,9 @@
 	-fx-background-color:text-primary;
 	-fx-border-color:text-primary;
 }
-.primary.button:hover, .primary.menu-button:hover, .primary.menu-button:hover .label,
-.primary.button:selected, .primary.menu-button:selected, .primary.menu-button:selected .label,
-.primary.button:focused, .primary.menu-button:focused, .primary.menu-button:focused .label{
+.primary.button:hover, .primary.button:selected, .primary.button:focused, 
+.primary.toggle-button:hover, .primary.toggle-button:selected, .primary.toggle-button:focused,
+.primary.menu-button:hover, .primary.menu-button:hover > .label, .primary.menu-button:selected, .primary.menu-button:selected > .label, .primary.menu-button:focused, .primary.menu-button:focused > .label{
 	-fx-background-color:derive(background-primary, -15%);
 	-fx-border-color:derive(background-primary, -15%);
 }

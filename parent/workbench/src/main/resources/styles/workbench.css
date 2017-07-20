@@ -3,7 +3,7 @@
 	-fx-pref-height:3em;
 	-fx-alignment:center;
 }
-.primary.title .center .label{
+.primary.title > .center > .label{
 	-fx-text-fill:text-primary;
 }
 
@@ -47,15 +47,18 @@
 	-fx-border-color:lighter;
 	-fx-background-color:lightest;
 }
+.title > .center > .right, .title > .center > .left, .title > .top, .title > .bottom{
+	-fx-spacing:0.5em;
+}
 
-.primary .title, .primary .title .label, .primary .title .right .button{
+.primary > .title, .primary > .title .label, .primary > .title > .center > .right > .button{
 	-fx-background-color:background-primary;
 	-fx-border-color:background-primary;
 	-fx-text-fill:text-primary;
 }
-.primary .title .right .button:hover,
-.primary .title .right .button:selected,
-.primary .title .right .button:focused{
+.primary > .title >.center >  .right > .button:hover,
+.primary > .title >.center >  .right > .button:selected,
+.primary > .title >.center >  .right > .button:focused{
 	-fx-background-color:derive(background-primary, -15%);
 	-fx-border-color:derive(background-primary, -15%);
 }
