@@ -41,10 +41,12 @@
 	-fx-background-color: transparent;
 }
 .scroll-bar:vertical .increment-button .increment-arrow{
-    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+    -fx-shape: "M 0 0 L 4 6 L 8 0 Z";
+ 	-fx-padding: 0.25em;
 }
 .scroll-bar:vertical .decrement-button .decrement-arrow{
-	-fx-shape: "M 0 7 h 7 l 3.5 -4 z";
+	-fx-shape: "M 0 6 L 4 0 L 8 6 Z";
+ 	-fx-padding: 0.25em;
 }
 
 .scroll-bar .decrement-arrow, .scroll-bar .increment-arrow,
