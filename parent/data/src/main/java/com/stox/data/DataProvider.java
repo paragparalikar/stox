@@ -13,6 +13,8 @@ public interface DataProvider extends HasLogin, HasName {
 
 	String getCode();
 
+	Instrument getInstrument(final String code) throws Exception;
+
 	List<Instrument> getInstruments() throws Exception;
 
 	List<Bar> getBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to) throws Exception;

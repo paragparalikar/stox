@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import com.stox.core.intf.Callback;
+import com.stox.core.ui.HasNameStringConverter;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.FormGroup;
 import com.stox.data.DataProvider;
@@ -26,7 +27,7 @@ public class DataProviderSelectionModal extends Modal {
 
 	public DataProviderSelectionModal(final Collection<DataProvider> dataProviders, final Callback<DataProvider, Void> callback) {
 		choiceBox.getItems().addAll(dataProviders);
-		choiceBox.setConverter(new DataProviderStringConverter());
+		choiceBox.setConverter(new HasNameStringConverter<>());
 		choiceBox.getSelectionModel().select(0);
 		setTitle("Please select a data provider"); // TODO I18N here
 		addStylesheet("styles/data.css");

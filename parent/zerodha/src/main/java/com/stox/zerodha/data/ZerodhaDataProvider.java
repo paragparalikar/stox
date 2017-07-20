@@ -2,11 +2,14 @@ package com.stox.zerodha.data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -16,13 +19,21 @@ import com.stox.core.intf.Callback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.Constant;
+import com.stox.core.util.DateUtil;
 import com.stox.data.DataProvider;
 import com.stox.workbench.ui.modal.Modal;
 import com.stox.zerodha.Zerodha;
 
 @Component
 public class ZerodhaDataProvider extends Zerodha implements DataProvider {
+
+	private List<Instrument> instruments;
+	private Map<String, Instrument> cache;
+
+	@Autowired
+	private InstrumentRepository instrumentRespository;
 
 	@Override
 	public String getCode() {
@@ -54,7 +65,30 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 	}
 
 	@Override
+	public Instrument getInstrument(String code) throws Exception {
+		loadInstruments();
+		return cache.get(code);
+	}
+
+	@Override
 	public List<Instrument> getInstruments() throws Exception {
+		loadInstruments();
+		return instruments;
+	}
+
+	private void loadInstruments() throws Exception {
+		if (null == instruments || instruments.isEmpty()) {
+			if (DateUtil.isToday(instrumentRespository.getLastUpdatedDate(getCode()))) {
+				instruments = instrumentRespository.getAllInstruments(getCode());
+			} else {
+				instruments = doGetInstruments();
+				instrumentRespository.save(getCode(), instruments);
+			}
+			cache = instruments.stream().collect(Collectors.toMap(Instrument::getId, Function.identity(), (p1, p2) -> p1));
+		}
+	}
+
+	private List<Instrument> doGetInstruments() throws Exception {
 		final HttpResponse response = HttpClientBuilder.create().build().execute(new HttpGet("https://api.kite.trade/instruments"));
 		final CsvSchema csvSchema = CsvSchema.builder().setUseHeader(true).build();
 		final MappingIterator<ZerodhaInstrument> iterator = Constant.csvMapper.readerFor(ZerodhaInstrument.class).with(csvSchema).readValues(response.getEntity().getContent());

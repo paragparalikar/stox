@@ -19,7 +19,7 @@ public class Instrument implements Identifiable<String>, Nameable {
 
 	private String isin;
 
-	private Exchange exchange;
+	private String exchange;
 
 	private String name;
 
@@ -29,16 +29,16 @@ public class Instrument implements Identifiable<String>, Nameable {
 
 	private double tickSize;
 
-	private InstrumentType type;
+	private String type;
 
 	@Override
 	public String getId() {
-		return symbol;
+		return exchangeCode;
 	}
 
 	@Override
 	public void setId(String id) {
-		this.symbol = id;
+		this.exchangeCode = id;
 	}
 
 	@Override
