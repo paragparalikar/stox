@@ -1,5 +1,6 @@
 package com.stox.workbench.ui.titlebar;
 
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -12,16 +13,44 @@ import com.stox.core.ui.util.UiUtil;
 
 public class TitleBar {
 
-	private final Label titleLabel = UiUtil.classes(new Label(), "title-label", "primary");
-	private final HBox left = new HBox(titleLabel);
-	private final HBox right = new HBox();
-	private final HBox hContainer = new HBox(left, UiUtil.spacer(), right);
-	private final VBox top = UiUtil.classes(new VBox(), "title-top");
-	private final VBox bottom = UiUtil.classes(new VBox(), "title-bottom");
-	private final VBox vContainer = UiUtil.classes(new VBox(top, hContainer, bottom), "title");
+	private final Label titleLabel = UiUtil.fullWidth(new Label());
+	private final HBox left = UiUtil.classes(new HBox(), "left");
+	private final HBox right = UiUtil.classes(new HBox(), "right");
+	private final HBox hContainer = UiUtil.classes(new HBox(titleLabel, UiUtil.spacer()), "center");
+	private final VBox top = UiUtil.classes(new VBox(), "top");
+	private final VBox bottom = UiUtil.classes(new VBox(), "bottom");
+	private final VBox vContainer = UiUtil.classes(new VBox(hContainer), "title", "center");
 
 	public TitleBar() {
 		right.getChildren().addListener(BoxChildrenChangeListener.getInstance());
+		left.getChildren().addListener((ListChangeListener<Node>) change -> {
+			if (0 == left.getChildren().size()) {
+				hContainer.getChildren().remove(left);
+			} else if (!hContainer.getChildren().contains(left)) {
+				hContainer.getChildren().add(0, left);
+			}
+		});
+		right.getChildren().addListener((ListChangeListener<Node>) change -> {
+			if (0 == right.getChildren().size()) {
+				hContainer.getChildren().remove(right);
+			} else if (!hContainer.getChildren().contains(right)) {
+				hContainer.getChildren().add(right);
+			}
+		});
+		top.getChildren().addListener((ListChangeListener<Node>) change -> {
+			if (0 == top.getChildren().size()) {
+				vContainer.getChildren().remove(top);
+			} else if (!vContainer.getChildren().contains(top)) {
+				vContainer.getChildren().add(0, top);
+			}
+		});
+		bottom.getChildren().addListener((ListChangeListener<Node>) change -> {
+			if (0 == bottom.getChildren().size()) {
+				vContainer.getChildren().remove(bottom);
+			} else if (!vContainer.getChildren().contains(bottom)) {
+				vContainer.getChildren().add(bottom);
+			}
+		});
 	}
 
 	public Node getNode() {

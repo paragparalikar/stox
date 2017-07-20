@@ -3,22 +3,17 @@
 	-fx-pref-height:3em;
 	-fx-alignment:center;
 }
-
-.title-label{
-	-fx-graphic-text-gap:1em;
-	-fx-padding: 0 1em 0 1em;
+.primary.title .center .label{
+	-fx-text-fill:text-primary;
 }
 
-.title-top,
-.title-bottom{
-	-fx-spacing:0.5em;
-}
+
 .snap-to-grid-group Line {
-	-fx-stroke: shape-light;
+	-fx-stroke: lighter;
 }
 
 .snap-to-grid-rectangle {
-	-fx-fill: shape-light;
+	-fx-fill: lighter;
 }
 
 .search-field{
@@ -49,13 +44,19 @@
 
 .view{
 	-fx-border-width:0;
-	-fx-background-color:background-lightest;
+	-fx-border-color:lighter;
+	-fx-background-color:lightest;
 }
 
-.view.primary{
+.primary .title, .primary .title .label, .primary .title .right .button{
+	-fx-background-color:background-primary;
 	-fx-border-color:background-primary;
+	-fx-text-fill:text-primary;
+}
+.primary .title .right .button:hover,
+.primary .title .right .button:selected,
+.primary .title .right .button:focused{
+	-fx-background-color:derive(background-primary, -15%);
+	-fx-border-color:derive(background-primary, -15%);
 }
 
-.view.danger{
-	-fx-border-color:background-danger;
-}

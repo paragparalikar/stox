@@ -12,7 +12,7 @@ import com.stox.workbench.ui.titlebar.TitleBar;
 public class CloseDecorator {
 
 	private HasLifecycle hasLifecycle;
-	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "fa");
+	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "icon");
 
 	public CloseDecorator() {
 		closeButton.addEventHandler(ActionEvent.ACTION, event -> hasLifecycle.stop());

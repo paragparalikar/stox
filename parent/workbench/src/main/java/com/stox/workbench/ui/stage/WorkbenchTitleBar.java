@@ -10,14 +10,17 @@ import com.stox.core.ui.util.UiUtil;
 public class WorkbenchTitleBar extends HBox {
 
 	private final MenuButton applicationsMenu = UiUtil.classes(new MenuButton("Applications"), "primary"); // TODO I18N here
-	private final HBox menuBar = UiUtil.box(UiUtil.classes(new HBox(applicationsMenu), "menu-bar"));
-	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "last", "fa", "primary");
-	private final Button minimizeButton = UiUtil.classes(new Button(Icon.WINDOW_MINIMIZE), "first", "fa", "primary");
-	private final Button maximizeButton = UiUtil.classes(new Button(Icon.WINDOW_MAXIMIZE), "middle", "fa", "primary");
+	private final MenuButton dataProvidersMenu = UiUtil.classes(new MenuButton("Data Providers"), "primary"); // TODO I18N here
+	private final MenuButton brokersMenu = UiUtil.classes(new MenuButton("Brokers"), "primary"); // TODO I18N here
+	private final HBox menuBar = UiUtil.classes(new HBox(applicationsMenu, dataProvidersMenu, brokersMenu), "menu-bar");
+	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "last", "icon", "primary");
+	private final Button minimizeButton = UiUtil.classes(new Button(Icon.WINDOW_MINIMIZE), "first", "icon", "primary");
+	private final Button maximizeButton = UiUtil.classes(new Button(Icon.WINDOW_MAXIMIZE), "middle", "icon", "primary");
+	private final HBox buttonGroup = UiUtil.classes(UiUtil.box(new HBox(minimizeButton, maximizeButton, closeButton)), "center");
 
 	public WorkbenchTitleBar() {
-		getStyleClass().addAll("title", "primary");
-		getChildren().addAll(menuBar, UiUtil.spacer(), minimizeButton, maximizeButton, closeButton);
+		getStyleClass().addAll("title", "primary", "center");
+		getChildren().addAll(menuBar, UiUtil.spacer(), buttonGroup);
 	}
 
 	public MenuButton getApplicationsMenu() {

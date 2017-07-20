@@ -1,0 +1,158 @@
+.button, .menu-button, .combo-box, .choice-box{
+	-fx-border-width:1px;
+	-fx-border-radius:5px;
+	-fx-background-radius:5px;
+	-fx-border-insets:0;
+	-fx-background-insets:0;
+}
+.list-view{
+	-fx-border-width:0;
+}
+.indexed-cell{
+	-fx-pref-height:2.4em;
+}
+.button{
+	-fx-padding:0.5em 1em;
+}
+.context-menu {
+	-fx-border-radius: 5;
+	-fx-background-radius: 5;
+	-fx-border-color: lighter;
+}
+
+.context-menu > * {
+	-fx-padding: 5 0 5 0;
+}
+
+.separator {
+	-fx-padding: 5 0 5 0;
+}
+
+.title{
+	-fx-pref-height:3em;
+	-fx-border-radius:0;
+}
+.title .label{
+	-fx-font-size:1.2em;
+	-fx-graphic-text-gap:1em;
+	-fx-padding: 0 1em 0 1em;
+}
+
+.container-sm{
+	-fx-padding:0.5em;
+}
+.container{
+	-fx-padding:1em;
+}
+.container-lg{
+	-fx-padding:2em;
+}
+
+
+.first{
+	-fx-border-radius:5 0 0 5;
+	-fx-background-radius:5 0 0 5;
+}
+.middle{
+	-fx-border-radius:0;
+	-fx-background-radius:0;
+}
+.last{
+	-fx-border-radius:0 5 5 0;
+	-fx-background-radius:0 5 5 0;
+}
+.top{
+	-fx-alignment:top-center;
+}
+.bottom{
+	-fx-alignment:bottom-center;
+}
+.center{
+	-fx-alignment:center;
+}
+.left{
+	-fx-alignment:center-left;
+}
+.right{
+	-fx-alignment:center-right;
+}
+
+.form-group, .button-group{
+	-fx-padding:0.5em;
+	-fx-spacing:0.5em;	
+}
+
+
+
+/*  default  */
+.indexed-cell:odd, .indexed-cell:even{
+	-fx-bakground-color:lightest;
+	-fx-text-fill:dark;
+}
+.button,.menu-button, .combo-box, .choice-box, .list-view{
+	-fx-text-fill:dark;
+	-fx-background-color:lightest;
+	-fx-border-color:lighter;
+}
+.button:hover,.menu-button:hover, .combo-box:hover, .choice-box:hover,
+.button:selected,.menu-button:selected, .combo-box:selected, .choice-box:selected,
+.button:focused,.menu-button:focused,  .combo-box:focused, .choice-box:focused{
+	-fx-background-color:lighter;
+	-fx-border-color:light;
+}
+
+
+/* primary */
+.title.primary,  
+.primary.label, .primary.button, 
+.primary.menu-button, .primary.menu-button .label, .primary.menu-button .context-menu{
+	-fx-background-color:background-primary;
+	-fx-border-color:background-primary;
+	-fx-text-fill:text-primary;
+}
+.primary *.arrow{
+	-fx-background-color:text-primary;
+	-fx-border-color:text-primary;
+}
+.button.primary:hover,.menu-button.primary:hover, .menu-button.primary:hover .label,
+.button.primary:selected,.menu-button.primary:selected, .menu-button.primary:selected .label,
+.button.primary:focused,.menu-button.primary:focused, .menu-button.primary:focused .label,{
+	-fx-background-color:derive(background-primary, -15%);
+	-fx-border-color:derive(background-primary, -15%);
+}
+
+
+/* success */
+.title.success, .success.label,
+.success.button, .success.menu-button, .success.menu-button .label{
+	-fx-background-color:background-success;
+	-fx-border-color:background-success;
+	-fx-text-fill:text-success;
+}
+
+/* info */
+.title.info, .info.label,
+.info.button, .info.menu-button, .info.menu-button .label{
+	-fx-background-color:background-info;
+	-fx-border-color:background-info;
+	-fx-text-fill:text-info;
+}
+
+/* warning */
+.title.warning, .warning.label,
+.warning.button, .warning.menu-button, .warning.menu-button .label{
+	-fx-background-color:background-warning;
+	-fx-border-color:background-warning;
+	-fx-text-fill:text-warning;
+}
+
+/* danger */
+.title.danger, .danger.label,
+.danger.button, .danger.menu-button, .danger.menu-button .label{
+	-fx-background-color:background-danger;
+	-fx-border-color:background-danger;
+	-fx-text-fill:text-danger;
+}
+
+
+

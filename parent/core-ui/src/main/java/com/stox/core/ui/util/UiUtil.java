@@ -33,7 +33,7 @@ public class UiUtil {
 
 	public static Node graphic(final String content) {
 		final Label label = new Label(content);
-		label.getStyleClass().add("fa");
+		label.getStyleClass().add("icon");
 		return label;
 	}
 

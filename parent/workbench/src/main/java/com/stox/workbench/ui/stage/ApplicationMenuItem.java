@@ -12,7 +12,7 @@ public class ApplicationMenuItem extends MenuItem {
 
 	public ApplicationMenuItem(final WorkbenchPresenter workbenchPresenter, final PresenterProvider presenterProvider) {
 		super(presenterProvider.getViewName());
-		setGraphic(UiUtil.classes(new Label(presenterProvider.getViewIcon()), "fa"));
+		setGraphic(UiUtil.classes(new Label(presenterProvider.getViewIcon()), "icon"));
 
 		addEventHandler(ActionEvent.ACTION, event -> {
 			final Presenter<?, ?> presenter = presenterProvider.create();

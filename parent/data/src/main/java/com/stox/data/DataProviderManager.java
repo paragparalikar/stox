@@ -34,11 +34,20 @@ public class DataProviderManager {
 		}
 		if (null == selectedDataProvider) {
 			selectionInProgress = true;
+			callbacks.add(callback);
 			Platform.runLater(() -> {
 				final DataProviderSelectionModal modal = new DataProviderSelectionModal(dataProviders, dataProvider -> {
 					selectedDataProvider = dataProvider;
 					selectionInProgress = false;
-					callbacks.forEach(c -> c.call(dataProvider));
+					callbacks.forEach(c -> {
+						try {
+							c.call(dataProvider);
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							callbacks.remove(c);
+						}
+					});
 					return null;
 				});
 				modal.getStyleClass().add("primary");

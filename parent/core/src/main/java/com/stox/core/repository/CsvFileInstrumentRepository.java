@@ -39,7 +39,8 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	@Override
 	public List<Instrument> getAllInstruments(final String dataProviderCode) {
 		try {
-			return Constant.csvMapper.reader(schema).readValues(new File(getPath(dataProviderCode))).readAll().stream().map(o -> (Instrument) o).collect(Collectors.toList());
+			return Constant.csvMapper.reader(schema).forType(Instrument.class).readValues(new File(getPath(dataProviderCode))).readAll().stream().map(o -> (Instrument) o)
+					.collect(Collectors.toList());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -2,18 +2,42 @@
 	-fx-border-color:red;
 	-fx-border-width:1px;
 }
-.fa {
+.icon {
 	-fx-font-family: 'FontAwesome';
+	-fx-font-size:14px;
+	-fx-font-weight:100;
+	-fx-padding:0.35em;
+	-fx-pref-height:2em;
+	-fx-pref-width:2em;
+	-fx-border-width:0;
 }
 
-.fa:hover {
-	-fx-text-fill: text-darkest;
+.icon.label{
+	-fx-padding:0;
 }
 
-.fa:pressed {
-	-fx-effect: dropshadow(gaussian, derive(background-light, -70%), 0.1em, 0.0,
-		0.07em, 0.07em);
-}
 
+
+
+
+.message{
+	-fx-padding:1em;
+}
+.message.success{
+	-fx-background-color:derive(background-success, 40%);
+	-fx-text-fill:derive(background-success, -40%);
+}
+.message.danger{
+	-fx-background-color:derive(background-danger, 40%);
+	-fx-text-fill:derive(background-danger, -40%);
+}
+.message.info{
+	-fx-background-color:derive(background-info, 40%);
+	-fx-text-fill:derive(background-info, -40%);
+}
+.message.warning{
+	-fx-background-color:derive(background-warning, 40%);
+	-fx-text-fill:derive(background-warning, -40%);
+}
 
 

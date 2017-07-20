@@ -1,523 +1,65 @@
-.combo-box:focused * {
-	-fx-effect: none;
-}
-
-.button,.menu-button,.toggle-button,.split-menu-button {
-	-fx-font-size: 14;
-	-fx-background-radius: 4;
-	-fx-border-radius: 4;
-	-fx-pref-height: 30;
-	-fx-min-width: 30;
-}
-.button,.menu-button,.split-menu-button,.toggle-button,.number-button {
-	-fx-background-insets: 0, 0, -1, 0;
-}
-
-.split-menu-button > .label {
-	-fx-border-radius: 4 0 0 4;
-	-fx-background-radius: 3 0 0 3;
-}
-
-.split-menu-button > .arrow-button {
-	-fx-border-radius: 0 4 4 0;
-	-fx-background-radius: 0 3 3 0;
-}
-
-.lg {
-	-fx-min-height: 46;
-	-fx-max-height: 46;
-	-fx-font-size: 18;
-}
-
-.sm {
-	-fx-min-height: 30;
-	-fx-max-height: 30;
-}
-
-.xs {
-	-fx-min-height: 22;
-	-fx-max-height: 22;
-	-fx-font-size: 10;
-}
-
-.primary .arrow,
-.success .arrow,
-.info .arrow,
-.warning .arrow,
-.danger .arrow {
-	-fx-background-color: transparent, background-lightest;
-}
-
-.primary > .label,
-.success > .label,
-.info > .label,
-.warning > .label,
-.danger > .label {
-	-fx-text-fill: white;
-}
-
-.action-btn {
-	-fx-min-width: 80;
-}
-
-
-.button.first, .menu-button.first, .toggle-button.first, .text-field.first, .text-area.first {
-	-fx-border-radius: 4 0 0 4;
-	-fx-background-radius: 4 0 0 4;
-}
-
-.split-menu-button.first > .arrow-button, .split-menu-button.middle > .arrow-button {
-	-fx-border-radius: 0;
-	-fx-background-radius: 0;
-}
-
-VBox > .button.first,
-VBox > .menu-button.first,
-VBox > .toggle-button.first,
-VBox > .split-menu-button.first,
-VBox > .text-field.first,
-VBox > .text-area.first {
-	-fx-border-radius: 4 4 0 0;
-	-fx-background-radius: 4 4 0 0;
-}
-
-VBox > .split-menu-button.first > .label {
-	-fx-border-radius: 4 0 0 0;
-	-fx-background-radius: 3 0 0 0;
-}
-VBox > .split-menu-button.first > .arrow-button {
-	-fx-border-radius: 0 4 0 0;
-	-fx-background-radius: 0 3 0 0;
-}
-/*middle*/
-.middle {
-	-fx-border-radius: 0;
-	-fx-background-radius: 0;
-}
-
-/*last*/
-.split-menu-button.middle > .label, .split-menu-button.last > .label {
-	-fx-border-radius: 0;
-	-fx-background-radius: 0;
-}
-
-.split-menu-button.last {
-	-fx-border-radius: 0 4 4 0;
-	-fx-background-radius: 0 4 4 0;
-}
-
-.button.middle, .text-field.middle, .text-area.middle, .split-menu-button.middle, .toggle-button.middle {
-	-fx-border-radius: 0;
-	-fx-background-radius: 0;
-}
-
-.button.last, .text-field.last, .text-area.last, .split-menu-button.last, .toggle-button.last, .menu-button.last {
-	-fx-border-radius: 0 4 4 0;
-	-fx-background-radius: 0 4 4 0;
-}
-VBox > .button.last,
-VBox > .menu-button.last,
-VBox > .toggle-button.last,
-VBox > .split-menu-button.last,
-VBox > .text-field.last,
-VBox > .text-area.last {
-	-fx-border-radius: 0 0 4 4;
-	-fx-background-radius: 0 0 4 4;
-}
-
-VBox > .split-menu-button.last > .label {
-	-fx-border-radius: 0 0 0 4;
-	-fx-background-radius: 0 0 0 3;
-}
-VBox > .split-menu-button.last > .arrow-button {
-	-fx-border-radius: 0 0 4 0;
-	-fx-background-radius: 0 0 3 0;
-}
-
-
-
-.color-picker,.date-picker > .arrow-button,
-.number-button,.left-arrow-button,.right-arrow-button,
-.button,.split-menu-button,.toggle-button,.menu-button,
-.font-menu-button, .split-menu-button > .label, .split-menu-button > .arrow-button {
-	-fx-background-color: background-lightest;
-}
-
-
-.color-picker,.date-picker > .arrow-button,
-.button,.menu-button,.toggle-button,.number-button,.left-arrow-button,.right-arrow-button,
-.font-menu-button,
-.split-menu-button > .label,.split-menu-button > .arrow-button {
-	-fx-border-color: background-light;
-	-fx-text-fill: text-darker;
-}
-
-
-	/*just for the special split menu button*/
-.split-menu-button > .label {
-	-fx-border-width: 1 0 1 1;
-}
-	/*for date picker arrow button*/
-.date-picker > .arrow-button {
-	-fx-border-radius: 0 4 4 0;
-}
-.combo-box > .arrow-button, .choice-box > .arrow-button {
-	-fx-border-width: 0;
-}
-
-	/*hover state*/
-.color-picker:hover,
-.date-picker:hover > .arrow-button,
-.combo-box:hover,.choice-box:hover,
-.number-button:hover,.left-arrow-button:hover,.right-arrow-button:hover,
-.button:hover,.menu-button:hover,.toggle-button:hover,
-.font-menu-button:hover,
-.split-menu-button > .label:hover, .split-menu-button > .arrow-button:hover {
-	-fx-background-color: background-lighter;
-	-fx-border-color: background-light;
-}
-	/*pressed selected*/
-.color-picker:pressed,.color-picker:selected,
-.number-button:pressed,.number-button:selected,
-.date-picker:pressed > .arrow-button,
-.combo-box:pressed > .arrow-button,.combo-box:selected > .arrow-button,
-.choice-box:pressed > .arrow-button,.choice-box:selected > .arrow-button,
-.font-menu-button:pressed,.font-menu-button:selected,
-.left-arrow-button:pressed,.left-arrow-button:selected,
-.right-arrow-button:pressed,.right-arrow-button:selected,
-.button:pressed, .button:selected,.menu-button:pressed,.menu-button:selected
-,.toggle-button:pressed,.toggle-button:selected,
-.split-menu-button:pressed > .label, .split-menu-button > .arrow-button:pressed {
-	-fx-background-color: background-lighter;
-	-fx-border-color: background-light;
-	-fx-effect: innershadow(gaussian, background-light, 10, 0, 0, 3);
-}
-
-
-	/*primary*/
-
-.button.primary,.split-menu-button.primary,.toggle-button.primary,.menu-button.primary,
-.split-menu-button.primary > .label, .split-menu-button.primary > .arrow-button {
-	-fx-background-color: background-primary;
-}
-
-.button.primary,.menu-button.primary,.toggle-button.primary,
-.split-menu-button.primary > .label,.split-menu-button.primary > .arrow-button {
-	-fx-border-color: background-primary;
-	-fx-text-fill: text-primary;
-}
-/*hover state*/
-.button.primary:hover,.menu-button.primary:hover,.toggle-button.primary:hover,
-.split-menu-button.primary > .label:hover, .split-menu-button.primary > .arrow-button:hover {
-	-fx-border-color: derive(background-primary, -20%);
-	-fx-background-color: derive(background-primary, -20%);
-}
-/*pressed selected*/
-.button.primary:pressed, .button.primary:selected,
-.menu-button.primary:pressed,.menu-button.primary:selected
-,.toggle-button.primary:pressed,.toggle-button.primary:selected,
-.split-menu-button.primary:pressed > .label, .split-menu-button.primary > .arrow-button:pressed {
-	-fx-background-color: derive(background-primary, -20%);
-	-fx-border-color: derive(background-primary, -20%);
-	-fx-effect: innershadow(gaussian, derive(background-primary, -30%), 10, 0, 0, 3);
-}
-
-/*success*/
-
-.button.success,.split-menu-button.success,.toggle-button.success,.menu-button.success,
-.split-menu-button.success > .label, .split-menu-button.success > .arrow-button {
-	-fx-background-color: background-success;
-}
-
-.button.success,.menu-button.success,.toggle-button.success,
-.split-menu-button.success > .label,.split-menu-button.success > .arrow-button {
-	-fx-border-color: background-success;
-	-fx-text-fill: text-success;
-}
-/*hover state*/
-.button.success:hover,.menu-button.success:hover,.toggle-button.success:hover,
-.split-menu-button.success > .label:hover, .split-menu-button.success > .arrow-button:hover {
-	-fx-border-color: derive(background-success, -20%);
-	-fx-background-color: derive(background-success, -20%);
-}
-/*pressed selected*/
-.button.success:pressed, .button.success:selected,
-.menu-button.success:pressed,.menu-button.success:selected
-,.toggle-button.success:pressed,.toggle-button.success:selected,
-.split-menu-button.success:pressed > .label, .split-menu-button.success > .arrow-button:pressed {
-	-fx-background-color: derive(background-success, -20%);
-	-fx-border-color: derive(background-success, -20%);
-	-fx-effect: innershadow(gaussian, derive(background-success, -30%), 10, 0, 0, 3);
-}
-
-
-/*info*/
-
-.button.info,.split-menu-button.info,.toggle-button.info,.menu-button.info,
-.split-menu-button.info > .label, .split-menu-button.info > .arrow-button {
-	-fx-background-color: background-info;
-}
-
-.button.info,.menu-button.info,.toggle-button.info,
-.split-menu-button.info > .label,.split-menu-button.info > .arrow-button {
-	-fx-border-color: background-info;
-	-fx-text-fill: text-info;
-}
-/*hover state*/
-.button.info:hover,.menu-button.info:hover,.toggle-button.info:hover,
-.split-menu-button.info > .label:hover, .split-menu-button.info > .arrow-button:hover {
-	-fx-border-color: derive(background-info, -20%);
-	-fx-background-color: derive(background-info, -20%);
-}
-/*pressed selected*/
-.button.info:pressed, .button.info:selected,
-.menu-button.info:pressed,.menu-button.info:selected
-,.toggle-button.info:pressed,.toggle-button.info:selected,
-.split-menu-button.info:pressed > .label, .split-menu-button.info > .arrow-button:pressed {
-	-fx-border-color: derive(background-info, -20%);
-	-fx-background-color: derive(background-info, -20%);
-	-fx-effect: innershadow(gaussian, derive(background-info, -30%), 10, 0, 0, 3);
-}
-
-/*warning*/
-
-.button.warning,.split-menu-button.warning,.toggle-button.warning,.menu-button.warning,
-.split-menu-button.warning > .label, .split-menu-button.warning > .arrow-button {
-	-fx-background-color: background-warning;
-}
-
-.button.warning,.menu-button.warning,.toggle-button.warning,
-.split-menu-button.warning > .label,.split-menu-button.warning > .arrow-button {
-	-fx-border-color: background-warning;
-	-fx-text-fill: text-warning;
-}
-/*hover state*/
-.button.warning:hover,.menu-button.warning:hover,.toggle-button.warning:hover,
-.split-menu-button.warning > .label:hover, .split-menu-button.warning > .arrow-button:hover {
-	-fx-border-color: derive(background-warning, -20%);
-	-fx-background-color: derive(background-warning, -20%);
-}
-/*pressed selected*/
-.button.warning:pressed, .button.warning:selected,
-.menu-button.warning:pressed,.menu-button.warning:selected
-,.toggle-button.warning:pressed,.toggle-button.warning:selected,
-.split-menu-button.warning:pressed > .label, .split-menu-button.warning > .arrow-button:pressed {
-	-fx-border-color: derive(background-warning, -20%);
-	-fx-background-color: derive(background-warning, -20%);
-	-fx-effect: innershadow(gaussian, derive(background-warning, -30%), 10, 0, 0, 3);
-}
-
-/*danger*/
-
-.button.danger,.split-menu-button.danger,.toggle-button.danger,.menu-button.danger,
-.split-menu-button.danger > .label, .split-menu-button.danger > .arrow-button {
-	-fx-background-color: background-danger;
-}
-
-.button.danger,.menu-button.danger,.toggle-button.danger,
-.split-menu-button.danger > .label,.split-menu-button.danger > .arrow-button {
-	-fx-border-color: background-danger;
-	-fx-text-fill: text-danger;
-}
-/*hover state*/
-.button.danger:hover,.menu-button.danger:hover,.toggle-button.danger:hover,
-.split-menu-button.danger > .label:hover, .split-menu-button.danger > .arrow-button:hover {
-	-fx-border-color: derive(background-danger, -20%);
-	-fx-background-color: derive(background-danger, -20%);
-}
-/*pressed selected*/
-.button.danger:pressed, .button.danger:selected,
-.menu-button.danger:pressed,.menu-button.danger:selected
-,.toggle-button.danger:pressed,.toggle-button.danger:selected,
-.split-menu-button.danger:pressed > .label, .split-menu-button.danger > .arrow-button:pressed {
-	-fx-border-color: derive(background-danger, -20%);
-	-fx-background-color: derive(background-danger, -20%);
-	-fx-effect: innershadow(gaussian, derive(background-danger, -30%), 10, 0, 0, 3);
-}
-
-
-
-.title{
-	-fx-alignment:center;
-	-fx-padding: 0 1em 0 1em;
-	-fx-font-size:1.2em;
-	-fx-pref-height:3em;
-}
-.title.primary,
-.primary .title{
-	-fx-background-color:background-primary;
-	-fx-text-fill:text-primary;
-}
-.title.success,
-.success .title{
-	-fx-background-color:background-success;
-	-fx-text-fill:text-success;
-}
-.title.info,
-.info .title{
-	-fx-background-color:background-info;
-	-fx-text-fill:text-info;
-}
-.title.warning,
-.warning .title{
-	-fx-background-color:background-warning;
-	-fx-text-fill:text-warning;
-}
-.title.danger,
-.danger .title{
-	-fx-background-color:background-danger;
-	-fx-text-fill:text-danger;
-}
-.title *.menu-button{
-	-fx-font-size:1.2em;
-}
-
-
-.titled-pane > .title {
-	-fx-background-color: background-light;
-	-fx-border-color: background-light;
-	-fx-background-radius: 0;
-	-fx-border-radius: 0;
-}
-
-.titled-pane > .content {
-	-fx-background-color: background-lightest;
-	-fx-background-radius: 0;
-	-fx-border-radius: 0;
-	-fx-border-color: background-lightest;
-}
-
-.titled-pane.primary {
-	-fx-text-fill: background-lightest;
-}
-
-.titled-pane.primary > .title {
-	-fx-background-color: background-primary;
-	-fx-border-color: background-primary;
-	-fx-text-fill:text-primary;
-}
-.titled-pane.primary > .title *.label{
-	-fx-text-fill:text-primary;
-}
-
-.titled-pane.primary > .content {
-	-fx-border-color: background-primary;
-}
-
-.titled-pane.success .arrow,
-.titled-pane.info .arrow,
-.titled-pane.warning .arrow,
-.titled-pane.danger .arrow {
-	-fx-background-color: background-lightest;
-}
-
-.titled-pane.success {
-	-fx-text-fill: text-success;
-}
-
-.titled-pane.success > .title {
-	-fx-background-color: background-success;
-	-fx-border-color: background-success;
-}
-
-.titled-pane.success > .content {
-	-fx-border-color: background-success;
-}
-
-.titled-pane.info {
-	-fx-text-fill: text-info;
-}
-
-.titled-pane.info > .title {
-	-fx-background-color: background-info;
-	-fx-border-color: background-info;
-}
-
-.titled-pane.info > .content {
-	-fx-border-color: background-info;
-}
-
-.titled-pane.warning {
-	-fx-text-fill: text-warning;
-}
-
-.titled-pane.warning > .title {
-	-fx-background-color: background-warning;
-	-fx-border-color: background-warning;
-}
-
-.titled-pane.warning > .content {
-	-fx-border-color: background-warning;
-}
-
-.titled-pane.danger {
-	-fx-text-fill: text-danger;
-}
-
-.titled-pane.danger > .title {
-	-fx-background-color: background-danger;
-	-fx-border-color: background-danger;
-}
-
-.titled-pane.danger > .content {
-	-fx-border-color: background-danger;
-}
-
-.titled-pane > .title *.button,
-.titled-pane > .title *.toggle-button{
+.button, .menu-button, .combo-box, .choice-box{
+	-fx-border-width:1px;
+	-fx-border-radius:5px;
+	-fx-background-radius:5px;
+	-fx-border-insets:0;
+	-fx-background-insets:0;
+}
+.list-view, .list-view:focused, .list-view:selected{
 	-fx-border-width:0;
+	-fx-background-insets:0;
 }
-.titled-pane.primary > .title *.button,
-.titled-pane.primary > .title *.toggle-button{
-	-fx-background-color:background-primary;
-	-fx-text-fill: text-primary;
+.indexed-cell{
+	-fx-pref-height:2.4em;
+	-fx-border-width:0 0 0.5px 0;
 }
-.titled-pane.primary > .title *.button:hover,
-.titled-pane.primary > .title *.toggle-button:hover{
-	-fx-border-color: derive(background-primary, -20%);
-	-fx-background-color: derive(background-primary, -20%);
+.button{
+	-fx-padding:0.5em 1em;
 }
-
-.titled-pane.danger > .title *.button,
-.titled-pane.danger > .title *.toggle-button{
-	-fx-background-color:background-danger;
-	-fx-text-fill: text-danger;
-}
-.titled-pane.danger > .title *.button:hover,
-.titled-pane.danger > .title *.toggle-button:hover{
-	-fx-border-color: derive(background-danger, -20%);
-	-fx-background-color: derive(background-danger, -20%);
-}
-
-
-
-.menu-item {
-	-fx-pref-width: 250;
-}
-
-.menu-item:focused {
-	-fx-background-color: background-lighter;
-}
-
-.menu-item:focused > * {
-	-fx-text-fill: text-darkest;
-}
-.menu-item:focused .arrow {
-	-fx-background-color: text-darkest;
-}
-
-.check-menu-item:checked:hover > .left-container > .check,
-.check-menu-item:checked:focused > .left-container > .check,
-.radio-menu-item:checked:hover > .left-container > .radio,
-.radio-menu-item:checked:focused > .left-container > .radio {
-	-fx-background-color: background-dark;
-}
-
 .context-menu {
-	-fx-border-radius: 4;
-	-fx-background-radius: 4;
-	-fx-border-color: background-lighter;
+	-fx-border-radius: 5;
+	-fx-background-radius: 5;
+	-fx-border-color: lighter;
 }
+
+
+
+.scroll-bar:vertical {
+	-fx-pref-width: 10;
+}
+.scroll-bar:horizontal {
+	-fx-pref-height: 10;
+}
+.scroll-bar,
+.scroll-bar .track,
+.scroll-bar .track-background{
+	-fx-background-color: transparent;
+	-fx-border-color:transparent;
+	-fx-background-insets: 0;
+}
+.scroll-bar .decrement-button, .scroll-bar .increment-button{
+	-fx-background-color: transparent;
+}
+.scroll-bar:vertical .increment-button .increment-arrow{
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+.scroll-bar:vertical .decrement-button .decrement-arrow{
+	-fx-shape: "M 0 7 h 7 l 3.5 -4 z";
+}
+
+.scroll-bar .decrement-arrow, .scroll-bar .increment-arrow,
+.scroll-bar .thumb{
+	-fx-background-color:light;
+	-fx-border-color:light;
+	-fx-background-insets: 0;
+}
+.scroll-bar .thumb{
+	-fx-border-radius:5;
+	-fx-background-radius:5;
+}
+
+
+
 
 .context-menu > * {
 	-fx-padding: 5 0 5 0;
@@ -526,3 +68,95 @@ VBox > .split-menu-button.last > .arrow-button {
 .separator {
 	-fx-padding: 5 0 5 0;
 }
+
+.title{
+	-fx-pref-height:3em;
+	-fx-border-radius:0;
+	-fx-padding: 0 0.5em 0 0.5em;
+}
+.title .label{
+	-fx-font-size:1.2em;
+	-fx-graphic-text-gap:0.5em;
+	-fx-padding: 0 0.5em 0 0.5em;
+}
+
+
+.first{
+	-fx-border-radius:5 0 0 5;
+	-fx-background-radius:5 0 0 5;
+}
+.middle{
+	-fx-border-radius:0;
+	-fx-background-radius:0;
+}
+.last{
+	-fx-border-radius:0 5 5 0;
+	-fx-background-radius:0 5 5 0;
+}
+.top{
+	-fx-alignment:top-center;
+}
+.bottom{
+	-fx-alignment:bottom-center;
+}
+.center{
+	-fx-alignment:center;
+}
+.left{
+	-fx-alignment:center-left;
+}
+.right{
+	-fx-alignment:center-right;
+}
+
+.form-group, .button-group{
+	-fx-padding:0.5em;
+	-fx-spacing:0.5em;	
+}
+
+
+
+
+
+
+
+
+
+
+/*  default  */
+.button,.menu-button, .choice-box, .indexed-cell:even, .indexed-cell:odd{
+	-fx-text-fill:dark;
+	-fx-background-color:lightest;
+	-fx-border-color:lighter;
+}
+
+.button:hover, .button:selected, .button:focused,
+.menu-button:hover, .menu-button:selected, .menu-button:focused,
+.choice-box:hover, .choice-box:selected, .choice-box:focused,
+.indexed-cell:even:hover, .indexed-cell:even:selected, .indexed-cell:even:focused, 
+.indexed-cell:odd:hover, .indexed-cell:odd:selected, .indexed-cell:odd:focused{
+	-fx-background-color:lighter;
+	-fx-border-color:light;
+}
+
+
+/* primary */
+.primary.button, .primary.title,
+.primary.menu-button, .primary.menu-button .label, .primary.menu-button .context-menu{
+	-fx-background-color:background-primary;
+	-fx-border-color:background-primary;
+	-fx-text-fill:text-primary;
+}
+.primary.menu-button .arrow-button .arrow{
+	-fx-background-color:text-primary;
+	-fx-border-color:text-primary;
+}
+.primary.button:hover, .primary.menu-button:hover, .primary.menu-button:hover .label,
+.primary.button:selected, .primary.menu-button:selected, .primary.menu-button:selected .label,
+.primary.button:focused, .primary.menu-button:focused, .primary.menu-button:focused .label{
+	-fx-background-color:derive(background-primary, -15%);
+	-fx-border-color:derive(background-primary, -15%);
+}
+
+
+

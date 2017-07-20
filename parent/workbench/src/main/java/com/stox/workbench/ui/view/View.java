@@ -20,7 +20,8 @@ public abstract class View extends BorderPane {
 		setTop(titleBar.getNode());
 		titleBar.setGraphic(icon);
 		titleBar.setTitleText(name);
-		getStyleClass().addAll("titled-pane", "primary", "view");
+		titleBar.getNode().getStyleClass().add("primary");
+		getStyleClass().addAll("primary", "view");
 	}
 
 	public int getMode() {
