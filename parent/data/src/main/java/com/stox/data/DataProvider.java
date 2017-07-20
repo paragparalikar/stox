@@ -3,6 +3,8 @@ package com.stox.data;
 import java.util.Date;
 import java.util.List;
 
+import javafx.scene.Node;
+
 import com.stox.core.client.HasLogin;
 import com.stox.core.intf.HasName;
 import com.stox.core.model.Bar;
@@ -12,6 +14,8 @@ import com.stox.core.model.Instrument;
 public interface DataProvider extends HasLogin, HasName {
 
 	String getCode();
+
+	Node getInstrumentFilterView(final List<Instrument> target);
 
 	Instrument getInstrument(final String code) throws Exception;
 

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javafx.scene.Node;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -25,6 +27,7 @@ import com.stox.core.util.DateUtil;
 import com.stox.data.DataProvider;
 import com.stox.workbench.ui.modal.Modal;
 import com.stox.zerodha.Zerodha;
+import com.stox.zerodha.ui.ZerodhaInstrumentFilterPresenter;
 
 @Component
 public class ZerodhaDataProvider extends Zerodha implements DataProvider {
@@ -43,6 +46,12 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 	@Override
 	public String getName() {
 		return "Zerodha";
+	}
+
+	@Override
+	public Node getInstrumentFilterView(final List<Instrument> target) {
+		final ZerodhaInstrumentFilterPresenter presenter = new ZerodhaInstrumentFilterPresenter(instruments, target);
+		return presenter.getView();
 	}
 
 	@Override
@@ -92,7 +101,9 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 		final HttpResponse response = HttpClientBuilder.create().build().execute(new HttpGet("https://api.kite.trade/instruments"));
 		final CsvSchema csvSchema = CsvSchema.builder().setUseHeader(true).build();
 		final MappingIterator<ZerodhaInstrument> iterator = Constant.csvMapper.readerFor(ZerodhaInstrument.class).with(csvSchema).readValues(response.getEntity().getContent());
-		return iterator.readAll().stream().map(zerodhaInstrument -> zerodhaInstrument.toInstrument()).collect(Collectors.toList());
+		final List<Instrument> instruments = iterator.readAll().stream().map(zerodhaInstrument -> zerodhaInstrument.toInstrument()).collect(Collectors.toList());
+		instruments.sort(new HasNameComaparator<>());
+		return instruments;
 	}
 
 	@Secured

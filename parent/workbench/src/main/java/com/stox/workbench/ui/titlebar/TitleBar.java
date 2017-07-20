@@ -90,8 +90,16 @@ public class TitleBar {
 		return this;
 	}
 
+	public void remove(final Side side, final Node node) {
+		getSide(side).getChildren().remove(node);
+	}
+
 	public int getChildCount(final Side side) {
 		return getSide(side).getChildren().size();
+	}
+
+	public void clear(final Side side) {
+		getSide(side).getChildren().clear();
 	}
 
 }

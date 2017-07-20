@@ -50,6 +50,9 @@ public class ZerodhaInstrument {
 			if (StringUtil.hasText(expiry)) {
 				instrument.setExpiry(dateFormat.parse(expiry));
 			}
+			if (StringUtil.hasText(strike)) {
+				instrument.setStrike(Double.parseDouble(strike));
+			}
 			if (StringUtil.hasText(lot_size)) {
 				instrument.setLotSize(Integer.parseInt(lot_size));
 			}

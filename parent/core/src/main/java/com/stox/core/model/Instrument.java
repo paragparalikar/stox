@@ -25,6 +25,8 @@ public class Instrument implements Identifiable<String>, Nameable {
 
 	private Date expiry;
 
+	private double strike;
+
 	private int lotSize;
 
 	private double tickSize;
