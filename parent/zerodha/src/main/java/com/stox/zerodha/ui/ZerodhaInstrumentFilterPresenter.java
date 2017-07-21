@@ -26,6 +26,8 @@ public class ZerodhaInstrumentFilterPresenter {
 		this.target = target;
 		bind();
 		setExchanges(source);
+		setTypes(source);
+		setExpiries(source);
 	}
 
 	private void bind() {
@@ -70,23 +72,25 @@ public class ZerodhaInstrumentFilterPresenter {
 		final List<String> exchanges = source.stream().map(Instrument::getExchange).distinct().sorted().collect(Collectors.toList());
 		exchanges.add(0, ALL); // TODO I18N here
 		view.getExchangeChoiceBox().getItems().setAll(exchanges);
+		view.getExchangeChoiceBox().getSelectionModel().select(ALL);
 	}
 
 	private void setTypes(final List<Instrument> instruments) {
-		view.getTypeChoiceBox().getSelectionModel().clearSelection();
 		final List<String> types = instruments.stream().map(Instrument::getType).distinct().sorted().collect(Collectors.toList());
 		types.add(0, ALL); // TODO I18N here
 		view.getTypeChoiceBox().getItems().setAll(types);
+		view.getTypeChoiceBox().getSelectionModel().select(ALL);
 	}
 
 	private void setExpiries(final List<Instrument> instruments) {
 		view.getExpiryChoiceBox().getSelectionModel().clearSelection();
-		final List<String> expiries = instruments.stream().map(instrument -> {
-			return null == instrument.getExpiry() ? "" : Constant.dateFormat.format(instrument.getExpiry());
-		}).distinct().sorted().collect(Collectors.toList());
+		final List<String> expiries = instruments.stream().map(Instrument::getExpiry).filter(date -> null != date).distinct().sorted().map(date -> {
+			return Constant.dateFormat.format(date);
+		}).collect(Collectors.toList());
 		expiries.remove("");
 		expiries.add(0, ALL); // TODO I18N here
 		view.getExpiryChoiceBox().getItems().setAll(expiries);
+		view.getExpiryChoiceBox().getSelectionModel().select(ALL);
 	}
 
 }
