@@ -66,9 +66,11 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 
 	@Override
 	public void start() {
+		view.showSpinner(true);
 		super.start();
 		dataClient.getAllInstruments(new ToastCallback<>(instruments -> {
 			view.getListView().getItems().addAll(instruments);
+			view.showSpinner(false);
 			return null;
 		}));
 	}
