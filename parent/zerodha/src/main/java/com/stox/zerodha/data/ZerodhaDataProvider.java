@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.stox.core.client.Secured;
 import com.stox.core.intf.Callback;
+import com.stox.core.intf.HasName;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
@@ -91,6 +92,10 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 				instruments = doGetInstruments();
 				instrumentRespository.save(getCode(), instruments);
 			}
+			instruments = instruments.stream().filter(instrument -> {
+				final String symbol = instrument.getSymbol();
+				return null != symbol && 3 < symbol.length() && '-' != symbol.charAt(symbol.length() - 3);
+			}).sorted(new HasName.HasNameComaparator<>()).collect(Collectors.toList());
 			cache = instruments.stream().collect(Collectors.toMap(Instrument::getId, Function.identity(), (p1, p2) -> p1));
 		}
 	}

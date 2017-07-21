@@ -1,5 +1,6 @@
 package com.stox.navigator.ui;
 
+import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,12 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	private Modal instrumentFilterView;
 
 	public NavigatorPresenter() {
-		view.getFilterButton().selectedProperty().addListener((observable, oldValue, value) -> {
-			if (value) {
-				if (null == instrumentFilterView) {
-					instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
-				}
-				if (null != instrumentFilterView) {
-					instrumentFilterView.show();
-				}
+		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> {
+			if (null == instrumentFilterView) {
+				instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
+			}
+			if (null != instrumentFilterView) {
+				instrumentFilterView.show();
 			}
 		});
 	}

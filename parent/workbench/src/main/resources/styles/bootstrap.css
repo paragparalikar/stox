@@ -127,13 +127,22 @@
 	-fx-border-color:lighter;
 }
 
-.button:hover, .button:selected, .button:focused,
-.menu-button:hover, .menu-button:selected, .menu-button:focused,
-.choice-box:hover, .choice-box:selected, .choice-box:focused,
-.indexed-cell:even:hover, .indexed-cell:even:selected, .indexed-cell:even:focused, 
-.indexed-cell:odd:hover, .indexed-cell:odd:selected, .indexed-cell:odd:focused{
-	-fx-background-color:lighter;
-	-fx-border-color:light;
+.button:hover,
+.menu-button:hover,  
+.choice-box:hover, 
+.indexed-cell:even:hover,
+.indexed-cell:odd:hover{
+	-fx-background-color:derive(lightest,-5%);
+	-fx-border-color:derive(lighter,-5%);
+}
+
+.button:selected, .button:focused,
+.menu-button:selected, .menu-button:focused,
+.choice-box:selected, .choice-box:focused,
+.indexed-cell:even:selected, .indexed-cell:even:focused, 
+.indexed-cell:odd:selected, .indexed-cell:odd:focused{
+	-fx-background-color:derive(lightest,-15%);
+	-fx-border-color:derive(lighter,-15%);
 }
 
 
@@ -148,11 +157,19 @@
 	-fx-background-color:text-primary;
 	-fx-border-color:text-primary;
 }
-.primary.button:hover, .primary.button:selected, .primary.button:focused, 
-.primary.toggle-button:hover, .primary.toggle-button:selected, .primary.toggle-button:focused,
-.primary.menu-button:hover, .primary.menu-button:hover > .label, .primary.menu-button:selected, .primary.menu-button:selected > .label, .primary.menu-button:focused, .primary.menu-button:focused > .label{
+
+.primary.button:hover, 
+.primary.toggle-button:hover,
+.primary.menu-button:hover, .primary.menu-button:hover > .label{
 	-fx-background-color:derive(background-primary, -15%);
 	-fx-border-color:derive(background-primary, -15%);
+}
+
+.primary.button:selected, .primary.button:focused, 
+ .primary.toggle-button:selected, .primary.toggle-button:focused,
+ .primary.menu-button:selected, .primary.menu-button:selected > .label, .primary.menu-button:focused, .primary.menu-button:focused > .label{
+	-fx-background-color:derive(background-primary, -25%);
+	-fx-border-color:derive(background-primary, -25%);
 }
 
 

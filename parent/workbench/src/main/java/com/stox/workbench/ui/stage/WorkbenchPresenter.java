@@ -136,10 +136,12 @@ public class WorkbenchPresenter implements HasLifecycle {
 	public void toggleMaximized() {
 		if (maximized) {
 			maximized = false;
-			workbench.setX(backupBounds.getMinX());
-			workbench.setY(backupBounds.getMinY());
-			workbench.setWidth(backupBounds.getWidth());
-			workbench.setHeight(backupBounds.getHeight());
+			if (null != backupBounds) {
+				workbench.setX(backupBounds.getMinX());
+				workbench.setY(backupBounds.getMinY());
+				workbench.setWidth(backupBounds.getWidth());
+				workbench.setHeight(backupBounds.getHeight());
+			}
 		} else {
 			maximized = true;
 			backupBounds = new Rectangle2D(workbench.getX(), workbench.getY(), workbench.getWidth(), workbench.getHeight());

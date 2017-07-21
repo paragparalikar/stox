@@ -1,19 +1,13 @@
 package com.stox.zerodha.ui;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.FormGroup;
-import com.stox.core.util.Constant;
-import com.stox.core.util.StringUtil;
 import com.stox.workbench.ui.modal.Modal;
 
 public class ZerodhaInstrumentFilterModal extends Modal {
@@ -22,18 +16,14 @@ public class ZerodhaInstrumentFilterModal extends Modal {
 	private final FormGroup exchangeFormGroup = new FormGroup(new Label("Exchange"), exchangeChoiceBox, null); // TODO I18N here
 	private final ChoiceBox<String> typeChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
 	private final FormGroup typeFormGroup = new FormGroup(new Label("Type"), typeChoiceBox, null); // TODO I18N here
-	private final ChoiceBox<Double> strikeChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
-	private final FormGroup strikeFormGroup = new FormGroup(new Label("Strike"), strikeChoiceBox, null); // TODO I18N here
-	private final ChoiceBox<Date> expiryChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
+	private final ChoiceBox<String> expiryChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
 	private final FormGroup expiryFormGroup = new FormGroup(new Label("Expiry"), expiryChoiceBox, null); // TODO I18N here
 
-	private final VBox content = UiUtil.classes(new VBox(exchangeFormGroup, typeFormGroup, strikeFormGroup, expiryFormGroup), "");
+	private final VBox content = UiUtil.classes(new VBox(exchangeFormGroup, typeFormGroup, expiryFormGroup), "");
 	private final Button filterButton = UiUtil.classes(new Button("Filter"), "primary"); // TODO I18N here
 	private final HBox buttonGroup = UiUtil.classes(new HBox(filterButton), "button-group", "right");
 
 	public ZerodhaInstrumentFilterModal() {
-		strikeChoiceBox.setConverter(new StrikeStringConverter());
-		expiryChoiceBox.setConverter(new ExpiryStringConverter());
 		setTitle("Filter Instruments"); // TODO I18N here
 		setContent(content);
 		setButtonGroup(buttonGroup);
@@ -49,56 +39,11 @@ public class ZerodhaInstrumentFilterModal extends Modal {
 		return typeChoiceBox;
 	}
 
-	public FormGroup getTypeFormGroup() {
-		return typeFormGroup;
-	}
-
-	public ChoiceBox<Double> getStrikeChoiceBox() {
-		return strikeChoiceBox;
-	}
-
-	public FormGroup getStrikeFormGroup() {
-		return strikeFormGroup;
-	}
-
-	public ChoiceBox<Date> getExpiryChoiceBox() {
+	public ChoiceBox<String> getExpiryChoiceBox() {
 		return expiryChoiceBox;
 	}
 
-	public FormGroup getExpiryFormGroup() {
-		return expiryFormGroup;
+	public Button getFilterButton() {
+		return filterButton;
 	}
-}
-
-class StrikeStringConverter extends StringConverter<Double> {
-
-	@Override
-	public String toString(Double object) {
-		return null != object ? String.valueOf(object) : "";
-	}
-
-	@Override
-	public Double fromString(String string) {
-		return StringUtil.hasText(string) ? Double.parseDouble(string) : 0;
-	}
-
-}
-
-class ExpiryStringConverter extends StringConverter<Date> {
-
-	@Override
-	public String toString(Date date) {
-		return null != date ? Constant.dateFormat.format(date) : "";
-	}
-
-	@Override
-	public Date fromString(String string) {
-		try {
-			return StringUtil.hasText(string) ? Constant.dateFormat.parse(string) : null;
-		} catch (ParseException e) {
-			e.printStackTrace(); // TODO logging here
-		}
-		return null;
-	}
-
 }

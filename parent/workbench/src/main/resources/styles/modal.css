@@ -25,11 +25,14 @@
 	-fx-border-color:background-primary;
 }
 
-.modal.primary > .title *.button:hover,
+.modal.primary > .title *.button:hover{
+	-fx-background-color:derive(background-primary, -5%);
+}
+
 .modal.primary > .title *.button:pressed,
 .modal.primary > .title *.button:selected,
 .modal.primary > .title *.button:focused{
-	-fx-background-color:derive(background-primary, -20%);
+	-fx-background-color:derive(background-primary, -15%);
 }
 
 
