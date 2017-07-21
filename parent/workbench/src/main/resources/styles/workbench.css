@@ -19,6 +19,9 @@
 .search-field{
 	-fx-padding:0.2em 0 0.2em 0.5em;
 }
+.text-field-button{
+	-fx-cursor:hand;
+}
 
 
 .scrip-link-context-menu {
@@ -46,6 +49,12 @@
 	-fx-border-width:0;
 	-fx-border-color:lighter;
 	-fx-background-color:lightest;
+}
+.title > .top{
+	-fx-padding: 0 0 0.5em 0;
+}
+.title > .bottom{
+	-fx-padding:0.5em 0 0 0;
 }
 .title > .center > .right, .title > .center > .left, .title > .top, .title > .bottom{
 	-fx-spacing:0.5em;

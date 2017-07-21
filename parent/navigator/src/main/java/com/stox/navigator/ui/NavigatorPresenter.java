@@ -1,6 +1,7 @@
 package com.stox.navigator.ui;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,13 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 			}
 			if (null != instrumentFilterView) {
 				instrumentFilterView.show();
+			}
+		});
+		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
+			if (value) {
+				view.getTitleBar().add(Side.BOTTOM, 0, view.getSearchTextField());
+			} else {
+				view.getTitleBar().remove(Side.BOTTOM, view.getSearchTextField());
 			}
 		});
 	}

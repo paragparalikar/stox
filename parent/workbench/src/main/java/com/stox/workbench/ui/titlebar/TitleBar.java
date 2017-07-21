@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import com.stox.core.ui.BoxChildrenChangeListener;
 import com.stox.core.ui.util.UiUtil;
 
 public class TitleBar {
@@ -21,6 +22,7 @@ public class TitleBar {
 	private final VBox vContainer = UiUtil.classes(new VBox(hContainer), "title", "center");
 
 	public TitleBar() {
+		right.getChildren().addListener(BoxChildrenChangeListener.getInstance());
 		left.getChildren().addListener((ListChangeListener<Node>) change -> {
 			if (0 == left.getChildren().size()) {
 				hContainer.getChildren().remove(left);

@@ -21,10 +21,10 @@ public abstract class AbstractSearchTextField<T> extends TextField {
 		boolean call(final T item, final String text);
 	}
 
-	private final Button next = UiUtil.classes(new Button(Icon.ARROW_DOWN), "fa", "text-field-button");
-	private final Button previous = UiUtil.classes(new Button(Icon.ARROW_UP), "fa", "text-field-button");
-	private final Button clear = UiUtil.classes(new Button(Icon.CROSS), "fa", "text-field-button");
-	private final HBox right = UiUtil.box(new HBox(next, previous, clear));
+	private final Button next = UiUtil.classes(new Button(Icon.ARROW_DOWN), "icon", "text-field-button");
+	private final Button previous = UiUtil.classes(new Button(Icon.ARROW_UP), "icon", "text-field-button");
+	private final Button clear = UiUtil.classes(new Button(Icon.CROSS), "icon", "text-field-button");
+	private final HBox right = UiUtil.classes(UiUtil.box(new HBox(next, previous, clear)), "right");
 	private Callback<T> matcher;
 
 	public AbstractSearchTextField() {
