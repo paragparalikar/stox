@@ -10,9 +10,9 @@ public class ZerodhaInstrumentFilterPresenter {
 
 	private final List<Instrument> source;
 	private final List<Instrument> target;
-	private final ZerodhaInstrumentFilterView view = new ZerodhaInstrumentFilterView();
+	private final ZerodhaInstrumentFilterModal view = new ZerodhaInstrumentFilterModal();
 
-	public ZerodhaInstrumentFilterView getView() {
+	public ZerodhaInstrumentFilterModal getView() {
 		return view;
 	}
 

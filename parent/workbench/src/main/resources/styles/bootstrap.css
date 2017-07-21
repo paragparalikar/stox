@@ -76,11 +76,6 @@
 	-fx-border-radius:0;
 	-fx-padding: 0 0.5em 0 0.5em;
 }
-.title > .label{
-	-fx-font-size:1.2em;
-	-fx-graphic-text-gap:0.5em;
-	-fx-padding: 0 0.5em 0 0.5em;
-}
 
 
 .first{

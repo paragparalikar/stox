@@ -1,7 +1,5 @@
 package com.stox.navigator.ui;
 
-import javafx.geometry.Side;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import com.stox.core.ui.ToastCallback;
 import com.stox.data.DataClient;
 import com.stox.data.InstrumentFilterProvider;
 import com.stox.data.event.InstrumentFilterChangedEvent;
+import com.stox.workbench.ui.modal.Modal;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
 @Component
@@ -31,7 +30,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	private InstrumentFilterProvider instrumentFilterProvider;
 
 	private final NavigatorView view = new NavigatorView();
-	private Node instrumentFilterView;
+	private Modal instrumentFilterView;
 
 	public NavigatorPresenter() {
 		view.getFilterButton().selectedProperty().addListener((observable, oldValue, value) -> {
@@ -39,23 +38,17 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 				if (null == instrumentFilterView) {
 					instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
 				}
-				showInstrumentFilterView();
-			} else {
-				view.getTitleBar().remove(Side.BOTTOM, instrumentFilterView);
+				if (null != instrumentFilterView) {
+					instrumentFilterView.show();
+				}
 			}
 		});
 	}
 
 	@EventListener(InstrumentFilterChangedEvent.class)
 	public void onInstrumentFilterViewChanged(final InstrumentFilterChangedEvent event) {
-		instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
-		showInstrumentFilterView();
-	}
-
-	private void showInstrumentFilterView() {
 		if (null != instrumentFilterView) {
-			view.getTitleBar().clear(Side.BOTTOM);
-			view.getTitleBar().add(Side.BOTTOM, 0, instrumentFilterView);
+			instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
 		}
 	}
 

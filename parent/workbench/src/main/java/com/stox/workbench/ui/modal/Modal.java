@@ -49,6 +49,10 @@ public class Modal implements HasLifecycle {
 		container.getChildren().add(node);
 	}
 
+	public void setButtonGroup(final Node node) {
+		root.setBottom(node);
+	}
+
 	public List<String> getStyleClass() {
 		return root.getStyleClass();
 	}

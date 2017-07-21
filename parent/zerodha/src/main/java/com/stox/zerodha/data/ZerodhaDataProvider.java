@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javafx.scene.Node;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -49,7 +47,7 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 	}
 
 	@Override
-	public Node getInstrumentFilterView(final List<Instrument> target) {
+	public Modal getInstrumentFilterView(final List<Instrument> target) {
 		final ZerodhaInstrumentFilterPresenter presenter = new ZerodhaInstrumentFilterPresenter(instruments, target);
 		return presenter.getView();
 	}

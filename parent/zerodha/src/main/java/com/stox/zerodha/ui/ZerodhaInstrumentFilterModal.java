@@ -3,8 +3,10 @@ package com.stox.zerodha.ui;
 import java.text.ParseException;
 import java.util.Date;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
@@ -12,8 +14,9 @@ import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.FormGroup;
 import com.stox.core.util.Constant;
 import com.stox.core.util.StringUtil;
+import com.stox.workbench.ui.modal.Modal;
 
-public class ZerodhaInstrumentFilterView extends VBox {
+public class ZerodhaInstrumentFilterModal extends Modal {
 
 	private final ChoiceBox<String> exchangeChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
 	private final FormGroup exchangeFormGroup = new FormGroup(new Label("Exchange"), exchangeChoiceBox, null); // TODO I18N here
@@ -24,11 +27,18 @@ public class ZerodhaInstrumentFilterView extends VBox {
 	private final ChoiceBox<Date> expiryChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
 	private final FormGroup expiryFormGroup = new FormGroup(new Label("Expiry"), expiryChoiceBox, null); // TODO I18N here
 
-	public ZerodhaInstrumentFilterView() {
+	private final VBox content = UiUtil.classes(new VBox(exchangeFormGroup, typeFormGroup, strikeFormGroup, expiryFormGroup), "");
+	private final Button filterButton = UiUtil.classes(new Button("Filter"), "primary"); // TODO I18N here
+	private final HBox buttonGroup = UiUtil.classes(new HBox(filterButton), "button-group", "right");
+
+	public ZerodhaInstrumentFilterModal() {
 		strikeChoiceBox.setConverter(new StrikeStringConverter());
 		expiryChoiceBox.setConverter(new ExpiryStringConverter());
-		UiUtil.fullArea(this);
-		getChildren().addAll(exchangeFormGroup, typeFormGroup, strikeFormGroup, expiryFormGroup);
+		setTitle("Filter Instruments"); // TODO I18N here
+		setContent(content);
+		setButtonGroup(buttonGroup);
+
+		getStyleClass().add("primary");
 	}
 
 	public ChoiceBox<String> getExchangeChoiceBox() {
