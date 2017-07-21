@@ -28,7 +28,9 @@ public class ZerodhaInstrumentFilterModal extends Modal {
 		setContent(content);
 		setButtonGroup(buttonGroup);
 
+		addStylesheet("styles/zerodha.css");
 		getStyleClass().add("primary");
+		getStyleClass().add("zerodha-instrument-filter-modal");
 	}
 
 	public ChoiceBox<String> getExchangeChoiceBox() {
