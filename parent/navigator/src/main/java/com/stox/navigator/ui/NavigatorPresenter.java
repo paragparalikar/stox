@@ -16,6 +16,7 @@ import com.stox.data.DataClient;
 import com.stox.data.FilterPresenterProvider;
 import com.stox.data.event.FilterPresenterChangedEvent;
 import com.stox.data.ui.FilterPresenter;
+import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
 @Component
@@ -36,6 +37,10 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 
 	public NavigatorPresenter() {
 		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
+		view.getListView().getSelectionModel().selectedItemProperty().addListener((observable, old, instrument) -> {
+			final State state = getLinkState();
+			publish(new State(instrument.getSymbol(), state.getBarSpan(), Long.MAX_VALUE));
+		});
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
 			if (value) {
 				view.getTitleBar().add(Side.BOTTOM, 0, view.getSearchTextField());

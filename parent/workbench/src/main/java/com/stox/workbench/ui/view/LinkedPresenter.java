@@ -3,6 +3,7 @@ package com.stox.workbench.ui.view;
 import javafx.geometry.Side;
 
 import com.stox.workbench.model.ViewState;
+import com.stox.workbench.ui.view.Link.State;
 
 public abstract class LinkedPresenter<V extends View, S extends ViewState> extends Presenter<V, S> {
 
@@ -28,6 +29,10 @@ public abstract class LinkedPresenter<V extends View, S extends ViewState> exten
 	public void setViewSate(S viewState) {
 		super.setViewSate(viewState);
 		linkButton.setLink(Link.values()[viewState.getLinkOrdinal()]);
+	}
+
+	public State getLinkState() {
+		return linkButton.getLink().getState();
 	}
 
 }
