@@ -2,6 +2,9 @@ package com.stox.core.ui;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.stox.core.intf.Callback;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Message;
@@ -9,6 +12,7 @@ import com.stox.core.model.MessageType;
 import com.stox.core.model.Response;
 
 public class ToastCallback<T, R> implements ResponseCallback<T> {
+	private static final Log log = LogFactory.getLog(ToastCallback.class);
 
 	private final Callback<T, R> callback;
 
@@ -41,9 +45,7 @@ public class ToastCallback<T, R> implements ResponseCallback<T> {
 	}
 
 	protected void toast(final String message, final MessageType messageType) {
-		// TODO toast
-
-		System.out.println(message);
+		log.error(message);
 	}
 
 }

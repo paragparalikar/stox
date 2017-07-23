@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.stox.core.client.AbstractClient;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
@@ -17,7 +16,7 @@ import com.stox.core.model.Response;
 
 @Async
 @Component
-public class DataClientImpl extends AbstractClient implements DataClient {
+public class DataClientImpl implements DataClient {
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -28,9 +27,13 @@ public class DataClientImpl extends AbstractClient implements DataClient {
 	@Override
 	public void getAllInstruments(ResponseCallback<List<Instrument>> callback) {
 		dataProviderManager.execute(dataProvider -> {
-			execute(callback, () -> {
-				return new Response<>(dataProvider.getInstruments());
-			});
+			try {
+				callback.onSuccess(new Response<>(dataProvider.getInstruments()));
+			} catch (Exception e) {
+				callback.onFailure(null, e);
+			} finally {
+				callback.onDone();
+			}
 			return null;
 		});
 	}
@@ -38,9 +41,13 @@ public class DataClientImpl extends AbstractClient implements DataClient {
 	@Override
 	public void getInstrument(String code, ResponseCallback<Instrument> callback) {
 		dataProviderManager.execute(dataProvider -> {
-			execute(callback, () -> {
-				return new Response<>(dataProvider.getInstrument(code));
-			});
+			try {
+				callback.onSuccess(new Response<>(dataProvider.getInstrument(code)));
+			} catch (final Exception e) {
+				callback.onFailure(null, e);
+			} finally {
+				callback.onDone();
+			}
 			return null;
 		});
 	}

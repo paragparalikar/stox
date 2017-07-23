@@ -1,3 +1,7 @@
+.glass{
+	-fx-background-color:light;
+	-fx-opacity:0.5;
+}
 .menu-bar{
 	-fx-background-color:transparent;
 	-fx-pref-height:3em;

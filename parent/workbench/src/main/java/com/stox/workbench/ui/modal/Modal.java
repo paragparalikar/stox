@@ -13,6 +13,7 @@ import javafx.stage.StageStyle;
 
 import com.stox.core.intf.HasLifecycle;
 import com.stox.workbench.ui.stage.ResizableRelocatableStageDecorator;
+import com.stox.workbench.ui.stage.Workbench;
 import com.stox.workbench.ui.titlebar.TitleBar;
 import com.stox.workbench.ui.titlebar.decorator.CloseDecorator;
 
@@ -64,14 +65,22 @@ public class Modal implements HasLifecycle {
 
 	@Override
 	public void stop() {
-		stage.hide();
+		hide();
 	}
 
 	public void show() {
+		final Workbench workbench = Workbench.getInstance();
+		if (null != workbench) {
+			workbench.showGlass(true);
+		}
 		stage.show();
 	}
 
 	public void hide() {
+		final Workbench workbench = Workbench.getInstance();
+		if (null != workbench) {
+			workbench.showGlass(false);
+		}
 		stage.hide();
 	}
 
