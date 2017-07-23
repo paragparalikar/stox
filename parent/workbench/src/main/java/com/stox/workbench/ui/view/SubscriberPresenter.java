@@ -2,7 +2,6 @@ package com.stox.workbench.ui.view;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Side;
 
 import com.stox.workbench.model.ViewState;
 import com.stox.workbench.ui.view.Link.State;
@@ -20,7 +19,6 @@ public abstract class SubscriberPresenter<V extends View, S extends ViewState> e
 	public void start() {
 		super.start();
 		final LinkButton linkButton = getLinkButton();
-		getView().getTitleBar().add(Side.LEFT, 0, linkButton);
 		setLinkState(linkButton.getLink().getState());
 		linkButton.getLink().stateProperty().addListener(stateChangeListener);
 		linkButton.linkProperty().addListener((observable, oldValue, newValue) -> {

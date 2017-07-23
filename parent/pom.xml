@@ -64,5 +64,6 @@
 		<module>zerodha</module>
 		<module>data</module>
 		<module>launcher</module>
+		<module>chart</module>
 	</modules>
 </project>
