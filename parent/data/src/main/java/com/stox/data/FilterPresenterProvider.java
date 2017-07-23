@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Instrument;
 import com.stox.data.event.DataProviderChangedEvent;
-import com.stox.data.event.InstrumentFilterChangedEvent;
-import com.stox.workbench.ui.modal.Modal;
+import com.stox.data.event.FilterPresenterChangedEvent;
+import com.stox.data.ui.FilterPresenter;
 
 @Component
-public class InstrumentFilterProvider {
+public class FilterPresenterProvider {
 
 	private DataProvider dataProvider;
 
@@ -23,11 +23,11 @@ public class InstrumentFilterProvider {
 	@EventListener(DataProviderChangedEvent.class)
 	public void onDataProviderChanged(final DataProviderChangedEvent event) {
 		dataProvider = event.getDataProvider();
-		eventPublisher.publishEvent(new InstrumentFilterChangedEvent(this));
+		eventPublisher.publishEvent(new FilterPresenterChangedEvent(this));
 	}
 
-	public Modal getInstrumentFilterView(final List<Instrument> target) {
-		return null == dataProvider ? null : dataProvider.getInstrumentFilterView(target);
+	public FilterPresenter getFilterPresenter(final List<Instrument> target) {
+		return null == dataProvider ? null : dataProvider.getFilterPresenter(target);
 	}
 
 }

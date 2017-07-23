@@ -4,21 +4,28 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javafx.event.ActionEvent;
+import javafx.scene.Node;
 
 import com.stox.core.model.Instrument;
 import com.stox.core.util.Constant;
 import com.stox.core.util.StringUtil;
+import com.stox.data.ui.FilterPresenter;
 
-public class ZerodhaInstrumentFilterPresenter {
+public class ZerodhaInstrumentFilterPresenter implements FilterPresenter {
 	private static final String ALL = "All";
 
 	private final List<Instrument> source;
 	private final List<Instrument> target;
-	private final ZerodhaInstrumentFilterModal view = new ZerodhaInstrumentFilterModal();
+	private final ZerodhaInstrumentFilterView view = new ZerodhaInstrumentFilterView();
 
-	public ZerodhaInstrumentFilterModal getView() {
+	@Override
+	public Node getView() {
 		return view;
+	}
+
+	@Override
+	public String[] getStylesheets() {
+		return new String[] { "styles/zerodha.css" };
 	}
 
 	public ZerodhaInstrumentFilterPresenter(final List<Instrument> source, final List<Instrument> target) {
@@ -40,16 +47,15 @@ public class ZerodhaInstrumentFilterPresenter {
 			final List<Instrument> filtered = filterByExchange(view.getExchangeChoiceBox().getValue(), source);
 			setExpiries(filterByType(type, filtered));
 		});
-		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> filter());
 	}
 
-	private void filter() {
+	@Override
+	public void filter() {
 		List<Instrument> filtered = filterByExchange(view.getExchangeChoiceBox().getValue(), source);
 		filtered = filterByType(view.getTypeChoiceBox().getValue(), filtered);
 		filtered = filterByExpiry(view.getExpiryChoiceBox().getValue(), filtered);
 		target.clear();
 		target.addAll(filtered);
-		view.hide();
 	}
 
 	private List<Instrument> filterByExchange(final String exchange, final List<Instrument> source) {

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.ui.ToastCallback;
 import com.stox.data.DataClient;
-import com.stox.data.InstrumentFilterProvider;
-import com.stox.data.event.InstrumentFilterChangedEvent;
-import com.stox.workbench.ui.modal.Modal;
+import com.stox.data.FilterPresenterProvider;
+import com.stox.data.event.FilterPresenterChangedEvent;
+import com.stox.data.ui.FilterPresenter;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
 @Component
@@ -29,20 +29,13 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	private DataClient dataClient;
 
 	@Autowired
-	private InstrumentFilterProvider instrumentFilterProvider;
+	private FilterPresenterProvider filterPresenterProvider;
 
 	private final NavigatorView view = new NavigatorView();
-	private Modal instrumentFilterView;
+	private FilterPresenter filterPresenter;
 
 	public NavigatorPresenter() {
-		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> {
-			if (null == instrumentFilterView) {
-				instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
-			}
-			if (null != instrumentFilterView) {
-				instrumentFilterView.show();
-			}
-		});
+		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
 			if (value) {
 				view.getTitleBar().add(Side.BOTTOM, 0, view.getSearchTextField());
@@ -52,10 +45,20 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		});
 	}
 
-	@EventListener(InstrumentFilterChangedEvent.class)
-	public void onInstrumentFilterViewChanged(final InstrumentFilterChangedEvent event) {
-		if (null != instrumentFilterView) {
-			instrumentFilterView = instrumentFilterProvider.getInstrumentFilterView(view.getListView().getItems());
+	private void showFilter() {
+		if (null == filterPresenter) {
+			filterPresenter = filterPresenterProvider.getFilterPresenter(view.getListView().getItems());
+		}
+		if (null != filterPresenter) {
+			final FilterModalPresenter filterModalPresenter = new FilterModalPresenter(filterPresenter);
+			filterModalPresenter.getModal().show();
+		}
+	}
+
+	@EventListener(FilterPresenterChangedEvent.class)
+	public void onInstrumentFilterViewChanged(final FilterPresenterChangedEvent event) {
+		if (null != filterPresenter) {
+			filterPresenter = filterPresenterProvider.getFilterPresenter(view.getListView().getItems());
 		}
 	}
 

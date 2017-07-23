@@ -30,7 +30,7 @@ public class DataProviderSelectionModal extends Modal {
 		choiceBox.setConverter(new HasNameStringConverter<>());
 		choiceBox.getSelectionModel().select(0);
 		setTitle("Please select a data provider"); // TODO I18N here
-		addStylesheet("styles/data.css");
+		addStylesheets("styles/data.css");
 		getStyleClass().add("data-provider-selection-modal");
 		setContent(content);
 

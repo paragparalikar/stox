@@ -75,8 +75,8 @@ public class Modal implements HasLifecycle {
 		stage.hide();
 	}
 
-	public void addStylesheet(final String path) {
-		stage.getScene().getStylesheets().add(path);
+	public void addStylesheets(final String... path) {
+		stage.getScene().getStylesheets().addAll(path);
 	}
 
 	public void setTitle(final String title) {

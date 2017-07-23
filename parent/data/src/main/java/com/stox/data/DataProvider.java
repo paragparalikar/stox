@@ -8,13 +8,13 @@ import com.stox.core.intf.HasName;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
-import com.stox.workbench.ui.modal.Modal;
+import com.stox.data.ui.FilterPresenter;
 
 public interface DataProvider extends HasLogin, HasName {
 
 	String getCode();
 
-	Modal getInstrumentFilterView(final List<Instrument> target);
+	FilterPresenter getFilterPresenter(final List<Instrument> target);
 
 	Instrument getInstrument(final String code) throws Exception;
 

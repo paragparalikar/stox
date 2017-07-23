@@ -24,6 +24,7 @@ import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.Constant;
 import com.stox.core.util.DateUtil;
 import com.stox.data.DataProvider;
+import com.stox.data.ui.FilterPresenter;
 import com.stox.workbench.ui.modal.Modal;
 import com.stox.zerodha.Zerodha;
 import com.stox.zerodha.ui.ZerodhaInstrumentFilterPresenter;
@@ -48,15 +49,14 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 	}
 
 	@Override
-	public Modal getInstrumentFilterView(final List<Instrument> target) {
-		final ZerodhaInstrumentFilterPresenter presenter = new ZerodhaInstrumentFilterPresenter(instruments, target);
-		return presenter.getView();
+	public FilterPresenter getFilterPresenter(final List<Instrument> target) {
+		return new ZerodhaInstrumentFilterPresenter(instruments, target);
 	}
 
 	@Override
 	public void login(final Callback<Void, Void> callback) throws Throwable {
 		final Modal modal = new Modal();
-		modal.addStylesheet("styles/zerodha.css");
+		modal.addStylesheets("styles/zerodha.css");
 		modal.getStyleClass().add("zerodha-login-modal");
 		modal.setTitle("Login to Zerodha"); // TODO I18N here
 		modal.setContent(createLoginView(p -> {
