@@ -21,6 +21,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.intf.HasLifecycle;
+import com.stox.core.ui.StylesheetProvider;
 import com.stox.core.ui.ToastCallback;
 import com.stox.workbench.client.WorkbenchClient;
 import com.stox.workbench.model.WorkbenchState;
@@ -31,7 +32,7 @@ import com.stox.workbench.ui.view.View;
 import com.stox.workbench.ui.view.event.RemoveViewRequestEvent;
 
 @Component
-public class WorkbenchPresenter implements HasLifecycle {
+public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	static {
 		final String[] fonts = { "awesome/fontawesome-webfont.ttf", "open-sans/OpenSans-Bold.ttf", "open-sans/OpenSans-BoldItalic.ttf", "open-sans/OpenSans-ExtraBold.ttf",
@@ -50,20 +51,19 @@ public class WorkbenchPresenter implements HasLifecycle {
 	@Autowired
 	private WorkbenchClient workbenchClient;
 
+	public WorkbenchPresenter() {
+		workbench.getTitleBar().getMinimizeButton().addEventHandler(ActionEvent.ACTION, event -> workbench.setIconified(true));
+		workbench.getTitleBar().getMaximizeButton().addEventHandler(ActionEvent.ACTION, event -> toggleMaximized());
+		workbench.getTitleBar().getCloseButton().addEventHandler(ActionEvent.ACTION, event -> Platform.exit());
+	}
+
 	public Workbench getWorkbench() {
 		return workbench;
 	}
 
-	private void style() {
-		final List<String> stylesheets = workbench.getScene().getStylesheets();
-		stylesheets.clear();
-		stylesheets.addAll(Arrays.asList("styles/color-sceme.css", "styles/bootstrap.css", "styles/common.css", "styles/workbench.css"));
-	}
-
-	private void bind() {
-		workbench.getTitleBar().getMinimizeButton().addEventHandler(ActionEvent.ACTION, event -> workbench.setIconified(true));
-		workbench.getTitleBar().getMaximizeButton().addEventHandler(ActionEvent.ACTION, event -> toggleMaximized());
-		workbench.getTitleBar().getCloseButton().addEventHandler(ActionEvent.ACTION, event -> Platform.exit());
+	@Override
+	public String[] getStylesheets() {
+		return new String[] { "styles/color-sceme.css", "styles/bootstrap.css", "styles/common.css", "styles/workbench.css" };
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
@@ -71,18 +71,19 @@ public class WorkbenchPresenter implements HasLifecycle {
 		if (!workbench.isShowing()) {
 			setSize();
 			final ApplicationContext context = event.getApplicationContext();
-			final Collection<PresenterProvider> providers = context.getBeansOfType(PresenterProvider.class).values();
-			providers.forEach(provider -> workbench.getTitleBar().getApplicationsMenu().getItems().add(new ApplicationMenuItem(this, provider)));
+			final Collection<PresenterProvider> presenterProviders = context.getBeansOfType(PresenterProvider.class).values();
+			presenterProviders.forEach(presenterProvider -> workbench.getTitleBar().getApplicationsMenu().getItems().add(new ApplicationMenuItem(this, presenterProvider)));
+			final Collection<StylesheetProvider> stylesheetProviders = context.getBeansOfType(StylesheetProvider.class).values();
+			stylesheetProviders.forEach(stylesheetProvider -> workbench.getScene().getStylesheets().addAll(stylesheetProvider.getStylesheets()));
 			workbench.show();
-			loadState(providers);
+			loadState(presenterProviders);
 		}
 	}
 
 	@Override
 	@PostConstruct
 	public void start() {
-		style();
-		bind();
+
 	}
 
 	@Override

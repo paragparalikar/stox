@@ -5,14 +5,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.stox.chart.util.ChartConstant;
+import com.stox.core.ui.StylesheetProvider;
 import com.stox.workbench.ui.view.Presenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
-public class ChartPresenterProvider implements PresenterProvider {
+public class ChartProvider implements PresenterProvider, StylesheetProvider {
 
 	@Autowired
 	private ApplicationContext context;
+
+	@Override
+	public String[] getStylesheets() {
+		return new String[] { "styles/chart.css" };
+	}
 
 	@Override
 	public String getViewCode() {

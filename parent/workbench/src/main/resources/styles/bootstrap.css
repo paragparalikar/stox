@@ -119,7 +119,9 @@
 
 
 
-
+.transparent{
+	-fx-background-color:transparent;
+}
 
 
 /*  default  */
