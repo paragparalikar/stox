@@ -3,6 +3,7 @@ package com.stox.core.repository;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -22,7 +23,7 @@ public class BinaryFileBarRepository implements BarRepository {
 	public Date getLastTradingDate(String exchangeCode, BarSpan barSpan) {
 		final String path = getPath(exchangeCode, barSpan).intern();
 		synchronized (path) {
-			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
+			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
 				if (file.length() >= Bar.BYTES) {
 					file.seek(file.length() - Bar.BYTES);
 					return new Date(file.readLong());
@@ -40,8 +41,24 @@ public class BinaryFileBarRepository implements BarRepository {
 		final String path = getPath(exchangeCode, barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
-
-				return null;
+				final List<Bar> bars = new ArrayList<>();
+				file.seek(file.length());
+				while (file.getFilePointer() >= Bar.BYTES) {
+					file.seek(file.getFilePointer() - Bar.BYTES);
+					final Bar bar = read(file);
+					if (bar.getDate().before(from)) {
+						break;
+					}
+					if (bar.getDate().before(to)) {
+						bars.add(bar);
+					}
+					if (file.getFilePointer() >= Bar.BYTES * 2) {
+						file.seek(file.getFilePointer() - Bar.BYTES);
+					} else {
+						break;
+					}
+				}
+				return bars;
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
