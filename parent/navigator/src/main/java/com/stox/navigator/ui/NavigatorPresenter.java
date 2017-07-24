@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.stox.core.model.BarSpan;
 import com.stox.core.ui.ToastCallback;
 import com.stox.data.DataClient;
 import com.stox.data.FilterPresenterProvider;
@@ -39,7 +40,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
 		view.getListView().getSelectionModel().selectedItemProperty().addListener((observable, old, instrument) -> {
 			final State state = getLinkState();
-			publish(new State(instrument.getSymbol(), state.getBarSpan(), Long.MAX_VALUE));
+			publish(new State(instrument.getSymbol(), null == state ? BarSpan.D : state.getBarSpan(), Long.MAX_VALUE));
 		});
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
 			if (value) {

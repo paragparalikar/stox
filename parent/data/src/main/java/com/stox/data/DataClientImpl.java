@@ -53,9 +53,18 @@ public class DataClientImpl implements DataClient {
 	}
 
 	@Override
-	public void loadBars(Instrument instrument, BarSpan barSpan, Date from, Date to, ResponseCallback<List<Bar>> callback) {
-		// TODO Auto-generated method stub
-
+	public void loadBars(String instrumentCode, BarSpan barSpan, Date from, Date to, ResponseCallback<List<Bar>> callback) {
+		dataProviderManager.execute(dataProvider -> {
+			try {
+				final List<Bar> bars = dataProvider.getBars(instrumentCode, barSpan, from, to);
+				callback.onSuccess(new Response<>(bars));
+			} catch (Exception e) {
+				callback.onFailure(null, e);
+			} finally {
+				callback.onDone();
+			}
+			return null;
+		});
 	}
 
 }

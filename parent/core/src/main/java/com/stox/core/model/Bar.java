@@ -4,8 +4,12 @@ import java.util.Date;
 
 import lombok.Data;
 
+import com.stox.core.intf.Range;
+
 @Data
-public class Bar implements Comparable<Bar> {
+public class Bar implements Range, Comparable<Bar> {
+
+	public static final int BYTES = 56;
 
 	private Date date;
 
@@ -20,6 +24,11 @@ public class Bar implements Comparable<Bar> {
 	private double previousClose;
 
 	private double volume;
+
+	@Override
+	public double getValue() {
+		return getClose();
+	}
 
 	@Override
 	public int compareTo(Bar other) {
