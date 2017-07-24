@@ -97,8 +97,13 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 					instruments = instrumentRespository.getAllInstruments(getCode());
 				}
 			}
+			final Date today = new Date();
 			instruments = instruments.stream().filter(instrument -> {
 				final String symbol = instrument.getSymbol();
+				final Date expiry = instrument.getExpiry();
+				if (null != expiry && expiry.before(today)) {
+					return false;
+				}
 				return null != symbol && 3 < symbol.length() && '-' != symbol.charAt(symbol.length() - 3);
 			}).sorted(new HasName.HasNameComaparator<>()).collect(Collectors.toList());
 			cache = instruments.stream().collect(Collectors.toMap(Instrument::getId, Function.identity(), (p1, p2) -> p1));

@@ -20,6 +20,6 @@ public interface DataProvider extends HasLogin, HasName {
 
 	List<Instrument> getInstruments() throws Exception;
 
-	List<Bar> getBars(final String instrumentCode, final BarSpan barSpan, final Date from, final Date to) throws Exception;
+	List<Bar> getBars(final String exchangeCode, final BarSpan barSpan, final Date from, final Date to) throws Exception;
 
 }
