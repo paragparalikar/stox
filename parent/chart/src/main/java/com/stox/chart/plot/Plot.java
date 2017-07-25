@@ -42,7 +42,7 @@ public abstract class Plot<M extends Range> extends Group {
 					getChildren().clear();
 				}
 			}
-			setDirty();
+			update();
 		});
 	}
 
@@ -51,6 +51,11 @@ public abstract class Plot<M extends Range> extends Group {
 	protected abstract Unit<M> create(final int index, final M model);
 
 	public void setDirty() {
+		dirty = true;
+		requestLayout();
+	}
+
+	public void update() {
 		min = Double.MAX_VALUE;
 		max = Double.MIN_VALUE;
 		final DateAxis dateAxis = chart.getChartView().getDateAxis();
@@ -65,7 +70,7 @@ public abstract class Plot<M extends Range> extends Group {
 				}
 			}
 		}
-		dirty = true;
+		setDirty();
 	}
 
 	public double min(M model) {

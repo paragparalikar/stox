@@ -1,6 +1,5 @@
 package com.stox.chart.view;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.chart.event.BarRequestEvent;
 import com.stox.chart.plot.PrimaryPricePlot;
-import com.stox.core.intf.Callback;
+import com.stox.chart.util.ChartUtil;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
@@ -50,7 +49,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 		if (null != state && StringUtil.hasText(state.getInstrumentId())) {
 			view.showSpinner(true);
 			final Date to = new Date(0 >= state.getDate() ? System.currentTimeMillis() : state.getDate());
-			final Date from = getFrom(to, state.getBarSpan());
+			final Date from = ChartUtil.getFrom(to, state.getBarSpan());
 			view.setBarSpan(null == state.getBarSpan() ? view.getBarSpan() : state.getBarSpan());
 			view.setFrom(from);
 			view.setTo(to);
@@ -75,22 +74,24 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 		}
 	}
 
-	private void loadBars(final String instrumentId, final BarSpan barSpan, final Date from, final Date to, final Callback<List<Bar>, Void> callback) {
+	private void loadBars(final String instrumentId, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback) {
 		view.showSpinner(true);
 		dataClient.loadBars(instrumentId, barSpan, from, to, new ResponseCallback<List<Bar>>() {
 			@Override
 			public void onSuccess(Response<List<Bar>> response) {
-				callback.call(response.getPayload());
+				callback.onSuccess(response);
 			}
 
 			@Override
 			public void onFailure(Response<List<Bar>> response, Throwable throwable) {
 				view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
+				callback.onFailure(response, throwable);
 			}
 
 			@Override
 			public void onDone() {
 				view.showSpinner(false);
+				callback.onDone();
 			}
 		});
 	}
@@ -118,35 +119,6 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	@Override
 	public void publish(ApplicationEvent event) {
 		eventPublisher.publishEvent(event);
-	}
-
-	private Date getFrom(final Date to, final BarSpan barSpan) {
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(to);
-		switch (barSpan) {
-		default:
-		case D:
-			calendar.add(Calendar.YEAR, -1);
-			return calendar.getTime();
-		case W:
-			calendar.add(Calendar.YEAR, -5);
-			return calendar.getTime();
-		case M:
-			calendar.add(Calendar.YEAR, -25);
-			return calendar.getTime();
-		case H:
-		case M30:
-			calendar.add(Calendar.DATE, -10);
-			return calendar.getTime();
-		case M15:
-		case M10:
-			calendar.add(Calendar.DATE, -3);
-			return calendar.getTime();
-		case M5:
-		case M1:
-			calendar.add(Calendar.DATE, -1);
-			return calendar.getTime();
-		}
 	}
 
 }

@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import com.stox.chart.ChartViewPanMouseHandler;
+import com.stox.chart.MouseHandler;
 import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;
@@ -39,9 +41,36 @@ public class ChartView extends View {
 	private final BorderPane content = new BorderPane(splitPane, null, null, dateAxis, null);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 
+	private MouseHandler mouseHandler;
+	private final MouseHandler defaultMouseHandler = new ChartViewPanMouseHandler(this);
+
 	public ChartView() {
 		super(ChartConstant.CODE, ChartConstant.NAME, ChartConstant.ICON);
 		setContent(content);
+		setMouseHandler(defaultMouseHandler);
+	}
+
+	public void setDirty() {
+		primaryChart.setDirty();
+		charts.forEach(Chart::setDirty);
+	}
+
+	public void update() {
+		primaryChart.update();
+		charts.forEach(Chart::update);
+	}
+
+	public void setMouseHandler(MouseHandler mouseHandler) {
+		if (null != this.mouseHandler) {
+			this.mouseHandler.detach();
+		}
+		if (null == mouseHandler) {
+			this.mouseHandler = defaultMouseHandler;
+			defaultMouseHandler.attach();
+		} else {
+			this.mouseHandler = mouseHandler;
+			mouseHandler.attach();
+		}
 	}
 
 }

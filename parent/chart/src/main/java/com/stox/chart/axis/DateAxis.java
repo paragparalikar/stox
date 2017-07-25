@@ -2,6 +2,7 @@ package com.stox.chart.axis;
 
 import javafx.scene.layout.Pane;
 
+import com.stox.chart.plot.PrimaryPricePlot;
 import com.stox.chart.view.ChartView;
 
 public class DateAxis extends Pane {
@@ -50,6 +51,19 @@ public class DateAxis extends Pane {
 
 	public int getLowerBoundIndex() {
 		return getIndexForDisplay(0);
+	}
+
+	public boolean pan(double x, double startX) {
+		upperBound += x - startX;
+		checkExtraDataNeeded();
+		return x != startX;
+	}
+
+	private void checkExtraDataNeeded() {
+		final PrimaryPricePlot primaryPricePlot = chartView.getPrimaryChart().getPrimaryPricePlot();
+		if (primaryPricePlot.getUnits().size() < getLowerBoundIndex()) {
+			primaryPricePlot.loadExtra();
+		}
 	}
 
 }

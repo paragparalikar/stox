@@ -41,4 +41,8 @@ public class Chart extends BorderPane {
 		plots.forEach(Plot::setDirty);
 	}
 
+	public void update() {
+		plots.forEach(Plot::update);
+	}
+
 }

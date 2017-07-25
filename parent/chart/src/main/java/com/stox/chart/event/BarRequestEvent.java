@@ -8,7 +8,7 @@ import javafx.event.EventType;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-import com.stox.core.intf.Callback;
+import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 
@@ -23,9 +23,9 @@ public class BarRequestEvent extends Event {
 	private final BarSpan barSpan;
 	private final Date from;
 	private final Date to;
-	private final Callback<List<Bar>, Void> callback;
+	private final ResponseCallback<List<Bar>> callback;
 
-	public BarRequestEvent(final String exchangeCode, final BarSpan barSpan, final Date from, final Date to, final Callback<List<Bar>, Void> callback) {
+	public BarRequestEvent(final String exchangeCode, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback) {
 		super(TYPE);
 		this.to = to;
 		this.from = from;

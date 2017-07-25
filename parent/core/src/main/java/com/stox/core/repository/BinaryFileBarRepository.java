@@ -47,6 +47,7 @@ public class BinaryFileBarRepository implements BarRepository {
 					file.seek(file.getFilePointer() - Bar.BYTES);
 					final Bar bar = read(file);
 					if (bar.getDate().before(from)) {
+						bars.add(bar); // One extra bar, to make things easier for loadExtra in PricePlot
 						break;
 					}
 					if (bar.getDate().before(to)) {

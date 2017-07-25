@@ -34,6 +34,13 @@ public class PrimaryChart extends Chart {
 	}
 
 	@Override
+	public void update() {
+		primaryPricePlot.update();
+		pricePlots.forEach(Plot::update);
+		super.update();
+	}
+
+	@Override
 	public String toString() {
 		return "";
 	}
