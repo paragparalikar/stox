@@ -4,7 +4,6 @@ import javafx.scene.control.Label;
 
 import com.stox.core.model.Message;
 import com.stox.core.model.MessageType;
-import com.stox.core.ui.util.UiConstant;
 
 public class MessageLabel extends Label {
 
@@ -18,10 +17,7 @@ public class MessageLabel extends Label {
 	}
 
 	private void setMessageType(final MessageType messageType) {
-		pseudoClassStateChanged(UiConstant.PSEUDO_CLASS_ERROR, MessageType.ERROR.equals(messageType));
-		pseudoClassStateChanged(UiConstant.PSEUDO_CLASS_WARN, MessageType.WARN.equals(messageType));
-		pseudoClassStateChanged(UiConstant.PSEUDO_CLASS_INFO, MessageType.INFO.equals(messageType));
-		pseudoClassStateChanged(UiConstant.PSEUDO_CLASS_SUCCESS, MessageType.SUCCESS.equals(messageType));
+		getStyleClass().removeAll("success", "warning", "info", "danger");
+		getStyleClass().add(messageType.getStyle());
 	}
-
 }

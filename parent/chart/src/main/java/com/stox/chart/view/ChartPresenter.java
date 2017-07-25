@@ -19,6 +19,8 @@ import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.core.model.Message;
+import com.stox.core.model.MessageType;
 import com.stox.core.model.Response;
 import com.stox.core.util.StringUtil;
 import com.stox.data.DataClient;
@@ -62,10 +64,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 
 				@Override
 				public void onFailure(Response<Instrument> response, Throwable throwable) {
-					// TODO show the message on view
-					if (null != throwable) {
-						throwable.printStackTrace();
-					}
+					view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
 				}
 
 				@Override
@@ -86,10 +85,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 
 			@Override
 			public void onFailure(Response<List<Bar>> response, Throwable throwable) {
-				// TODO show the message on view
-				if (null != throwable) {
-					throwable.printStackTrace();
-				}
+				view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
 			}
 
 			@Override
