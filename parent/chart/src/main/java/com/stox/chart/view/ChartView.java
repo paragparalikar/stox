@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,6 +27,10 @@ public class ChartView extends View {
 	private BarSpan barSpan = BarSpan.D;
 	private Date to;
 	private Date from;
+
+	/* configurable properties, these should go into a different object */
+	private Color upBarColor = Color.GREEN;
+	private Color downBarColor = Color.RED;
 
 	private final PrimaryChart primaryChart = new PrimaryChart(this);
 	private final VolumePlot volumePlot = new VolumePlot(primaryChart);

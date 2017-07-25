@@ -5,8 +5,11 @@ import lombok.EqualsAndHashCode;
 
 import com.stox.chart.chart.PrimaryChart;
 import com.stox.chart.event.BarRequestEvent;
+import com.stox.chart.unit.CandlePriceUnit;
 import com.stox.chart.unit.PriceUnitType;
+import com.stox.chart.unit.Unit;
 import com.stox.chart.view.ChartView;
+import com.stox.core.model.Bar;
 import com.stox.core.model.Instrument;
 import com.stox.core.util.StringUtil;
 
@@ -20,6 +23,11 @@ public class PrimaryPricePlot extends PricePlot {
 	public PrimaryPricePlot(final PrimaryChart chart) {
 		super(chart);
 		this.chart = chart;
+	}
+
+	@Override
+	protected Unit<Bar> create(int index, Bar model) {
+		return new CandlePriceUnit(index, model, this);
 	}
 
 	@Override
