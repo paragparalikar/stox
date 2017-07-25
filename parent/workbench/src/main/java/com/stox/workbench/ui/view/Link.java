@@ -25,20 +25,20 @@ public enum Link {
 	@Value
 	public static class State {
 
-		private final String instrumentCode;
+		private final String instrumentId;
 		private final BarSpan barSpan;
 		private final long date;
 
-		public State copyWithInstrumentCode(final String instrumentCode) {
-			return new State(instrumentCode, barSpan, date);
+		public State copyWithInstrumentCode(final String instrumentId) {
+			return new State(instrumentId, barSpan, date);
 		}
 
 		public State copyWithBarSpan(final BarSpan barSpan) {
-			return new State(instrumentCode, barSpan, date);
+			return new State(instrumentId, barSpan, date);
 		}
 
 		public State copyWithDate(final long date) {
-			return new State(instrumentCode, barSpan, date);
+			return new State(instrumentId, barSpan, date);
 		}
 
 	}

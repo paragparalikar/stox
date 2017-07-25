@@ -1,7 +1,5 @@
 package com.stox.zerodha.data;
 
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +19,7 @@ import com.stox.core.intf.HasName;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.Constant;
 import com.stox.core.util.DateUtil;
@@ -38,6 +37,9 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 
 	@Autowired
 	private InstrumentRepository instrumentRespository;
+
+	@Autowired
+	private BarRepository barRepository;
 
 	@Override
 	public String getCode() {
@@ -74,9 +76,9 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 	}
 
 	@Override
-	public Instrument getInstrument(String code) throws Exception {
+	public Instrument getInstrument(String id) throws Exception {
 		loadInstruments();
-		return cache.get(code);
+		return cache.get(id);
 	}
 
 	@Override
@@ -121,23 +123,7 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 
 	// @Secured
 	@Override
-	public List<Bar> getBars(final String instrument, final BarSpan barSpan, final Date from, final Date to) {
-		final List<Bar> bars = new ArrayList<>();
-		try (final RandomAccessFile file = new RandomAccessFile("C:/Users/parag_paralikar/finx/bar/D/ABB", "r")) {
-			while (file.getFilePointer() < file.length() - Bar.BYTES) {
-				final Bar bar = new Bar();
-				bar.setDate(new Date(file.readLong()));
-				bar.setOpen(file.readDouble());
-				bar.setHigh(file.readDouble());
-				bar.setLow(file.readDouble());
-				bar.setClose(file.readDouble());
-				bar.setPreviousClose(file.readDouble());
-				bar.setVolume(file.readDouble());
-				bars.add(bar);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return bars;
+	public List<Bar> getBars(final String exchangeCode, final BarSpan barSpan, final Date from, final Date to) {
+		return barRepository.find(exchangeCode, barSpan, from, to);
 	}
 }

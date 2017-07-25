@@ -1,17 +1,21 @@
 package com.stox.chart.plot;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import com.stox.chart.chart.Chart;
+import com.stox.chart.event.BarRequestEvent;
 import com.stox.chart.unit.LineUnit;
 import com.stox.chart.unit.Unit;
+import com.stox.chart.view.ChartView;
 import com.stox.core.model.Bar;
 import com.stox.core.model.Instrument;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class PricePlot extends Plot<Bar> {
 
-	private final ObjectProperty<Instrument> instrumentProperty = new SimpleObjectProperty<>();
+	private Instrument instrument;
 
 	public PricePlot(final Chart chart) {
 		super(chart);
@@ -19,20 +23,15 @@ public class PricePlot extends Plot<Bar> {
 
 	@Override
 	protected Unit<Bar> create(final int index, final Bar model) {
-		// TODO Auto-generated method stub
 		return new LineUnit<>(index, model, this);
 	}
 
-	public Instrument getInstrument() {
-		return instrumentProperty.get();
+	@Override
+	public void load() {
+		final ChartView chartView = getChart().getChartView();
+		chartView.fireEvent(new BarRequestEvent(instrument.getExchangeCode(), chartView.getBarSpan(), chartView.getFrom(), chartView.getTo(), bars -> {
+			getModels().setAll(bars);
+			return null;
+		}));
 	}
-
-	public ObjectProperty<Instrument> instrumentProperty() {
-		return instrumentProperty;
-	}
-
-	public void setInstrument(final Instrument instrument) {
-		instrumentProperty.set(instrument);
-	}
-
 }

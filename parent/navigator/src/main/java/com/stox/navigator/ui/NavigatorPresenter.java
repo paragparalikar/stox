@@ -40,7 +40,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
 		view.getListView().getSelectionModel().selectedItemProperty().addListener((observable, old, instrument) -> {
 			final State state = getLinkState();
-			publish(new State(instrument.getSymbol(), null == state ? BarSpan.D : state.getBarSpan(), Long.MAX_VALUE));
+			publish(new State(instrument.getId(), null == state ? BarSpan.D : state.getBarSpan(), 0));
 		});
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
 			if (value) {

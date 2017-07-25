@@ -20,8 +20,8 @@ import com.stox.core.util.Constant;
 public class BinaryFileBarRepository implements BarRepository {
 
 	@Override
-	public Date getLastTradingDate(String exchangeCode, BarSpan barSpan) {
-		final String path = getPath(exchangeCode, barSpan).intern();
+	public Date getLastTradingDate(String instrumentId, BarSpan barSpan) {
+		final String path = getPath(instrumentId, barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
 				if (file.length() >= Bar.BYTES) {
@@ -37,8 +37,8 @@ public class BinaryFileBarRepository implements BarRepository {
 	}
 
 	@Override
-	public List<Bar> find(String exchangeCode, BarSpan barSpan, Date from, Date to) {
-		final String path = getPath(exchangeCode, barSpan).intern();
+	public List<Bar> find(String instrumentId, BarSpan barSpan, Date from, Date to) {
+		final String path = getPath(instrumentId, barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
 				final List<Bar> bars = new ArrayList<>();
@@ -66,10 +66,10 @@ public class BinaryFileBarRepository implements BarRepository {
 	}
 
 	@Override
-	public void save(List<Bar> bars, String exchangeCode, BarSpan barSpan) {
+	public void save(List<Bar> bars, String instrumentId, BarSpan barSpan) {
 		final TreeSet<Bar> set = new TreeSet<Bar>(Collections.reverseOrder());
 		set.addAll(bars);
-		final String path = getPath(exchangeCode, barSpan).intern();
+		final String path = getPath(instrumentId, barSpan).intern();
 		synchronized (path) {
 			new File(path).getParentFile().mkdirs();
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
@@ -95,8 +95,8 @@ public class BinaryFileBarRepository implements BarRepository {
 	}
 
 	@Override
-	public void save(Bar bar, String exchangeCode, BarSpan barSpan) {
-		final String path = getPath(exchangeCode, barSpan);
+	public void save(Bar bar, String instrumentId, BarSpan barSpan) {
+		final String path = getPath(instrumentId, barSpan);
 		synchronized (path) {
 			new File(path).getParentFile().mkdirs();
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
@@ -108,8 +108,8 @@ public class BinaryFileBarRepository implements BarRepository {
 		}
 	}
 
-	protected String getPath(final String exchangeCode, final BarSpan barSpan) {
-		return Constant.PATH + "bar" + File.separator + barSpan.getShortName() + File.separator + exchangeCode;
+	protected String getPath(final String instrumentId, final BarSpan barSpan) {
+		return Constant.PATH + "bar" + File.separator + barSpan.getShortName() + File.separator + instrumentId;
 	}
 
 	public Bar read(final RandomAccessFile file) {

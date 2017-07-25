@@ -16,8 +16,8 @@ import com.stox.core.intf.Range;
 @EqualsAndHashCode(callSuper = true, exclude = { "chart", "units", "models" })
 public abstract class Plot<M extends Range> extends Group {
 
+	private Chart chart;
 	private boolean dirty;
-	private final Chart chart;
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
 	private int lastMinIndex = Integer.MIN_VALUE, lastMaxIndex = Integer.MAX_VALUE;
 	private final ObservableList<M> models = FXCollections.observableArrayList();
@@ -39,11 +39,14 @@ public abstract class Plot<M extends Range> extends Group {
 				}
 				if (change.wasRemoved()) {
 					units.clear();
+					getChildren().clear();
 				}
 			}
 			setDirty();
 		});
 	}
+
+	public abstract void load();
 
 	protected abstract Unit<M> create(final int index, final M model);
 
@@ -57,12 +60,20 @@ public abstract class Plot<M extends Range> extends Group {
 			if (index >= 0 && index < units.size()) {
 				final Unit<M> unit = units.get(index);
 				if (null != unit) {
-					min = Math.min(min, unit.getModel().getLow());
-					max = Math.max(max, unit.getModel().getHigh());
+					min = Math.min(min, min(unit.getModel()));
+					max = Math.max(max, max(unit.getModel()));
 				}
 			}
 		}
 		dirty = true;
+	}
+
+	public double min(M model) {
+		return model.getLow();
+	}
+
+	public double max(M model) {
+		return model.getHigh();
 	}
 
 	@Override
