@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -30,6 +31,8 @@ import com.stox.workbench.ui.view.Presenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 import com.stox.workbench.ui.view.View;
 import com.stox.workbench.ui.view.event.RemoveViewRequestEvent;
+import com.stox.workbench.ui.view.event.ViewSelectedEvent;
+import com.stox.workbench.ui.widget.Tool;
 
 @Component
 public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
@@ -75,9 +78,17 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 			presenterProviders.forEach(presenterProvider -> workbench.getTitleBar().getApplicationsMenu().getItems().add(new ApplicationMenuItem(this, presenterProvider)));
 			final Collection<StylesheetProvider> stylesheetProviders = context.getBeansOfType(StylesheetProvider.class).values();
 			stylesheetProviders.forEach(stylesheetProvider -> workbench.getScene().getStylesheets().addAll(stylesheetProvider.getStylesheets()));
+			final Collection<Tool> toolBoxes = context.getBeansOfType(Tool.class).values();
+			toolBoxes.forEach(toolBox -> toolBox.setPresenters(presenters));
+			workbench.getToolBar().getItems().addAll(toolBoxes.stream().map(Tool::getNode).collect(Collectors.toList()));
 			workbench.show();
 			loadState(presenterProviders);
 		}
+	}
+
+	@EventListener(ViewSelectedEvent.class)
+	public void onViewSelected(final ViewSelectedEvent event) {
+		presenters.stream().filter(presenter -> presenter != event.getPresenter()).forEach(presenter -> presenter.setSelected(false));
 	}
 
 	@Override

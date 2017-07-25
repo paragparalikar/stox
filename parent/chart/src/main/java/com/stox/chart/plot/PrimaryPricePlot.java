@@ -32,8 +32,9 @@ public class PrimaryPricePlot extends PricePlot {
 
 	@Override
 	public void setInstrument(Instrument instrument) {
-		super.setInstrument(instrument);
 		chart.getChartView().clearMessages();
+		chart.getChartView().getDateAxis().reset();
+		super.setInstrument(instrument);
 	}
 
 	@Override

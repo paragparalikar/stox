@@ -2,13 +2,12 @@ package com.stox.workbench.ui.stage;
 
 import javafx.scene.control.ToolBar;
 
+import com.stox.core.ui.util.UiUtil;
+
 public class WorkbenchToolBar extends ToolBar {
 
 	public WorkbenchToolBar() {
-		/*
-		 * getItems().addAll(new BarSpanToggleBox(workbench), new DrawingButtonBox(workbench), new NavigationButtonBox(workbench), new UtilButtonBox(workbench), new
-		 * UnitTypeButtonBox(workbench), new AnalysisButtonBox(workbench), new ScaleButtonBox(workbench), new DataButtonBox(workbench), UiUtil.spacer(), new ZoomSlider(workbench));
-		 */
+		UiUtil.classes(this, "right");
 	}
 
 }

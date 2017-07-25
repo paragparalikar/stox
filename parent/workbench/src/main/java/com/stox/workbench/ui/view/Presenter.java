@@ -16,12 +16,13 @@ import com.stox.workbench.ui.view.decorator.MaximizeDecorator;
 import com.stox.workbench.ui.view.decorator.RelocationDecorator;
 import com.stox.workbench.ui.view.decorator.ResizeDecorator;
 import com.stox.workbench.ui.view.event.RemoveViewRequestEvent;
-import com.stox.workbench.ui.view.event.SelectViewRequestEvent;
+import com.stox.workbench.ui.view.event.ViewSelectedEvent;
 import com.stox.workbench.ui.view.helper.ViewPersistanceHelper;
 import com.stox.workbench.ui.view.helper.ViewPositionHelper;
 
 public abstract class Presenter<V extends View, S extends ViewState> implements HasLifecycle, Persistable {
 
+	private boolean selected;
 	private CloseDecorator closeDecorator;
 	private RelocationDecorator relocateDecorator;
 	private MaximizeDecorator maximizeDecorator;
@@ -33,13 +34,13 @@ public abstract class Presenter<V extends View, S extends ViewState> implements 
 
 	public abstract S getViewState();
 
-	public void setViewSate(final S viewState) {
-		setPosition(viewState.getX(), viewState.getY(), viewState.getWidth(), viewState.getHeight());
-	}
-
 	public abstract void setDefaultPosition();
 
 	public abstract void publish(final ApplicationEvent event);
+
+	public void setViewSate(final S viewState) {
+		setPosition(viewState.getX(), viewState.getY(), viewState.getWidth(), viewState.getHeight());
+	}
 
 	protected void populateViewState(final S viewState) {
 		final View view = getView();
@@ -72,11 +73,14 @@ public abstract class Presenter<V extends View, S extends ViewState> implements 
 		positionHelper = new ViewPositionHelper(this);
 		persistanceHelper = new ViewPersistanceHelper(this);
 
-		getView().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> select());
+		getView().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> setSelected(true));
 	}
 
-	public void select() {
-		publish(new SelectViewRequestEvent(this, getView()));
+	public void setSelected(final boolean value) {
+		if (!selected && value) {
+			publish(new ViewSelectedEvent(this, getView()));
+		}
+		selected = value;
 	}
 
 	@Override

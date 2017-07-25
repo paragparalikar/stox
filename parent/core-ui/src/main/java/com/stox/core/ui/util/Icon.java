@@ -4,6 +4,7 @@ public interface Icon {
 
 	String CROSS = "\uf00d";
 	String PLUS = "\uf067";
+	String MINUS = "\uf068";
 	String PENCIL = "\uf044";
 	String WINDOW_MAXIMIZE = "\uf2d0";
 	String WINDOW_MINIMIZE = "\uf2d1";
