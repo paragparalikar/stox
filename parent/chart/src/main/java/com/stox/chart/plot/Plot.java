@@ -42,7 +42,6 @@ public abstract class Plot<M extends Range> extends Group {
 					getChildren().clear();
 				}
 			}
-			update();
 		});
 	}
 

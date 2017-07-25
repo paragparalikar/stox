@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.stox.chart.event.BarRequestEvent;
@@ -44,6 +45,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 		});
 	}
 
+	@Async
 	@Override
 	public void setLinkState(State state) {
 		if (null != state && StringUtil.hasText(state.getInstrumentId())) {

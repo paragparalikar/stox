@@ -11,6 +11,7 @@ import com.stox.chart.unit.PriceUnitType;
 import com.stox.chart.unit.Unit;
 import com.stox.chart.view.ChartView;
 import com.stox.core.model.Bar;
+import com.stox.core.model.Instrument;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "chart", "priceUnitType" })
@@ -27,6 +28,12 @@ public class PrimaryPricePlot extends PricePlot {
 	@Override
 	protected Unit<Bar> create(int index, Bar model) {
 		return new CandlePriceUnit(index, model, this);
+	}
+
+	@Override
+	public void setInstrument(Instrument instrument) {
+		super.setInstrument(instrument);
+		chart.getChartView().clearMessages();
 	}
 
 	@Override

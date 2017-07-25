@@ -50,6 +50,6 @@ public class ValueAxis extends Pane {
 	}
 
 	private double getVerticalSpace() {
-		return chart.getWidth() * 0.1;
+		return chart.getHeight() * 0.025;
 	}
 }

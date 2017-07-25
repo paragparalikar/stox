@@ -58,6 +58,8 @@ public class PricePlot extends Plot<Bar> {
 		addModels(bars);
 		if (dataAvailable) {
 			loadExtra();
+		} else {
+			update();
 		}
 	}
 
@@ -98,6 +100,12 @@ public class PricePlot extends Plot<Bar> {
 				@Override
 				public void onSuccess(Response<List<Bar>> response) {
 					addData(from, barSpan, response.getPayload());
+					if (dataAvailable) {
+						loadExtra();
+					}
+					if (getModels().size() >= chartView.getDateAxis().getLowerBoundIndex()) {
+						update();
+					}
 				}
 
 				@Override
@@ -110,10 +118,6 @@ public class PricePlot extends Plot<Bar> {
 					locked = false;
 				}
 			}));
-
-			if (dataAvailable) {
-				loadExtra();
-			}
 		}
 	}
 }
