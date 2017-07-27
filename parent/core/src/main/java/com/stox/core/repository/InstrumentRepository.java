@@ -7,10 +7,12 @@ import com.stox.core.model.Instrument;
 
 public interface InstrumentRepository {
 
-	Date getLastUpdatedDate(final String dataProviderCode);
+	Date getLastUpdatedDate();
 
-	List<Instrument> getAllInstruments(final String dataProviderCode);
+	List<Instrument> getAllInstruments();
 
-	void save(final String dataProviderCode, final List<Instrument> instruments);
+	Instrument getInstrument(final String id);
+
+	void save(final List<Instrument> instruments);
 
 }

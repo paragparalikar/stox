@@ -1,16 +1,19 @@
-From : https://www.nseindia.com/products/content/equities/equities/homepage_eq_monthly.htm
+Referer : https://www.nseindia.com/products/content/equities/equities/homepage_eq_monthly.htm
+Referer : https://www.nseindia.com/products/content/derivatives/equities/homepage_fo_monthly.htm
 https://www.nseindia.com/content/nsccl/nsccl_ann19.zip   		// approved list of equities
 https://www.nseindia.com/content/nsccl/nsccl_cm_ann_mf.zip 		// approved list of mutual funds	
 https://www.nseindia.com/content/nsccl/nsccl_ann_cb.zip    		// approved list of corporate bonds
 https://www.nseindia.com/content/nsccl/nsccl_ann_gsec.zip		// government securities and treasury bills
 
+
+Referer : https://www.nseindia.com/corporates/content/securities_info.htm
 https://www.nseindia.com/content/equities/EQUITY_L.csv			// equities
-https://www.nseindia.com/content/equities/IDR_W9.csv			//
+https://www.nseindia.com/content/equities/IDR_W9.csv			// Depository Receipts
 https://www.nseindia.com/content/equities/PREF.csv				// Peference shares
-https://www.nseindia.com/content/equities/DEBT.csv				// 
+https://www.nseindia.com/content/equities/DEBT.csv				// Debt instrument
 https://www.nseindia.com/content/equities/WARRANT.csv			// Warrants
 https://www.nseindia.com/content/equities/mf_close-end.csv		// close ended mutual funds
-https://www.nseindia.com/content/equities/eq_ilseclist.csv
+https://www.nseindia.com/content/equities/eq_ilseclist.csv		// IL series (Industrial segment)
 https://www.nseindia.com/content/equities/eq_etfseclist.csv		// exchange traded funds
 
 https://www.nseindia.com/content/equities/namechange.csv
@@ -59,21 +62,12 @@ https://www.nseindia.com/content/indices/ind_niftypselist.csv
 https://www.nseindia.com/content/indices/ind_niftyservicelist.csv
 https://www.nseindia.com/content/indices/ind_Nifty100_Liquid15.csv
 https://www.nseindia.com/content/indices/ind_Nifty_Midcap_Liquid15.csv
-Strategy Indices :
-https://www.nseindia.com/content/indices/ind_nifty50list.csv
-https://www.nseindia.com/content/indices/ind_nifty100list.csv
-https://www.nseindia.com/content/indices/ind_Nifty100LowVolatility30list.csv
-https://www.nseindia.com/content/indices/ind_nifty_Alpha_Index.csv
-https://www.nseindia.com/content/indices/ind_niftydivopp50list.csv
-https://www.nseindia.com/content/indices/nifty_High_Beta50_Index.csv
-https://www.nseindia.com/content/indices/nifty_Low_Volatility50_Index.csv
-https://www.nseindia.com/content/indices/ind_niftyQuality30list.csv
-https://www.nseindia.com/content/indices/ind_Nifty50_Value20.csv
-https://www.nseindia.com/content/indices/ind_NiftyGrowth_Sectors15_Index.csv
+
 
 https://www.nseindia.com/content/indices/ind_close_all_25072017.csv
 
-
+Underlying list
+https://nseindia.com/products/content/derivatives/equities/fo_underlyinglist.htm
 
 https://www.nseindia.com/content/historical/EQUITIES/2017/JUL/cm25JUL2017bhav.csv.zip			// Daily bhavcopy
 https://www.nseindia.com/archives/equities/bhavcopy/pr/PR250717.zip								// Daily bhavcopy PR.zip ???

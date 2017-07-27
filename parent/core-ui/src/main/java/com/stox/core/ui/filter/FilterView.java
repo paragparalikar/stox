@@ -1,4 +1,4 @@
-package com.stox.zerodha.ui;
+package com.stox.core.ui.filter;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -7,7 +7,7 @@ import javafx.scene.layout.VBox;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.FormGroup;
 
-public class ZerodhaInstrumentFilterView extends VBox {
+public class FilterView extends VBox {
 
 	private final ChoiceBox<String> exchangeChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
 	private final FormGroup exchangeFormGroup = new FormGroup(new Label("Exchange"), exchangeChoiceBox, null); // TODO I18N here
@@ -16,7 +16,7 @@ public class ZerodhaInstrumentFilterView extends VBox {
 	private final ChoiceBox<String> expiryChoiceBox = UiUtil.fullWidth(new ChoiceBox<>());
 	private final FormGroup expiryFormGroup = new FormGroup(new Label("Expiry"), expiryChoiceBox, null); // TODO I18N here
 
-	public ZerodhaInstrumentFilterView() {
+	public FilterView() {
 		UiUtil.classes(this, "zerodha-instrument-filter");
 		getChildren().addAll(exchangeFormGroup, typeFormGroup, expiryFormGroup);
 	}

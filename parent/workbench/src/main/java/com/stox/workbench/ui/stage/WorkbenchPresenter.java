@@ -25,6 +25,7 @@ import com.stox.core.intf.HasLifecycle;
 import com.stox.core.ui.StylesheetProvider;
 import com.stox.core.ui.ToastCallback;
 import com.stox.workbench.client.WorkbenchClient;
+import com.stox.workbench.model.ViewState;
 import com.stox.workbench.model.WorkbenchState;
 import com.stox.workbench.ui.view.Link;
 import com.stox.workbench.ui.view.Presenter;
@@ -108,24 +109,29 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 		}));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	private void loadState(final Collection<PresenterProvider> providers) {
 		workbenchClient.load(new ToastCallback<WorkbenchState, Void>((state) -> {
 			state.getViewStates().forEach(
 					viewState -> providers.stream().filter(provider -> provider.getViewCode().equals(viewState.getCode())).findFirst().ifPresent(provider -> {
 						final Presenter presenter = provider.create();
-						add(presenter);
-						presenter.setViewSate(viewState);
+						add(presenter, viewState);
 					}));
 			return null;
 		}));
 	}
 
-	public void add(final Presenter<?, ?> presenter) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void add(final Presenter presenter, final ViewState viewState) {
 		final View view = presenter.getView();
-		workbench.getContentPane().getChildren().add(view);
-		presenter.start();
-		presenters.add(presenter);
+		Platform.runLater(() -> {
+			workbench.getContentPane().getChildren().add(view);
+			presenter.start();
+			presenters.add(presenter);
+			if (null != viewState) {
+				presenter.setViewSate(viewState);
+			}
+		});
 	}
 
 	@EventListener(RemoveViewRequestEvent.class)

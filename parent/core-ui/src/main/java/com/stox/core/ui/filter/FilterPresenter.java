@@ -1,4 +1,4 @@
-package com.stox.zerodha.ui;
+package com.stox.core.ui.filter;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -9,26 +9,19 @@ import javafx.scene.Node;
 import com.stox.core.model.Instrument;
 import com.stox.core.util.Constant;
 import com.stox.core.util.StringUtil;
-import com.stox.data.ui.FilterPresenter;
 
-public class ZerodhaInstrumentFilterPresenter implements FilterPresenter {
+public class FilterPresenter {
 	private static final String ALL = "All";
 
 	private final List<Instrument> source;
 	private final List<Instrument> target;
-	private final ZerodhaInstrumentFilterView view = new ZerodhaInstrumentFilterView();
+	private final FilterView view = new FilterView();
 
-	@Override
 	public Node getView() {
 		return view;
 	}
 
-	@Override
-	public String[] getStylesheets() {
-		return new String[] { "styles/zerodha.css" };
-	}
-
-	public ZerodhaInstrumentFilterPresenter(final List<Instrument> source, final List<Instrument> target) {
+	public FilterPresenter(final List<Instrument> source, final List<Instrument> target) {
 		this.source = source;
 		this.target = target;
 		bind();
@@ -49,7 +42,6 @@ public class ZerodhaInstrumentFilterPresenter implements FilterPresenter {
 		});
 	}
 
-	@Override
 	public void filter() {
 		List<Instrument> filtered = filterByExchange(view.getExchangeChoiceBox().getValue(), source);
 		filtered = filterByType(view.getTypeChoiceBox().getValue(), filtered);

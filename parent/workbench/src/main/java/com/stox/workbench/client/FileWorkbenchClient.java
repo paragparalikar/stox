@@ -10,7 +10,6 @@ import com.stox.core.model.Response;
 import com.stox.core.util.Constant;
 import com.stox.workbench.model.WorkbenchState;
 
-@Async
 @Component
 public class FileWorkbenchClient implements WorkbenchClient {
 
@@ -30,6 +29,7 @@ public class FileWorkbenchClient implements WorkbenchClient {
 		}
 	}
 
+	@Async
 	@Override
 	public void load(ResponseCallback<WorkbenchState> callback) {
 		try {

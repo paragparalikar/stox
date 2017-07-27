@@ -8,15 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.model.BarSpan;
 import com.stox.core.ui.ToastCallback;
+import com.stox.core.ui.filter.FilterPresenter;
 import com.stox.data.DataClient;
-import com.stox.data.FilterPresenterProvider;
-import com.stox.data.event.FilterPresenterChangedEvent;
-import com.stox.data.ui.FilterPresenter;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
@@ -30,10 +27,8 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	@Autowired
 	private DataClient dataClient;
 
-	@Autowired
-	private FilterPresenterProvider filterPresenterProvider;
-
 	private final NavigatorView view = new NavigatorView();
+
 	private FilterPresenter filterPresenter;
 
 	public NavigatorPresenter() {
@@ -52,19 +47,9 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	}
 
 	private void showFilter() {
-		if (null == filterPresenter) {
-			filterPresenter = filterPresenterProvider.getFilterPresenter(view.getListView().getItems());
-		}
 		if (null != filterPresenter) {
 			final FilterModalPresenter filterModalPresenter = new FilterModalPresenter(filterPresenter);
 			filterModalPresenter.getModal().show();
-		}
-	}
-
-	@EventListener(FilterPresenterChangedEvent.class)
-	public void onInstrumentFilterViewChanged(final FilterPresenterChangedEvent event) {
-		if (null != filterPresenter) {
-			filterPresenter = filterPresenterProvider.getFilterPresenter(view.getListView().getItems());
 		}
 	}
 
@@ -79,6 +64,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		super.start();
 		dataClient.getAllInstruments(new ToastCallback<>(instruments -> {
 			view.getListView().getItems().addAll(instruments);
+			filterPresenter = new FilterPresenter(instruments, view.getListView().getItems());
 			view.showSpinner(false);
 			return null;
 		}));

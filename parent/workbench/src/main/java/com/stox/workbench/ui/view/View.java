@@ -1,5 +1,6 @@
 package com.stox.workbench.ui.view;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
@@ -56,12 +57,14 @@ public abstract class View extends StackPane {
 	}
 
 	public void showSpinner(final boolean value) {
-		container.setDisable(value);
-		if (value && !getChildren().contains(spinner)) {
-			getChildren().add(spinner);
-		} else if (!value) {
-			getChildren().remove(spinner);
-		}
+		Platform.runLater(() -> {
+			container.setDisable(value);
+			if (value && !getChildren().contains(spinner)) {
+				getChildren().add(spinner);
+			} else if (!value) {
+				getChildren().remove(spinner);
+			}
+		});
 	}
 
 	public int getMode() {
