@@ -4,7 +4,7 @@ import com.stox.core.intf.HasId;
 import com.stox.core.intf.HasName;
 
 public enum Exchange implements HasName, HasId<String> {
-	NSE("NSE", "National Stock Exchange"), BSE("BSE", "Bombay Stock Exchange");
+	NSE("NSE", "National Stock Exchange"), BSE("BSE", "Bombay Stock Exchange"), CDS("CDS", "Currency Derivatives"), MCX("MCX", "Multi Commodity Exchange");
 
 	private final String id;
 	private final String name;

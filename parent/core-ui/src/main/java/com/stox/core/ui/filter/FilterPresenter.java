@@ -67,14 +67,16 @@ public class FilterPresenter {
 	}
 
 	private void setExchanges(final List<Instrument> instruments) {
-		final List<String> exchanges = source.stream().map(Instrument::getExchange).distinct().sorted().collect(Collectors.toList());
+		final List<String> exchanges = source.stream().map(instrument -> null == instrument.getExchange() ? "" : instrument.getExchange().getName()).distinct().sorted()
+				.collect(Collectors.toList());
 		exchanges.add(0, ALL); // TODO I18N here
 		view.getExchangeChoiceBox().getItems().setAll(exchanges);
 		view.getExchangeChoiceBox().getSelectionModel().select(ALL);
 	}
 
 	private void setTypes(final List<Instrument> instruments) {
-		final List<String> types = instruments.stream().map(Instrument::getType).distinct().sorted().collect(Collectors.toList());
+		final List<String> types = instruments.stream().map(instrument -> null == instrument.getType() ? "" : instrument.getType().getName()).distinct().sorted()
+				.collect(Collectors.toList());
 		types.add(0, ALL); // TODO I18N here
 		view.getTypeChoiceBox().getItems().setAll(types);
 		view.getTypeChoiceBox().getSelectionModel().select(ALL);

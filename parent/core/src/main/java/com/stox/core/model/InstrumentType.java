@@ -5,7 +5,8 @@ import com.stox.core.intf.HasName;
 
 public enum InstrumentType implements HasName, HasId<String> {
 
-	EQ("EQ", "Equities"), MF("MF", "Mutual Funds"), CB("CB", "Corporate Bonds"), GB("GB", "Government Bonds"), TB("TB", "Treasury Bills");
+	EQ("EQ", "Equities"), CALL("CE", "Call Options"), PUT("PE", "Put Options"), FUT("FUT", "Futures"), MF("MF", "Mutual Funds"), CB("CB", "Corporate Bonds"), GB("GB",
+			"Government Bonds"), TB("TB", "Treasury Bills");
 
 	private final String id;
 	private final String name;

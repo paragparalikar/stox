@@ -8,6 +8,7 @@ import lombok.Data;
 
 import com.stox.core.model.Instrument;
 import com.stox.core.util.StringUtil;
+import com.stox.zerodha.util.ZerodhaUtil;
 
 @Data
 public class ZerodhaInstrument {
@@ -44,8 +45,8 @@ public class ZerodhaInstrument {
 			instrument.setSymbol(tradingsymbol);
 			instrument.setExchangeCode(exchange_token);
 			instrument.setDataProviderCode(instrument_token);
-			instrument.setExchange(exchange);
-			instrument.setType(instrument_type);
+			instrument.setExchange(ZerodhaUtil.toExchange(exchange));
+			instrument.setType(ZerodhaUtil.toInstrumentType(instrument_type));
 			instrument.setName(StringUtil.hasText(name) ? name : tradingsymbol);
 			if (StringUtil.hasText(expiry)) {
 				instrument.setExpiry(dateFormat.parse(expiry));
