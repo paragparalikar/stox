@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -30,9 +29,7 @@ public class BinaryFileBarRepository implements BarRepository {
 				}
 			} catch (Exception ignored) {
 			}
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.YEAR, -2);
-			return calendar.getTime();
+			return null;
 		}
 	}
 
