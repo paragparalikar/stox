@@ -33,12 +33,12 @@ public class Instrument implements Identifiable<String>, Nameable {
 
 	@Override
 	public String getId() {
-		return exchangeCode;
+		return isin;
 	}
 
 	@Override
 	public void setId(String id) {
-		this.exchangeCode = id;
+		this.isin = id;
 	}
 
 	@Override

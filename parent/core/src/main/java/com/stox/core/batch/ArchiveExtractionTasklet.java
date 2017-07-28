@@ -13,12 +13,12 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
-public class UnzipTasklet implements Tasklet {
+public class ArchiveExtractionTasklet implements Tasklet {
 
 	private final String archivePath;
 	private final String targetDirectoryPath;
 
-	public UnzipTasklet(final String archivePath, final String targetDirectoryPath) {
+	public ArchiveExtractionTasklet(final String archivePath, final String targetDirectoryPath) {
 		this.archivePath = archivePath;
 		this.targetDirectoryPath = targetDirectoryPath;
 	}

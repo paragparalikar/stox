@@ -26,8 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.stox.core.batch.ArchiveExtractionTasklet;
+import com.stox.core.batch.ExcelItemReader;
 import com.stox.core.batch.FileDownloadTasklet;
-import com.stox.core.batch.UnzipTasklet;
 import com.stox.core.model.Instrument;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.Constant;
@@ -35,13 +36,13 @@ import com.stox.nse.NseProperties;
 
 @Component
 public class InstrumentBatchJobManager {
-	private static final String NAME = "INSTRUMENT_DOWNLOAD_JOB";
+	private static final String JOB_NAME = "com.stox.nse.instrument";
+	private static final String STEP_MF = "com.stox.nse.instrument.mutual-funds";
+	private static final String STEP_CB = "com.stox.nse.instrument.corporate-bonds";
+	private static final String STEP_GSEC = "com.stox.nse.instrument.gsec";
 
 	@Autowired
-	private JobBuilderFactory jobBuilderFactory;
-
-	@Autowired
-	private StepBuilderFactory stepBuilderFactory;
+	private NseProperties properties;
 
 	@Autowired
 	private JobOperator jobOperator;
@@ -53,15 +54,18 @@ public class InstrumentBatchJobManager {
 	private JobLauncher jobLauncher;
 
 	@Autowired
-	private InstrumentRepository instrumentRepository;
+	private JobBuilderFactory jobBuilderFactory;
 
 	@Autowired
-	private NseProperties properties;
+	private StepBuilderFactory stepBuilderFactory;
+
+	@Autowired
+	private InstrumentRepository instrumentRepository;
 
 	@Async
 	public void executeInstrumentDownloadJob() {
 		try {
-			final List<Long> jobInstanceIds = jobOperator.getJobInstances(NAME, 0, 1);
+			final List<Long> jobInstanceIds = jobOperator.getJobInstances(JOB_NAME, 0, 1);
 			if (null != jobInstanceIds && !jobInstanceIds.isEmpty()) {
 				final List<Long> jobExecutionIds = jobOperator.getExecutions(jobInstanceIds.get(0));
 				for (final Long jobExecutionId : jobExecutionIds) {
@@ -83,8 +87,10 @@ public class InstrumentBatchJobManager {
 
 	private void doExecuteInstrumentDownloadJob() {
 		try {
-			final Flow mfFlow = zippedExcelFlow("com.stox.nse.instrument.mf", properties.getMutualFundsInstrumentDownloadUrl(), new MutualFundInstrumentRowMapper());
-			final Job job = jobBuilderFactory.get("com.stox.nse.instrument").start(mfFlow).end().build();
+			final Flow mfFlow = zippedExcelFlow(STEP_MF, properties.getMutualFundsInstrumentDownloadUrl(), new MutualFundInstrumentRowMapper());
+			final Flow cbFlow = zippedExcelFlow(STEP_CB, properties.getCorporateBondsInstrumentDownloadUrl(), new CorporateBondInstrumentRowMapper());
+			final Flow gsecFlow = zippedExcelFlow(STEP_GSEC, properties.getGsecInstrumentsDownloadUrl(), new GsecInstrumentRowMapper());
+			final Job job = jobBuilderFactory.get(JOB_NAME).start(mfFlow).next(cbFlow).next(gsecFlow).end().build();
 			final JobParameters jobParameters = new JobParametersBuilder().addString("MONTH", new SimpleDateFormat("MMM-yyyy").format(new Date())).toJobParameters();
 			final JobExecution jobExecution = jobLauncher.run(job, jobParameters);
 			if (ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())) {
@@ -100,8 +106,8 @@ public class InstrumentBatchJobManager {
 		final String directoryPath = Constant.TEMPDIR + File.separator + flowName;
 		final String archivePath = Constant.TEMPDIR + File.separator + flowName + ".zip";
 		final Step fileDownloadStep = stepBuilderFactory.get(flowName + "-file-download-step").tasklet(new FileDownloadTasklet(url, archivePath)).build();
-		final Step fileUnzipStep = stepBuilderFactory.get(flowName + "-file-unzip-step").tasklet(new UnzipTasklet(archivePath, directoryPath)).build();
-		final ExcelInstrumentItemReader itemReader = new ExcelInstrumentItemReader(directoryPath, rowMapper);
+		final Step fileUnzipStep = stepBuilderFactory.get(flowName + "-file-unzip-step").tasklet(new ArchiveExtractionTasklet(archivePath, directoryPath)).build();
+		final ExcelItemReader<Instrument> itemReader = new ExcelItemReader<>(directoryPath, rowMapper);
 		final Step readWriteStep = stepBuilderFactory.get(flowName + "-read-write-step").<Instrument, Instrument> chunk(Integer.MAX_VALUE).reader(itemReader)
 				.writer(instruments -> {
 					instrumentRepository.save((List<Instrument>) instruments);

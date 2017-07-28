@@ -1,4 +1,4 @@
-package com.stox.nse.batch.instrument;
+package com.stox.core.batch;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -13,22 +13,20 @@ import org.springframework.batch.item.excel.RowMapper;
 import org.springframework.batch.item.excel.poi.PoiItemReader;
 import org.springframework.core.io.InputStreamResource;
 
-import com.stox.core.model.Instrument;
+public class ExcelItemReader<T> implements ItemReader<T> {
 
-public class ExcelInstrumentItemReader implements ItemReader<Instrument> {
-
-	private PoiItemReader<Instrument> delegate;
+	private PoiItemReader<T> delegate;
 	private final String directoryPath;
-	private final RowMapper<Instrument> rowMapper;
+	private final RowMapper<T> rowMapper;
 	private final ExecutionContext executionContext = new ExecutionContext();
 
-	public ExcelInstrumentItemReader(final String directoryPath, final RowMapper<Instrument> rowMapper) {
+	public ExcelItemReader(final String directoryPath, final RowMapper<T> rowMapper) {
 		this.rowMapper = rowMapper;
 		this.directoryPath = directoryPath;
 	}
 
 	@Override
-	public Instrument read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+	public T read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 		if (null == delegate) {
 			delegate = new PoiItemReader<>();
 			delegate.setLinesToSkip(1);

@@ -42,4 +42,5 @@ public class StoxApplication extends Application {
 		final String url = "jdbc:hsqldb:file:" + Constant.PATH + "database" + File.separator + "hsqldb";
 		return DataSourceBuilder.create().url(url).username(username).password(password).build();
 	}
+
 }

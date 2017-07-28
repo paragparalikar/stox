@@ -14,4 +14,10 @@ public class NseProperties {
 	@Value("${com.stox.nse.url.instrument.mf}")
 	private String mutualFundsInstrumentDownloadUrl;
 
+	@Value("${com.stox.nse.url.instrument.cb}")
+	private String corporateBondsInstrumentDownloadUrl;
+
+	@Value("${com.stox.nse.url.instrument.gsec}")
+	private String gsecInstrumentsDownloadUrl;
+
 }
