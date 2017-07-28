@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 
 import com.stox.core.model.Instrument;
@@ -43,19 +44,21 @@ public class FilterPresenter {
 	}
 
 	public void filter() {
-		List<Instrument> filtered = filterByExchange(view.getExchangeChoiceBox().getValue(), source);
-		filtered = filterByType(view.getTypeChoiceBox().getValue(), filtered);
-		filtered = filterByExpiry(view.getExpiryChoiceBox().getValue(), filtered);
-		target.clear();
-		target.addAll(filtered);
+		final List<Instrument> filteredByExchange = filterByExchange(view.getExchangeChoiceBox().getValue(), source);
+		final List<Instrument> filteredByType = filterByType(view.getTypeChoiceBox().getValue(), filteredByExchange);
+		final List<Instrument> filteredByExpiry = filterByExpiry(view.getExpiryChoiceBox().getValue(), filteredByType);
+		Platform.runLater(() -> {
+			target.clear();
+			target.addAll(filteredByExpiry);
+		});
 	}
 
 	private List<Instrument> filterByExchange(final String exchange, final List<Instrument> source) {
-		return filter(exchange, instrument -> exchange.equals(instrument.getExchange()), source);
+		return filter(exchange, instrument -> exchange.equals(instrument.getExchange().getName()), source);
 	}
 
 	private List<Instrument> filterByType(final String type, final List<Instrument> source) {
-		return filter(type, instrument -> type.equals(instrument.getType()), source);
+		return filter(type, instrument -> type.equals(instrument.getType().getName()), source);
 	}
 
 	private List<Instrument> filterByExpiry(final String expiry, final List<Instrument> source) {

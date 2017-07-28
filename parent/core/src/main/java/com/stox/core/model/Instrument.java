@@ -11,8 +11,6 @@ import com.stox.core.util.StringUtil;
 @Data
 public class Instrument implements Identifiable<String>, Nameable {
 
-	private String dataProviderCode;
-
 	private String exchangeCode;
 
 	private String symbol;

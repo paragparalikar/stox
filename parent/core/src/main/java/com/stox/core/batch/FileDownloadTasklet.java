@@ -1,4 +1,4 @@
-package com.stox.nse.batch;
+package com.stox.core.batch;
 
 import java.net.URL;
 import java.nio.file.Files;

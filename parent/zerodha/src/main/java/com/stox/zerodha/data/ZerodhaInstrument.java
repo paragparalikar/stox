@@ -44,7 +44,6 @@ public class ZerodhaInstrument {
 			final Instrument instrument = new Instrument();
 			instrument.setSymbol(tradingsymbol);
 			instrument.setExchangeCode(exchange_token);
-			instrument.setDataProviderCode(instrument_token);
 			instrument.setExchange(ZerodhaUtil.toExchange(exchange));
 			instrument.setType(ZerodhaUtil.toInstrumentType(instrument_type));
 			instrument.setName(StringUtil.hasText(name) ? name : tradingsymbol);

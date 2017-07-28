@@ -12,15 +12,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.intf.HasName.HasNameComaparator;
 import com.stox.core.model.Instrument;
 import com.stox.core.util.Constant;
 
 @Component
 public class CsvFileInstrumentRepository implements InstrumentRepository {
+
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 
 	private final Map<String, Instrument> cache = new HashMap<>();
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(Instrument.class).withHeader();
@@ -63,9 +69,16 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public void save(final List<Instrument> instruments) {
+		instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+
+	}
+
+	@Override
+	public void flush() {
 		try {
-			Constant.csvMapper.writer(schema).writeValues(new File(getPath())).writeAll(instruments).flush();
-			instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+			Constant.csvMapper.writer(schema).writeValues(new File(getPath())).writeAll(cache.values()).flush();
+			final List<Instrument> instruments = cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());
+			eventPublisher.publishEvent(new InstrumentsChangedEvent(this, instruments));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

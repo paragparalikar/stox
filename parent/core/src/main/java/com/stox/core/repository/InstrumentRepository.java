@@ -15,4 +15,6 @@ public interface InstrumentRepository {
 
 	void save(final List<Instrument> instruments);
 
+	void flush();
+
 }

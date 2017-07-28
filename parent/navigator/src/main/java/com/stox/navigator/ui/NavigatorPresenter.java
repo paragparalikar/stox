@@ -1,5 +1,8 @@
 package com.stox.navigator.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
@@ -8,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.model.BarSpan;
+import com.stox.core.model.Instrument;
 import com.stox.core.ui.ToastCallback;
 import com.stox.core.ui.filter.FilterPresenter;
 import com.stox.data.DataClient;
@@ -28,8 +34,8 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	private DataClient dataClient;
 
 	private final NavigatorView view = new NavigatorView();
-
-	private FilterPresenter filterPresenter;
+	private final List<Instrument> allInstruments = new ArrayList<>(100000);
+	private final FilterPresenter filterPresenter = new FilterPresenter(allInstruments, view.getListView().getItems());
 
 	public NavigatorPresenter() {
 		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
@@ -47,10 +53,15 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	}
 
 	private void showFilter() {
-		if (null != filterPresenter) {
-			final FilterModalPresenter filterModalPresenter = new FilterModalPresenter(filterPresenter);
-			filterModalPresenter.getModal().show();
-		}
+		final FilterModalPresenter filterModalPresenter = new FilterModalPresenter(filterPresenter);
+		filterModalPresenter.getModal().show();
+	}
+
+	@EventListener(InstrumentsChangedEvent.class)
+	public void onInstrumentsChanged(final InstrumentsChangedEvent event) {
+		allInstruments.clear();
+		allInstruments.addAll(event.getInstruments());
+		filterPresenter.filter();
 	}
 
 	@Override
@@ -63,8 +74,9 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		view.showSpinner(true);
 		super.start();
 		dataClient.getAllInstruments(new ToastCallback<>(instruments -> {
-			view.getListView().getItems().addAll(instruments);
-			filterPresenter = new FilterPresenter(instruments, view.getListView().getItems());
+			allInstruments.clear();
+			allInstruments.addAll(instruments);
+			filterPresenter.filter();
 			view.showSpinner(false);
 			return null;
 		}));
