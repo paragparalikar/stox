@@ -1,5 +1,6 @@
 package com.stox.navigator.ui;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -15,7 +16,7 @@ import com.stox.workbench.ui.view.View;
 
 public class NavigatorView extends View {
 
-	private final ListView<Instrument> listView = new ListView<Instrument>();
+	private final ListView<Instrument> listView = new ListView<Instrument>(FXCollections.observableArrayList());
 	private final Button filterButton = UiUtil.classes(new Button(Icon.FILTER), "icon", "primary");
 	private final ToggleButton searchButton = UiUtil.classes(new ToggleButton(Icon.SEARCH), "icon", "primary");
 	private final TextField searchTextField = new ListViewSearchTextField<>(listView, new InstrumentMatcher());
