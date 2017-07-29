@@ -27,7 +27,7 @@ import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.SubscriberPresenter;
 
-@Component
+@Component("chartPresenter")
 @Scope("prototype")
 public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewState> {
 

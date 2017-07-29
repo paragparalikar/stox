@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -20,9 +21,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.stox.core.util.Constant;
 
-@EnableAsync
 @EnableScheduling
 @EnableBatchProcessing
+@EnableAsync(mode = AdviceMode.ASPECTJ)
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class StoxApplication extends Application {
 
