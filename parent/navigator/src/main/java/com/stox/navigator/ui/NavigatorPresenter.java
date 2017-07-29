@@ -3,6 +3,7 @@ package com.stox.navigator.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
@@ -62,11 +63,18 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 
 	@PostConstruct
 	public void postConstruct() {
-		filterPresenter = new FilterPresenter(allInstruments, view.getListView().getItems(), view, taskExecutor);
+		filterPresenter = new FilterPresenter(allInstruments, taskExecutor);
 	}
 
 	private void showFilter() {
 		final FilterModalPresenter filterModalPresenter = new FilterModalPresenter(filterPresenter);
+		filterModalPresenter.getModal().getFilterButton().addEventHandler(ActionEvent.ACTION, event -> {
+			filterModalPresenter.getModal().hide();
+			filterPresenter.filter(instruments -> {
+				view.getListView().getItems().setAll(instruments);
+				return null;
+			});
+		});
 		filterModalPresenter.getModal().show();
 	}
 
@@ -74,7 +82,12 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	public void onInstrumentsChanged(final InstrumentsChangedEvent event) {
 		allInstruments.clear();
 		allInstruments.addAll(event.getInstruments());
-		filterPresenter.filter();
+		filterPresenter.filter(instruments -> {
+			Platform.runLater(() -> {
+				view.getListView().getItems().setAll(instruments);
+			});
+			return null;
+		});
 	}
 
 	@Override
@@ -89,8 +102,14 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		dataClient.getAllInstruments(new ToastCallback<>(instruments -> {
 			allInstruments.clear();
 			allInstruments.addAll(instruments);
-			filterPresenter.filter();
-			view.showSpinner(false);
+			filterPresenter.filter(i -> {
+				Platform.runLater(() -> {
+					view.getListView().getItems().setAll(i);
+					view.showSpinner(false);
+				});
+				return null;
+			});
+
 			return null;
 		}));
 	}

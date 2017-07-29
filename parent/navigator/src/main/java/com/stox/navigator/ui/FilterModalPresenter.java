@@ -11,10 +11,6 @@ public class FilterModalPresenter {
 	public FilterModalPresenter(final FilterPresenter filterPresenter) {
 		modal.setContent(filterPresenter.getView());
 		modal.getCancelButton().addEventHandler(ActionEvent.ACTION, event -> modal.hide());
-		modal.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> {
-			filterPresenter.filter();
-			modal.hide();
-		});
 	}
 
 	public FilterModal getModal() {

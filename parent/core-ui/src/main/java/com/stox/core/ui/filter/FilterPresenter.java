@@ -10,10 +10,10 @@ import javafx.scene.Node;
 
 import org.springframework.core.task.TaskExecutor;
 
+import com.stox.core.intf.Callback;
 import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
 import com.stox.core.model.InstrumentType;
-import com.stox.core.ui.HasSpinner;
 import com.stox.core.util.Constant;
 import com.stox.core.util.StringUtil;
 
@@ -21,19 +21,15 @@ public class FilterPresenter {
 	private static final String ALL = "All";
 
 	private final List<Instrument> source;
-	private final List<Instrument> target;
 	private final TaskExecutor taskExecutor;
 	private final FilterView view = new FilterView();
-	private final HasSpinner hasSpinner;
 
 	public Node getView() {
 		return view;
 	}
 
-	public FilterPresenter(final List<Instrument> source, final List<Instrument> target, final HasSpinner hasSpinner, final TaskExecutor taskExecutor) {
+	public FilterPresenter(final List<Instrument> source, final TaskExecutor taskExecutor) {
 		this.source = source;
-		this.target = target;
-		this.hasSpinner = hasSpinner;
 		this.taskExecutor = taskExecutor;
 		bind();
 		setExchanges();
@@ -57,19 +53,12 @@ public class FilterPresenter {
 		});
 	}
 
-	public void filter() {
-		if (null != hasSpinner) {
-			hasSpinner.showSpinner(true);
-		}
+	public void filter(final Callback<List<Instrument>, Void> callback) {
 		taskExecutor.execute(() -> {
 			final List<Instrument> filteredByExchange = filterByExchange(view.getExchangeChoiceBox().getValue(), source);
 			final List<Instrument> filteredByType = filterByType(view.getTypeChoiceBox().getValue(), filteredByExchange);
 			final List<Instrument> filteredByExpiry = filterByExpiry(view.getExpiryChoiceBox().getValue(), filteredByType);
-			Platform.runLater(() -> {
-				target.clear();
-				target.addAll(filteredByExpiry);
-				hasSpinner.showSpinner(false);
-			});
+			callback.call(filteredByExpiry);
 		});
 	}
 
@@ -94,7 +83,7 @@ public class FilterPresenter {
 		exchanges.add(0, ALL); // TODO I18N here
 		Platform.runLater(() -> {
 			view.getExchangeChoiceBox().getItems().setAll(exchanges);
-			view.getExchangeChoiceBox().getSelectionModel().select(ALL);
+			view.getExchangeChoiceBox().getSelectionModel().select(Exchange.NSE.getName());
 		});
 	}
 
@@ -103,7 +92,7 @@ public class FilterPresenter {
 		types.add(0, ALL); // TODO I18N here
 		Platform.runLater(() -> {
 			view.getTypeChoiceBox().getItems().setAll(types);
-			view.getTypeChoiceBox().getSelectionModel().select(ALL);
+			view.getTypeChoiceBox().getSelectionModel().select(InstrumentType.EQUITY.getName());
 		});
 	}
 
@@ -113,7 +102,7 @@ public class FilterPresenter {
 		types.add(0, ALL); // TODO I18N here
 		Platform.runLater(() -> {
 			view.getTypeChoiceBox().getItems().setAll(types);
-			view.getTypeChoiceBox().getSelectionModel().select(ALL);
+			view.getTypeChoiceBox().getSelectionModel().select(InstrumentType.EQUITY.getName());
 		});
 	}
 
