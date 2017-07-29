@@ -18,6 +18,7 @@ import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
@@ -70,22 +71,21 @@ public class BarBatchJobManager {
 	@Async
 	@SuppressWarnings("unchecked")
 	public void lengthDownload() {
-		final List<Step> steps = instrumentRepository
-				.getAllInstruments()
-				.stream()
-				.filter(instrument -> {
-					return Exchange.NSE.equals(instrument.getExchange()) && InstrumentType.EQUITY.equals(instrument.getType());
-				})
-				.map(instrument -> {
-					return stepBuilderFactory.get(LENGTH_JOB_NAME + "." + instrument.getSymbol()).<Bar, Bar> chunk(Integer.MAX_VALUE)
-							.reader(new BarLengthDownloadItemReader(properties.getBarDownloadUrl(), instrument, rowMapper)).writer(bars -> {
-								barRepository.save((List<Bar>) bars, instrument.getId(), BarSpan.D);
-							}).build();
-				}).collect(Collectors.toList());
+		final List<Step> steps = instrumentRepository.getAllInstruments().stream().filter(instrument -> {
+			return Exchange.NSE.equals(instrument.getExchange()) && InstrumentType.EQUITY.equals(instrument.getType());
+		}).map(instrument -> {
+			final BarLengthDownloadItemReader itemReader = new BarLengthDownloadItemReader(properties.getBarDownloadUrl(), instrument, rowMapper);
+			itemReader.setLinesToSkip(1);
+			itemReader.setName(LENGTH_JOB_NAME + "." + instrument.getSymbol() + ".item-reader");
+			final ItemWriter<Bar> itemWriter = bars -> {
+				barRepository.save((List<Bar>) bars, instrument.getId(), BarSpan.D);
+			};
+			return stepBuilderFactory.get(LENGTH_JOB_NAME + "." + instrument.getSymbol()).<Bar, Bar> chunk(Integer.MAX_VALUE).reader(itemReader).writer(itemWriter).build();
+		}).collect(Collectors.toList());
 		final List<Flow> flows = steps
 				.stream()
 				.map(step -> {
-					return new FlowBuilder<Flow>(step.getName() + "-flow").start(step).on(FlowExecutionStatus.FAILED.getName()).fail().on(FlowExecutionStatus.COMPLETED.getName())
+					return new FlowBuilder<Flow>(step.getName() + "-flow").start(step).on(FlowExecutionStatus.FAILED.getName()).end().on(FlowExecutionStatus.COMPLETED.getName())
 							.end().build();
 				}).collect(Collectors.toList());
 		final Flow parentFlow = new FlowBuilder<Flow>(LENGTH_JOB_NAME + "-flow").split(taskExecutor).add(flows.toArray(new Flow[flows.size()]))
