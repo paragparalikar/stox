@@ -7,11 +7,14 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.event.InstrumentsChangedEvent;
@@ -33,15 +36,20 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	@Autowired
 	private DataClient dataClient;
 
+	@Autowired
+	private TaskExecutor taskExecutor;
+
 	private final NavigatorView view = new NavigatorView();
 	private final List<Instrument> allInstruments = new ArrayList<>(100000);
-	private final FilterPresenter filterPresenter = new FilterPresenter(allInstruments, view.getListView().getItems());
+	private FilterPresenter filterPresenter;
 
 	public NavigatorPresenter() {
 		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
 		view.getListView().getSelectionModel().selectedItemProperty().addListener((observable, old, instrument) -> {
-			final State state = getLinkState();
-			publish(new State(instrument.getId(), null == state ? BarSpan.D : state.getBarSpan(), 0));
+			if (null != instrument) {
+				final State state = getLinkState();
+				publish(new State(instrument.getId(), null == state ? BarSpan.D : state.getBarSpan(), 0));
+			}
 		});
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
 			if (value) {
@@ -50,6 +58,11 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 				view.getTitleBar().remove(Side.BOTTOM, view.getSearchTextField());
 			}
 		});
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		filterPresenter = new FilterPresenter(allInstruments, view.getListView().getItems(), view, taskExecutor);
 	}
 
 	private void showFilter() {

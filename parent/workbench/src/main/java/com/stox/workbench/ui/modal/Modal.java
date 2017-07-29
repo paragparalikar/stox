@@ -2,28 +2,35 @@ package com.stox.workbench.ui.modal;
 
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import com.stox.core.intf.HasLifecycle;
+import com.stox.core.ui.HasSpinner;
+import com.stox.core.ui.util.UiUtil;
 import com.stox.workbench.ui.stage.ResizableRelocatableStageDecorator;
 import com.stox.workbench.ui.stage.Workbench;
 import com.stox.workbench.ui.titlebar.TitleBar;
 import com.stox.workbench.ui.titlebar.decorator.CloseDecorator;
 
-public class Modal implements HasLifecycle {
+public class Modal implements HasLifecycle, HasSpinner {
 
 	private final TitleBar titleBar = new TitleBar();
 	private final CloseDecorator closeDecorator = new CloseDecorator();
 	private final VBox container = new VBox();
-	private final BorderPane root = new BorderPane(container, titleBar.getNode(), null, null, null);
+	private final BorderPane borderPane = new BorderPane(container, titleBar.getNode(), null, null, null);
+	private final StackPane root = new StackPane(borderPane);
 	private final Stage stage = new Stage();
+	private final VBox spinner = UiUtil.classes(new VBox(new ProgressIndicator()), "center");
 	private final ResizableRelocatableStageDecorator stageDecorator = new ResizableRelocatableStageDecorator(stage);
 
 	public Modal() {
@@ -43,6 +50,18 @@ public class Modal implements HasLifecycle {
 		stage.setScene(scene);
 	}
 
+	@Override
+	public void showSpinner(boolean value) {
+		Platform.runLater(() -> {
+			root.setDisable(value);
+			if (value && !root.getChildren().contains(spinner)) {
+				root.getChildren().add(spinner);
+			} else if (!value) {
+				root.getChildren().remove(spinner);
+			}
+		});
+	}
+
 	public void setContent(final Node node) {
 		container.getChildren().clear();
 		VBox.setVgrow(node, Priority.ALWAYS);
@@ -51,7 +70,7 @@ public class Modal implements HasLifecycle {
 	}
 
 	public void setButtonGroup(final Node node) {
-		root.setBottom(node);
+		borderPane.setBottom(node);
 	}
 
 	public List<String> getStyleClass() {

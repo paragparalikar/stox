@@ -1,5 +1,6 @@
 package com.stox.core.batch;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ public class FileDownloadTasklet implements Tasklet {
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+		new File(targetPath).getParentFile().mkdirs();
 		Files.copy(new URL(sourcePath).openStream(), Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
 		return RepeatStatus.FINISHED;
 	}

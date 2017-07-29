@@ -15,7 +15,7 @@ public class GsecInstrumentRowMapper implements RowMapper<Instrument> {
 	public Instrument mapRow(RowSet rowSet) throws Exception {
 		final Instrument instrument = new Instrument();
 		instrument.setExchange(Exchange.NSE);
-		instrument.setType(InstrumentType.GSEC);
+		instrument.setType(InstrumentType.GOVERNMENT_SECURITY);
 		instrument.setIsin(rowSet.getColumnValue(1));
 		instrument.setName(rowSet.getColumnValue(2));
 		try {

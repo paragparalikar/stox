@@ -22,7 +22,7 @@ public class CorporateBondInstrumentRowMapper implements RowMapper<Instrument> {
 	public Instrument mapRow(RowSet rowSet) throws Exception {
 		final Instrument instrument = new Instrument();
 		instrument.setExchange(Exchange.NSE);
-		instrument.setType(InstrumentType.CB);
+		instrument.setType(InstrumentType.CORPORATE_BOND);
 		instrument.setIsin(rowSet.getColumnValue(1));
 		instrument.setSymbol(rowSet.getColumnValue(2));
 		instrument.setExchangeCode(instrument.getSymbol());

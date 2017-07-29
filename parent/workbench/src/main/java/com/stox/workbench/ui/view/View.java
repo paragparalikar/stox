@@ -8,11 +8,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import com.stox.core.model.Message;
+import com.stox.core.ui.HasSpinner;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.util.StringUtil;
 import com.stox.workbench.ui.titlebar.TitleBar;
 
-public abstract class View extends StackPane {
+public abstract class View extends StackPane implements HasSpinner {
 
 	public static final int NONE = 0;
 	public static final int MOVE = 1;
@@ -56,6 +57,7 @@ public abstract class View extends StackPane {
 		container.setCenter(node);
 	}
 
+	@Override
 	public void showSpinner(final boolean value) {
 		Platform.runLater(() -> {
 			container.setDisable(value);

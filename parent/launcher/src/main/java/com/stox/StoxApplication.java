@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.stox.core.util.Constant;
 
@@ -41,6 +42,15 @@ public class StoxApplication extends Application {
 		final String password = "admin";
 		final String url = "jdbc:hsqldb:file:" + Constant.PATH + "database" + File.separator + "hsqldb";
 		return DataSourceBuilder.create().url(url).username(username).password(password).build();
+	}
+
+	@Bean
+	@Primary
+	public ThreadPoolTaskExecutor taskExecutor() {
+		final ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setDaemon(true);
+		taskExecutor.setCorePoolSize(2);
+		return taskExecutor;
 	}
 
 }

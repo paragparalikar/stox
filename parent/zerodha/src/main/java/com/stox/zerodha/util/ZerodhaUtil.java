@@ -11,9 +11,9 @@ public class ZerodhaUtil {
 		case ZerodhaConstant.CE:
 			return InstrumentType.CALL;
 		case ZerodhaConstant.EQ:
-			return InstrumentType.EQ;
+			return InstrumentType.EQUITY;
 		case ZerodhaConstant.FUT:
-			return InstrumentType.FUT;
+			return InstrumentType.FUTURE;
 		case ZerodhaConstant.PE:
 			return InstrumentType.PUT;
 		}

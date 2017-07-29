@@ -13,7 +13,7 @@ public class MutualFundInstrumentRowMapper implements RowMapper<Instrument> {
 	public Instrument mapRow(RowSet rowSet) throws Exception {
 		final Instrument instrument = new Instrument();
 		instrument.setExchange(Exchange.NSE);
-		instrument.setType(InstrumentType.MF);
+		instrument.setType(InstrumentType.MUTUAL_FUND);
 		instrument.setSymbol(rowSet.getColumnValue(1));
 		instrument.setExchangeCode(instrument.getSymbol());
 		instrument.setIsin(rowSet.getColumnValue(2));
