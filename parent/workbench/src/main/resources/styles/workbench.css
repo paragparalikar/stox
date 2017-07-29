@@ -54,6 +54,9 @@
 	-fx-border-color:lighter;
 	-fx-background-color:lightest;
 }
+.filter-view{
+	-fx-pref-width:40em;
+}
 .title > .top{
 	-fx-padding: 0 0 0.5em 0;
 }

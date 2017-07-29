@@ -17,7 +17,7 @@ public class FilterView extends VBox {
 	private final FormGroup expiryFormGroup = new FormGroup(new Label("Expiry"), expiryChoiceBox, null); // TODO I18N here
 
 	public FilterView() {
-		UiUtil.classes(this, "zerodha-instrument-filter");
+		UiUtil.classes(this, "filter-view");
 		getChildren().addAll(exchangeFormGroup, typeFormGroup, expiryFormGroup);
 	}
 
