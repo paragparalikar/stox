@@ -71,7 +71,7 @@ public class PricePlot extends Plot<Bar> {
 			final Date from = chartView.getFrom();
 			final BarSpan barSpan = chartView.getBarSpan();
 			getModels().clear();
-			chartView.fireEvent(new BarRequestEvent(instrument.getExchangeCode(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
+			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
 				@Override
 				public void onSuccess(Response<List<Bar>> response) {
 					addData(from, barSpan, response.getPayload());
@@ -95,7 +95,7 @@ public class PricePlot extends Plot<Bar> {
 			final BarSpan barSpan = chartView.getBarSpan();
 			final Date from = ChartUtil.getFrom(to, barSpan);
 
-			chartView.fireEvent(new BarRequestEvent(instrument.getExchangeCode(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
+			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
 
 				@Override
 				public void onSuccess(Response<List<Bar>> response) {
