@@ -21,14 +21,18 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.core.launch.NoSuchJobInstanceException;
+import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.excel.RowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.batch.ArchiveExtractionTasklet;
+import com.stox.core.batch.CsvItemReader;
+import com.stox.core.batch.CsvRowMapper;
 import com.stox.core.batch.ExcelItemReader;
 import com.stox.core.batch.FileDownloadTasklet;
 import com.stox.core.model.Instrument;
@@ -36,6 +40,16 @@ import com.stox.core.model.InstrumentType;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.Constant;
 import com.stox.nse.NseProperties;
+import com.stox.nse.batch.instrument.mapper.CorporateBondInstrumentRowMapper;
+import com.stox.nse.batch.instrument.mapper.DebtCsvRowMapper;
+import com.stox.nse.batch.instrument.mapper.DepositoryReceiptCsvRowMapper;
+import com.stox.nse.batch.instrument.mapper.EquityCsvRowMapper;
+import com.stox.nse.batch.instrument.mapper.EtfCsvRowMapper;
+import com.stox.nse.batch.instrument.mapper.GsecInstrumentRowMapper;
+import com.stox.nse.batch.instrument.mapper.MutualFundCloseEndedCsvRowMapper;
+import com.stox.nse.batch.instrument.mapper.MutualFundInstrumentRowMapper;
+import com.stox.nse.batch.instrument.mapper.PreferenceShareCsvRowMapper;
+import com.stox.nse.batch.instrument.mapper.WarrantCsvRowMapper;
 
 @Component
 public class InstrumentBatchJobManager {
@@ -70,6 +84,10 @@ public class InstrumentBatchJobManager {
 		instrumentRepository.save((List<Instrument>) instruments);
 	};
 
+	private JobParameters getJobParameters() {
+		return new JobParametersBuilder().addString("MONTH", new SimpleDateFormat("MMM-yyyy").format(new Date())).toJobParameters();
+	}
+
 	@Async
 	public void executeInstrumentDownloadJob() {
 		try {
@@ -101,16 +119,41 @@ public class InstrumentBatchJobManager {
 					new CorporateBondInstrumentRowMapper());
 			final Flow gsecFlow = archivedExcelFlow(JOB_NAME + "." + InstrumentType.GOVERNMENT_SECURITY.getName(), properties.getGsecInstrumentsDownloadUrl(),
 					new GsecInstrumentRowMapper());
-			final Job job = jobBuilderFactory.get(JOB_NAME).start(mfFlow).split(taskExecutor).add(cbFlow, gsecFlow).on(FlowExecutionStatus.COMPLETED.getName()).end()
-					.on(FlowExecutionStatus.FAILED.getName()).fail().end().build();
-			final JobParameters jobParameters = new JobParametersBuilder().addString("MONTH", new SimpleDateFormat("MMM-yyyy").format(new Date())).toJobParameters();
-			final JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-			if (ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())) {
-				instrumentRepository.flush();
-			}
+			final Flow equityFlow = csvFlow(JOB_NAME + "." + InstrumentType.EQUITY, properties.getEquityInstrumentDownloadUrl(), new EquityCsvRowMapper());
+			final Flow depositoryReceiptFlow = csvFlow(JOB_NAME + "." + InstrumentType.DEPOSITORY_RECEIPTS, properties.getDepositoryReceiptsInstrumentDownloadUrl(),
+					new DepositoryReceiptCsvRowMapper());
+			final Flow preferenceShareFlow = csvFlow(JOB_NAME + "." + InstrumentType.PREFERENCE_SHARES, properties.getPreferenceSharesInstrumentDownloadUrl(),
+					new PreferenceShareCsvRowMapper());
+			final Flow debtFlow = csvFlow(JOB_NAME + "." + InstrumentType.DEBT, properties.getDebtInstrumentDownloadUrl(), new DebtCsvRowMapper());
+			final Flow warrantFlow = csvFlow(JOB_NAME + "." + InstrumentType.WARRANTS, properties.getWarrantInstrumentDownloadUrl(), new WarrantCsvRowMapper());
+			final Flow mfCloseEndedFlow = csvFlow(JOB_NAME + "." + InstrumentType.MUTUAL_FUND_CE, properties.getMutualFundsCloseEndedInstrumentDownloadUrl(),
+					new MutualFundCloseEndedCsvRowMapper());
+			final Flow etfFlow = csvFlow(JOB_NAME + "." + InstrumentType.ETF, properties.getEtfInstrumentDownloadUrl(), new EtfCsvRowMapper());
+			final Job job = jobBuilderFactory.get(JOB_NAME).start(mfFlow).split(new SyncTaskExecutor())
+					.add(cbFlow, gsecFlow, equityFlow, depositoryReceiptFlow, preferenceShareFlow, debtFlow, warrantFlow, mfCloseEndedFlow, etfFlow)
+					.on(FlowExecutionStatus.COMPLETED.getName()).end().on(FlowExecutionStatus.FAILED.getName()).fail().end().listener(new JobExecutionListenerSupport() {
+						@Override
+						public void afterJob(JobExecution jobExecution) {
+							super.afterJob(jobExecution);
+							if (ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())) {
+								instrumentRepository.flush();
+							}
+						}
+					}).build();
+
+			jobLauncher.run(job, getJobParameters());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private Flow csvFlow(final String flowName, final String url, final CsvRowMapper<Instrument> rowMapper) {
+		final CsvItemReader<Instrument> reader = new CsvItemReader<>(url, rowMapper);
+		reader.setLinesToSkip(1);
+		reader.setName(flowName + "-item-reader");
+		final Step step = stepBuilderFactory.get(flowName + "-read-write-step").<Instrument, Instrument> chunk(Integer.MAX_VALUE).reader(reader).writer(instrumentsItemWriter)
+				.build();
+		return new FlowBuilder<Flow>(flowName).start(step).on(FlowExecutionStatus.FAILED.getName()).fail().from(step).on(FlowExecutionStatus.COMPLETED.getName()).end().build();
 	}
 
 	private Flow archivedExcelFlow(final String flowName, final String url, final RowMapper<Instrument> rowMapper) {

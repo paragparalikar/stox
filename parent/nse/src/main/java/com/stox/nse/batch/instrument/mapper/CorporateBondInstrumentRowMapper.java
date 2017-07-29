@@ -1,4 +1,4 @@
-package com.stox.nse.batch.instrument;
+package com.stox.nse.batch.instrument.mapper;
 
 import java.util.Date;
 
@@ -21,14 +21,20 @@ public class CorporateBondInstrumentRowMapper implements RowMapper<Instrument> {
 	@Override
 	public Instrument mapRow(RowSet rowSet) throws Exception {
 		final Instrument instrument = new Instrument();
+		final int count = rowSet.getMetaData().getColumnCount();
 		instrument.setExchange(Exchange.NSE);
 		instrument.setType(InstrumentType.CORPORATE_BOND);
-		instrument.setIsin(rowSet.getColumnValue(1));
-		instrument.setSymbol(rowSet.getColumnValue(2));
+		if (1 < count)
+			instrument.setIsin(rowSet.getColumnValue(1));
+		if (2 < count)
+			instrument.setSymbol(rowSet.getColumnValue(2));
 		instrument.setExchangeCode(instrument.getSymbol());
-		instrument.setName(rowSet.getColumnValue(3));
+		if (3 < count)
+			instrument.setName(rowSet.getColumnValue(3));
 		final Date date = new Date();
-		date.setTime(Long.parseLong(rowSet.getColumnValue(5)));
+
+		if (5 < count)
+			date.setTime(Long.parseLong(rowSet.getColumnValue(5)));
 		instrument.setExpiry(date);
 		return instrument;
 	}

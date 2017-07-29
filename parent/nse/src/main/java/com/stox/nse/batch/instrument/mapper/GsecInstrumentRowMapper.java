@@ -1,4 +1,4 @@
-package com.stox.nse.batch.instrument;
+package com.stox.nse.batch.instrument.mapper;
 
 import java.util.Date;
 

@@ -9,6 +9,47 @@ import java.util.zip.ZipInputStream;
 
 public class StringUtil {
 
+	public static String get(final String[] tokens, final int index) {
+		if (null != tokens && index < tokens.length) {
+			return tokens[index];
+		}
+		return null;
+	}
+
+	public static Integer parseInt(final String text) {
+		if (StringUtil.hasText(text)) {
+			try {
+				return Integer.parseInt(text);
+			} catch (NumberFormatException e) {
+
+			}
+		}
+		return null;
+	}
+
+	public static Long parseLong(final String text) {
+		if (StringUtil.hasText(text)) {
+			try {
+				return Long.parseLong(text);
+			} catch (NumberFormatException e) {
+
+			}
+		}
+		return null;
+	}
+
+	public static Double parseDouble(final String text) {
+		if (StringUtil.hasText(text)) {
+			try {
+				return Double.parseDouble(text);
+			} catch (NumberFormatException e) {
+
+			}
+		}
+		return null;
+
+	}
+
 	public static String nullIfEmpty(final String text) {
 		return hasText(text) ? text : null;
 	}

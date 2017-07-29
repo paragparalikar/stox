@@ -17,7 +17,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.support.AbstractItemCountingItemStreamItemReader;
-import org.springframework.core.io.Resource;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -32,8 +31,7 @@ public class CsvItemReader<T> extends AbstractItemCountingItemStreamItemReader<T
 	@Setter(AccessLevel.NONE)
 	private final List<String> rows = new ArrayList<>();
 
-	private String delimiter;
-	private Resource resource;
+	private String delimiter = ",";
 	private int linesToSkip = 0;
 	private CsvRowCallback skippedRowsCallback;
 
@@ -47,8 +45,11 @@ public class CsvItemReader<T> extends AbstractItemCountingItemStreamItemReader<T
 
 	@Override
 	protected T doRead() throws Exception {
-		final String row = rows.get(index++);
-		return rowMapper.map(null != row ? row.split(delimiter) : new String[] {});
+		if (index < rows.size()) {
+			final String row = rows.get(index++);
+			return rowMapper.map(null != row ? row.split(delimiter) : new String[] {});
+		}
+		return null;
 	}
 
 	@Override

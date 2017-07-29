@@ -23,11 +23,11 @@ public class Instrument implements Identifiable<String>, Nameable {
 
 	private Date expiry;
 
-	private double strike;
+	private Double strike;
 
-	private int lotSize;
+	private Integer lotSize;
 
-	private double tickSize;
+	private Double tickSize;
 
 	private InstrumentType type;
 
