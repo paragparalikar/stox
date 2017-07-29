@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -54,11 +55,7 @@ public class CsvItemReader<T> extends AbstractItemCountingItemStreamItemReader<T
 
 	@Override
 	protected void doOpen() throws Exception {
-		final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getInputStream()));
-		String line = null;
-		while (null != (line = bufferedReader.readLine())) {
-			rows.add(line);
-		}
+		rows.addAll(createRows(getInputStream()));
 		if (null != skippedRowsCallback) {
 			for (; index < Math.min(linesToSkip, rows.size()); index++) {
 				final String row = rows.get(index);
@@ -66,6 +63,16 @@ public class CsvItemReader<T> extends AbstractItemCountingItemStreamItemReader<T
 			}
 		}
 		index = linesToSkip;
+	}
+
+	protected List<String> createRows(final InputStream inputStream) throws Exception {
+		final List<String> rows = new LinkedList<String>();
+		final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		String line = null;
+		while (null != (line = bufferedReader.readLine())) {
+			rows.add(line);
+		}
+		return rows;
 	}
 
 	protected InputStream getInputStream() throws Exception {

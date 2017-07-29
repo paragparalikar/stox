@@ -44,4 +44,7 @@ public class NseProperties {
 	@Value("${com.stox.nse.url.instrument.ID}")
 	private String indexInstrumentDownloadUrl;
 
+	@Value("${com.stox.nse.url.bar}")
+	private String barDownloadUrl;
+
 }
