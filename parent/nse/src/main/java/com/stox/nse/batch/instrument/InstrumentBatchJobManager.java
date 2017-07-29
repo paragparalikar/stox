@@ -1,7 +1,6 @@
 package com.stox.nse.batch.instrument;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,14 +12,10 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.JobOperator;
-import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.launch.NoSuchJobInstanceException;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.excel.RowMapper;
@@ -53,16 +48,10 @@ import com.stox.nse.batch.instrument.mapper.WarrantCsvRowMapper;
 
 @Component
 public class InstrumentBatchJobManager {
-	private static final String JOB_NAME = "com.stox.job.download.nse.instrument";
+	public static final String JOB_NAME = "com.stox.job.download.nse.instrument";
 
 	@Autowired
 	private NseProperties properties;
-
-	@Autowired
-	private JobOperator jobOperator;
-
-	@Autowired
-	private JobExplorer jobExplorer;
 
 	@Autowired
 	private JobLauncher jobLauncher;
@@ -90,28 +79,6 @@ public class InstrumentBatchJobManager {
 
 	@Async
 	public void executeInstrumentDownloadJob() {
-		try {
-			final List<Long> jobInstanceIds = jobOperator.getJobInstances(JOB_NAME, 0, 1);
-			if (null != jobInstanceIds && !jobInstanceIds.isEmpty()) {
-				final List<Long> jobExecutionIds = jobOperator.getExecutions(jobInstanceIds.get(0));
-				for (final Long jobExecutionId : jobExecutionIds) {
-					final JobExecution jobExecution = jobExplorer.getJobExecution(jobExecutionId);
-					if (null != jobExecution && ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())) {
-						final Date date = jobExecution.getEndTime();
-						final Calendar calendar = Calendar.getInstance();
-						calendar.add(Calendar.MONTH, -1);
-						if (date.after(calendar.getTime())) {
-							return;
-						}
-					}
-				}
-			}
-		} catch (NoSuchJobException | NoSuchJobInstanceException e) {
-		}
-		doExecuteInstrumentDownloadJob();
-	}
-
-	private void doExecuteInstrumentDownloadJob() {
 		try {
 			final Flow mfFlow = archivedExcelFlow(JOB_NAME + "." + InstrumentType.MUTUAL_FUND.getName(), properties.getMutualFundsInstrumentDownloadUrl(),
 					new MutualFundInstrumentRowMapper());
