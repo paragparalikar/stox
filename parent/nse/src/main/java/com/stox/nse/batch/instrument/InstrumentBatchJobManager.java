@@ -24,7 +24,6 @@ import org.springframework.batch.core.launch.NoSuchJobInstanceException;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.excel.RowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -102,8 +101,8 @@ public class InstrumentBatchJobManager {
 					new CorporateBondInstrumentRowMapper());
 			final Flow gsecFlow = archivedExcelFlow(JOB_NAME + "." + InstrumentType.GOVERNMENT_SECURITY.getName(), properties.getGsecInstrumentsDownloadUrl(),
 					new GsecInstrumentRowMapper());
-			final Job job = jobBuilderFactory.get(JOB_NAME).start(mfFlow).split(new SimpleAsyncTaskExecutor()).add(cbFlow, gsecFlow).on(FlowExecutionStatus.COMPLETED.getName())
-					.end().on(FlowExecutionStatus.FAILED.getName()).fail().end().build();
+			final Job job = jobBuilderFactory.get(JOB_NAME).start(mfFlow).split(taskExecutor).add(cbFlow, gsecFlow).on(FlowExecutionStatus.COMPLETED.getName()).end()
+					.on(FlowExecutionStatus.FAILED.getName()).fail().end().build();
 			final JobParameters jobParameters = new JobParametersBuilder().addString("MONTH", new SimpleDateFormat("MMM-yyyy").format(new Date())).toJobParameters();
 			final JobExecution jobExecution = jobLauncher.run(job, jobParameters);
 			if (ExitStatus.COMPLETED.equals(jobExecution.getExitStatus())) {
