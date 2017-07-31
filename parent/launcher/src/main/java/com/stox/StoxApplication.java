@@ -10,8 +10,10 @@ import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+@EnableScheduling
 @EnableAsync(mode = AdviceMode.ASPECTJ)
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class StoxApplication extends Application {

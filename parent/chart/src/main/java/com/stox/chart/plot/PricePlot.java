@@ -88,36 +88,38 @@ public class PricePlot extends Plot<Bar> {
 	public void loadExtra() {
 		final List<Bar> bars = getModels();
 		final ChartView chartView = getChart().getChartView();
-		if (null != instrument && 0 < getModels().size() && !locked && dataAvailable && getModels().size() < chartView.getDateAxis().getLowerBoundIndex()) {
-			locked = true;
-			final Bar oldestBar = bars.get(bars.size() - 1);
-			final Date to = oldestBar.getDate();
-			final BarSpan barSpan = chartView.getBarSpan();
-			final Date from = ChartUtil.getFrom(to, barSpan);
+		if (null != instrument && 0 < getModels().size() && !locked) {
+			if (dataAvailable && getModels().size() < chartView.getDateAxis().getLowerBoundIndex()) {
+				locked = true;
+				final Bar oldestBar = bars.get(bars.size() - 1);
+				final Date to = oldestBar.getDate();
+				final BarSpan barSpan = chartView.getBarSpan();
+				final Date from = ChartUtil.getFrom(to, barSpan);
 
-			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
+				chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
 
-				@Override
-				public void onSuccess(Response<List<Bar>> response) {
-					addData(from, barSpan, response.getPayload());
-					if (dataAvailable) {
-						loadExtra();
+					@Override
+					public void onSuccess(Response<List<Bar>> response) {
+						addData(from, barSpan, response.getPayload());
+						if (dataAvailable) {
+							loadExtra();
+						} else {
+							update();
+						}
 					}
-					if (getModels().size() >= chartView.getDateAxis().getLowerBoundIndex()) {
-						update();
+
+					@Override
+					public void onFailure(Response<List<Bar>> response, Throwable throwable) {
+						dataAvailable = false;
 					}
-				}
 
-				@Override
-				public void onFailure(Response<List<Bar>> response, Throwable throwable) {
-					dataAvailable = false;
-				}
-
-				@Override
-				public void onDone() {
-					locked = false;
-				}
-			}));
+					@Override
+					public void onDone() {
+						locked = false;
+					}
+				}));
+			}
+			update();
 		}
 	}
 }
