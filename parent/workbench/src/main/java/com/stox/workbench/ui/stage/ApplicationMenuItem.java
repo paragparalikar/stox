@@ -17,7 +17,6 @@ public class ApplicationMenuItem extends MenuItem {
 		addEventHandler(ActionEvent.ACTION, event -> {
 			final Presenter<?, ?> presenter = presenterProvider.create();
 			workbenchPresenter.add(presenter, null);
-			presenter.setDefaultPosition();
 		});
 	}
 

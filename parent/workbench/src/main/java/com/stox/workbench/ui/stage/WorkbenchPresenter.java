@@ -130,6 +130,8 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 			presenters.add(presenter);
 			if (null != viewState) {
 				presenter.setViewSate(viewState);
+			} else {
+				presenter.setDefaultPosition();
 			}
 		});
 	}

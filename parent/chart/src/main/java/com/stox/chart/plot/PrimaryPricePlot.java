@@ -34,6 +34,7 @@ public class PrimaryPricePlot extends PricePlot {
 	public void setInstrument(Instrument instrument) {
 		chart.getChartView().clearMessages();
 		chart.getChartView().getDateAxis().reset();
+		chart.getChartView().getTitleBar().setTitleText(instrument.getName());
 		super.setInstrument(instrument);
 	}
 
