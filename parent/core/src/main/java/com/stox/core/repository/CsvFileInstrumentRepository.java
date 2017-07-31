@@ -3,10 +3,6 @@ package com.stox.core.repository;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.intf.HasName.HasNameComaparator;
+import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
 import com.stox.core.util.Constant;
 
@@ -31,28 +29,19 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	private final Map<String, Instrument> cache = new HashMap<>();
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(Instrument.class).withHeader();
 
-	public String getPath() {
-		return Constant.PATH + "com.stox.instruments.csv";
-	}
-
-	@Override
-	public Date getLastUpdatedDate() {
-		try {
-			final Path path = Paths.get(getPath());
-			if (Files.exists(path)) {
-				return new Date(Files.getLastModifiedTime(path).toMillis());
-			}
-		} catch (IOException e) {
-		}
-		return new Date(0);
+	public String getPath(final Exchange exchange) {
+		return Constant.PATH + "com.stox.instruments." + exchange.getId().toLowerCase() + ".csv";
 	}
 
 	private void loadInstruments() {
 		try {
 			if (cache.isEmpty()) {
-				final List<Instrument> instruments = Constant.csvMapper.reader(schema).forType(Instrument.class).readValues(new File(getPath())).readAll().stream()
-						.map(o -> (Instrument) o).collect(Collectors.toList());
-				instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+				for (final Exchange exchange : Exchange.values()) {
+					final File file = new File(getPath(exchange));
+					final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Instrument.class);
+					final List<Instrument> instruments = reader.<Instrument> readValues(file).readAll();
+					instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+				}
 			}
 		} catch (FileNotFoundException fnfe) {
 			// Do nothing
@@ -68,17 +57,12 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
-	public void save(final List<Instrument> instruments) {
-		instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
-
-	}
-
-	@Override
-	public void flush() {
+	public void save(final Exchange exchange, final List<Instrument> instruments) {
 		try {
-			Constant.csvMapper.writer(schema).writeValues(new File(getPath())).writeAll(cache.values()).flush();
-			final List<Instrument> instruments = cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());
-			eventPublisher.publishEvent(new InstrumentsChangedEvent(this, instruments));
+			Constant.csvMapper.writer(schema).writeValues(new File(getPath(exchange))).writeAll(instruments).flush();
+			instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+			final List<Instrument> allInstruments = cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());
+			eventPublisher.publishEvent(new InstrumentsChangedEvent(this, allInstruments));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

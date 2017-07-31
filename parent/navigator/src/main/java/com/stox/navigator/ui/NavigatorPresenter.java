@@ -71,7 +71,9 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		filterModalPresenter.getModal().getFilterButton().addEventHandler(ActionEvent.ACTION, event -> {
 			filterModalPresenter.getModal().hide();
 			filterPresenter.filter(instruments -> {
-				view.getListView().getItems().setAll(instruments);
+				Platform.runLater(() -> {
+					view.getListView().getItems().setAll(instruments);
+				});
 				return null;
 			});
 		});

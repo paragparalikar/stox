@@ -1,0 +1,75 @@
+package com.stox.nse.data;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+
+import com.stox.core.downloader.Downloader;
+import com.stox.core.model.Exchange;
+import com.stox.core.model.Instrument;
+import com.stox.core.model.InstrumentType;
+import com.stox.core.repository.BarRepository;
+import com.stox.core.repository.InstrumentRepository;
+import com.stox.nse.NseProperties;
+import com.stox.nse.data.instrument.InstrumentDownloaderFactory;
+
+@Component
+public class NseDataManager {
+
+	@Autowired
+	private InstrumentRepository instrumentRepository;
+
+	@Autowired
+	private BarRepository barRepository;
+
+	@Autowired
+	private NseProperties properties;
+
+	@Autowired
+	private NseDataStateRepository dataStateRepository;
+
+	@Autowired
+	private ThreadPoolTaskExecutor taskExecutor;
+
+	@EventListener(ContextRefreshedEvent.class)
+	public void onContextRefreshed(final ContextRefreshedEvent event) {
+		if (shouldDownloadInstruments()) {
+			downloadInstruments();
+		}
+	}
+
+	private boolean shouldDownloadInstruments() {
+		return null == dataStateRepository.getDataState().getLastInstrumentDownloadDate();
+	}
+
+	private void downloadInstruments() {
+		try {
+			final InstrumentDownloaderFactory downloaderFactory = new InstrumentDownloaderFactory(properties);
+			final List<Downloader<Instrument, ?>> downlaoders = Arrays.stream(InstrumentType.values()).map(type -> downloaderFactory.getDownloader(type))
+					.filter(downloader -> null != downloader).collect(Collectors.toList());
+			taskExecutor.submit(() -> {
+				final List<Instrument> allInstruments = downlaoders.stream().parallel().map(downloader -> {
+					try {
+						System.out.println("Downloading : " + downloader.getClass());
+						return downloader.download();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}).flatMap(x -> x.stream()).collect(Collectors.toList());
+				instrumentRepository.save(Exchange.NSE, allInstruments);
+				dataStateRepository.getDataState().setLastInstrumentDownloadDate(new Date());
+				dataStateRepository.persistDataState();
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}

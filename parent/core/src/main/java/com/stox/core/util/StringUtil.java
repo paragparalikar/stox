@@ -85,12 +85,12 @@ public class StringUtil {
 		return String.valueOf(Constant.currencyFormat.format(value) + text);
 	}
 
-	public static String toString(final InputStream inputStream) throws IOException {
+	public static String toString(final InputStream inputStream, final String lineDelimiter) throws IOException {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		String line = null;
 		final StringBuilder sb = new StringBuilder();
 		while (null != (line = reader.readLine())) {
-			sb.append(line);
+			sb.append(line + lineDelimiter);
 		}
 		return sb.toString();
 	}
