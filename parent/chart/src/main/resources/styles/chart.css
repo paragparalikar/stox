@@ -22,7 +22,8 @@
 	-fx-background-color: lightest;
 }
 
-.value-axis Line {
+.value-axis Line,
+.date-axis Line {
 	-fx-stroke: lighter;
 }
 

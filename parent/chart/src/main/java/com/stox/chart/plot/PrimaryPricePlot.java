@@ -53,4 +53,21 @@ public class PrimaryPricePlot extends PricePlot {
 		});
 	}
 
+	long previousDate = 0;
+
+	@Override
+	public void preLayout() {
+		previousDate = 0;
+		getChart().getChartView().getDateAxis().clear();
+		super.preLayout();
+	}
+
+	@Override
+	public void layoutUnit(final Unit<Bar> unit, final double x, final double width) {
+		final Bar bar = unit.getModel();
+		getChart().getChartView().getDateAxis().addTick(x, bar.getDate().getTime(), previousDate);
+		previousDate = bar.getDate().getTime();
+		super.layoutUnit(unit, x, width);
+	}
+
 }

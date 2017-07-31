@@ -2,6 +2,7 @@ package com.stox.chart.axis;
 
 import javafx.scene.layout.Pane;
 
+import com.stox.chart.axis.helper.DateAxisTickHelper;
 import com.stox.chart.plot.PrimaryPricePlot;
 import com.stox.chart.view.ChartView;
 import com.stox.core.ui.util.UiUtil;
@@ -14,6 +15,7 @@ public class DateAxis extends Pane {
 	private int barCount = 200;
 	private double upperBound;
 	private int blankBarSpace = 5;
+	private final DateAxisTickHelper dateAxisTickHelper = new DateAxisTickHelper(this);
 
 	public DateAxis(final ChartView chartView) {
 		this.chartView = chartView;
@@ -64,6 +66,14 @@ public class DateAxis extends Pane {
 		if (primaryPricePlot.getUnits().size() < getLowerBoundIndex()) {
 			primaryPricePlot.loadExtra();
 		}
+	}
+
+	public void addTick(final double x, final long date, final long previousDate) {
+		dateAxisTickHelper.addTick(x + getUnitWidth() / 2, date, previousDate);
+	}
+
+	public void clear() {
+		dateAxisTickHelper.clear();
 	}
 
 	public void zoomIn() {

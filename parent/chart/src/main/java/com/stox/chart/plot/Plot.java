@@ -80,6 +80,15 @@ public abstract class Plot<M extends Range> extends Group {
 		return model.getHigh();
 	}
 
+	protected void preLayout() {
+		lastMinIndex = Math.max(lastMinIndex, 0);
+		lastMaxIndex = Math.min(lastMaxIndex, units.size() - 1);
+	}
+
+	protected void layoutUnit(final Unit<M> unit, final double x, final double width) {
+		unit.layoutChartChildren(x, width);
+	}
+
 	@Override
 	protected final void layoutChildren() {
 		if (dirty) {
@@ -88,15 +97,14 @@ public abstract class Plot<M extends Range> extends Group {
 			final int minIndex = dateAxis.getUpperBoundIndex();
 			final int maxIndex = dateAxis.getLowerBoundIndex();
 			final double width = dateAxis.getUnitWidth();
-			lastMinIndex = Math.max(lastMinIndex, 0);
-			lastMaxIndex = Math.min(lastMaxIndex, units.size() - 1);
+			preLayout();
 			for (int index = lastMaxIndex; index >= lastMinIndex; index--) {
 				final Unit<M> unit = units.get(index);
 				if (null != unit) {
 					if (index <= maxIndex && index >= minIndex) {
 						unit.setVisible(true);
 						final double x = dateAxis.getDisplayPosition(index);
-						unit.layoutChartChildren(x, width);
+						layoutUnit(unit, x, width);
 					} else {
 						unit.setVisible(false);
 					}
