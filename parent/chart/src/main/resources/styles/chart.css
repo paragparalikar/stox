@@ -1,0 +1,39 @@
+.chart .content-area{
+	-fx-border-width:0 1 1 0;
+	-fx-border-color:lighter;
+}
+
+.crosshair Line {
+	-fx-stroke: dark;
+	-fx-stroke-width: 1px;
+	-fx-stroke-dash-array: 10 4 4 4;
+	-fx-stroke-dash-offset: 6;
+}
+
+.crosshair Label {
+	-fx-padding: 0;
+	-fx-text-alignment: right;
+	-fx-background-color: lightest;
+	-fx-text-fill: dark;
+}
+
+.value-axis {
+	-fx-pref-width: 4em;
+	-fx-background-color: lightest;
+}
+
+.value-axis Line {
+	-fx-stroke: lighter;
+}
+
+.date-axis {
+	-fx-pref-height: 3em;
+}
+
+.date-axis .label {
+	-fx-font-size: 0.8em;
+}
+
+.grid Line {
+	-fx-stroke: lighter;
+}

@@ -13,18 +13,20 @@ import lombok.EqualsAndHashCode;
 import com.stox.chart.axis.ValueAxis;
 import com.stox.chart.plot.Plot;
 import com.stox.chart.view.ChartView;
+import com.stox.core.ui.util.UiUtil;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "chartView", "plots" })
 public class Chart extends BorderPane {
 
 	private final ChartView chartView;
-	private final Pane area = new Pane();
+	private final Pane area = UiUtil.classes(new Pane(), "content-area");
 	private final ValueAxis valueAxis = new ValueAxis(this);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 
 	public Chart(final ChartView chartView) {
 		this.chartView = chartView;
+		UiUtil.classes(this, "chart");
 		setCenter(area);
 		setRight(valueAxis);
 		plots.addListener((ListChangeListener<Plot<?>>) (change) -> {

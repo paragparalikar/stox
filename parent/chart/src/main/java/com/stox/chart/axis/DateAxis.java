@@ -4,6 +4,7 @@ import javafx.scene.layout.Pane;
 
 import com.stox.chart.plot.PrimaryPricePlot;
 import com.stox.chart.view.ChartView;
+import com.stox.core.ui.util.UiUtil;
 
 public class DateAxis extends Pane {
 	private static final int MAX = 800;
@@ -16,6 +17,7 @@ public class DateAxis extends Pane {
 
 	public DateAxis(final ChartView chartView) {
 		this.chartView = chartView;
+		UiUtil.classes(this, "date-axis");
 	}
 
 	@Override

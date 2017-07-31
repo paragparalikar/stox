@@ -17,6 +17,7 @@ import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;
 import com.stox.chart.plot.VolumePlot;
 import com.stox.chart.util.ChartConstant;
+import com.stox.chart.widget.Crosshair;
 import com.stox.core.model.BarSpan;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.workbench.ui.view.View;
@@ -39,6 +40,7 @@ public class ChartView extends View {
 	private final SplitPane splitPane = UiUtil.classes(new SplitPane(primaryChart), "transparent");
 	private final DateAxis dateAxis = new DateAxis(this);
 	private final BorderPane content = new BorderPane(splitPane, null, null, dateAxis, null);
+	private final Crosshair crosshair = new Crosshair(this);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 
 	private MouseHandler mouseHandler;
@@ -46,8 +48,10 @@ public class ChartView extends View {
 
 	public ChartView() {
 		super(ChartConstant.CODE, ChartConstant.NAME, ChartConstant.ICON);
+		UiUtil.classes(this, "chart-view");
 		setContent(content);
 		setMouseHandler(defaultMouseHandler);
+		getChildren().addAll(crosshair);
 	}
 
 	public void setDirty() {
@@ -71,6 +75,18 @@ public class ChartView extends View {
 			this.mouseHandler = mouseHandler;
 			mouseHandler.attach();
 		}
+	}
+
+	public Chart getChartAt(final double screenX, final double screenY) {
+		if (primaryChart.contains(primaryChart.screenToLocal(screenX, screenY))) {
+			return primaryChart;
+		}
+		for (final Chart chart : charts) {
+			if (chart.contains(chart.screenToLocal(screenX, screenY))) {
+				return chart;
+			}
+		}
+		return null;
 	}
 
 }

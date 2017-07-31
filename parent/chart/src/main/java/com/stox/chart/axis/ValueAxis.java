@@ -3,6 +3,7 @@ package com.stox.chart.axis;
 import javafx.scene.layout.Pane;
 
 import com.stox.chart.chart.Chart;
+import com.stox.core.ui.util.UiUtil;
 import com.stox.core.util.MathUtil;
 
 public class ValueAxis extends Pane {
@@ -11,6 +12,7 @@ public class ValueAxis extends Pane {
 
 	public ValueAxis(final Chart chart) {
 		this.chart = chart;
+		UiUtil.classes(this, "value-axis");
 	}
 
 	public double getValueForDisplay(final double position, final double plotMin, final double plotMax) {
