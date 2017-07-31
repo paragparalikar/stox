@@ -72,7 +72,7 @@
 	-fx-padding: 0 0.5em 0 0.5em;
 }
 
-.primary > .title, .primary > .title > .label, .primary > .title > .label > .graphic, .primary > .title > .center > .right > .button{
+.primary > .title,  .primary .title .center .label, .primary > .title > .center > .right > .button{
 	-fx-background-color:background-primary;
 	-fx-border-color:background-primary;
 	-fx-text-fill:text-primary;
