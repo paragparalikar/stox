@@ -151,7 +151,7 @@
 
 
 /* primary */
-.primary.button, .primary.toggle-button, .primary.title,
+.primary.button, .primary.toggle-button, .primary.title, .primary.label,
 .primary.menu-button, .primary.menu-button > .label, .primary.menu-button > .context-menu{
 	-fx-background-color:background-primary;
 	-fx-border-color:background-primary;

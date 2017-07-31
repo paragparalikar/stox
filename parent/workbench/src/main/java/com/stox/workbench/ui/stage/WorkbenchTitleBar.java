@@ -1,6 +1,7 @@
 package com.stox.workbench.ui.stage;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.layout.HBox;
 
@@ -20,7 +21,7 @@ public class WorkbenchTitleBar extends HBox {
 
 	public WorkbenchTitleBar() {
 		getStyleClass().addAll("title", "primary", "center");
-		getChildren().addAll(menuBar, UiUtil.spacer(), buttonGroup);
+		getChildren().addAll(menuBar, UiUtil.spacer(), UiUtil.classes(new Label("parag.paralikar@gmail.com"), "primary"), UiUtil.spacer(), buttonGroup);
 	}
 
 	public MenuButton getApplicationsMenu() {
