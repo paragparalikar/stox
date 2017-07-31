@@ -18,10 +18,11 @@ public class WorkbenchTitleBar extends HBox {
 	private final Button minimizeButton = UiUtil.classes(new Button(Icon.WINDOW_MINIMIZE), "first", "icon", "primary");
 	private final Button maximizeButton = UiUtil.classes(new Button(Icon.WINDOW_MAXIMIZE), "middle", "icon", "primary");
 	private final HBox buttonGroup = UiUtil.classes(UiUtil.box(new HBox(minimizeButton, maximizeButton, closeButton)), "center");
+	private final Label contactLabel = UiUtil.classes(new Label("parag.paralikar@gmail.com"), "primary");
 
 	public WorkbenchTitleBar() {
 		getStyleClass().addAll("title", "primary", "center");
-		getChildren().addAll(menuBar, UiUtil.spacer(), UiUtil.classes(new Label("parag.paralikar@gmail.com"), "primary"), UiUtil.spacer(), buttonGroup);
+		getChildren().addAll(menuBar, UiUtil.spacer(), contactLabel, UiUtil.spacer(), buttonGroup);
 	}
 
 	public MenuButton getApplicationsMenu() {
