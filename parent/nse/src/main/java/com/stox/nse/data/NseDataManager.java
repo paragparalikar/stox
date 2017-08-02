@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +19,10 @@ import com.stox.core.model.Instrument;
 import com.stox.core.model.InstrumentType;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
-import com.stox.nse.NseProperties;
 import com.stox.nse.data.instrument.InstrumentDownloaderFactory;
 
 @Component
+@PropertySource("classpath:nse.properties")
 public class NseDataManager {
 
 	@Autowired
@@ -30,13 +32,13 @@ public class NseDataManager {
 	private BarRepository barRepository;
 
 	@Autowired
-	private NseProperties properties;
-
-	@Autowired
 	private NseDataStateRepository dataStateRepository;
 
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
+
+	@Autowired
+	private Environment environment;
 
 	@EventListener(ContextRefreshedEvent.class)
 	public void onContextRefreshed(final ContextRefreshedEvent event) {
@@ -51,7 +53,7 @@ public class NseDataManager {
 
 	private void downloadInstruments() {
 		try {
-			final InstrumentDownloaderFactory downloaderFactory = new InstrumentDownloaderFactory(properties);
+			final InstrumentDownloaderFactory downloaderFactory = new InstrumentDownloaderFactory(environment);
 			final List<Downloader<Instrument, ?>> downlaoders = Arrays.stream(InstrumentType.values()).map(type -> downloaderFactory.getDownloader(type))
 					.filter(downloader -> null != downloader).collect(Collectors.toList());
 			taskExecutor.submit(() -> {

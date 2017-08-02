@@ -1,0 +1,75 @@
+Isin,Code,Name
+ISIN_NSE_IDX_1,Nifty 50,Nifty 50
+ISIN_NSE_IDX_2,Nifty Next 50,Nifty Next 50
+ISIN_NSE_IDX_3,Nifty 100,Nifty 100
+ISIN_NSE_IDX_4,Nifty 200,Nifty 200
+ISIN_NSE_IDX_5,Nifty 500,Nifty 500
+ISIN_NSE_IDX_6,Nifty Midcap 50,Nifty Midcap 50
+ISIN_NSE_IDX_7,Nifty Free Float Midcap 100,Nifty Free Float Midcap 100
+ISIN_NSE_IDX_8,Nifty Free Float Smallcap 100,Nifty Free Float Smallcap 100
+ISIN_NSE_IDX_9,Nifty50 Dividend Points,Nifty50 Dividend Points
+ISIN_NSE_IDX_10,Nifty Auto,Nifty Auto
+ISIN_NSE_IDX_11,Nifty Bank,Nifty Bank
+ISIN_NSE_IDX_12,Nifty Energy,Nifty Energy
+ISIN_NSE_IDX_13,Nifty Financial Services,Nifty Financial Services
+ISIN_NSE_IDX_14,Nifty FMCG,Nifty FMCG
+ISIN_NSE_IDX_15,Nifty IT,Nifty IT
+ISIN_NSE_IDX_16,Nifty Media,Nifty Media
+ISIN_NSE_IDX_17,Nifty Metal,Nifty Metal
+ISIN_NSE_IDX_18,Nifty MNC,Nifty MNC
+ISIN_NSE_IDX_19,Nifty Pharma,Nifty Pharma
+ISIN_NSE_IDX_20,Nifty PSU Bank,Nifty PSU Bank
+ISIN_NSE_IDX_21,Nifty Realty,Nifty Realty
+ISIN_NSE_IDX_22,Nifty India Consumption,Nifty India Consumption
+ISIN_NSE_IDX_23,Nifty Commodities,Nifty Commodities
+ISIN_NSE_IDX_24,Nifty Dividend Opportunities 50,Nifty Dividend Opportunities 50
+ISIN_NSE_IDX_25,Nifty Infrastructure,Nifty Infrastructure
+ISIN_NSE_IDX_26,Nifty PSE,Nifty PSE
+ISIN_NSE_IDX_27,Nifty Services Sector,Nifty Services Sector
+ISIN_NSE_IDX_28,Nifty50 Shariah,Nifty50 Shariah
+ISIN_NSE_IDX_29,Nifty500 Shariah,Nifty500 Shariah
+ISIN_NSE_IDX_30,Nifty Low Volatility 50,Nifty Low Volatility 50
+ISIN_NSE_IDX_31,Nifty Alpha 50,Nifty Alpha 50
+ISIN_NSE_IDX_32,Nifty High Beta 50,Nifty High Beta 50
+ISIN_NSE_IDX_33,Nifty50 USD,Nifty50 USD
+ISIN_NSE_IDX_34,Nifty100 Equal Weight,Nifty100 Equal Weight
+ISIN_NSE_IDX_35,Nifty100 Liquid 15,Nifty100 Liquid 15
+ISIN_NSE_IDX_36,Nifty CPSE,Nifty CPSE
+ISIN_NSE_IDX_37,Nifty50 Value 20,Nifty50 Value 20
+ISIN_NSE_IDX_38,Nifty Midcap Liquid 15,Nifty Midcap Liquid 15
+ISIN_NSE_IDX_39,Nifty Shariah 25,Nifty Shariah 25
+ISIN_NSE_IDX_40,India VIX,India VIX
+ISIN_NSE_IDX_41,Nifty Growth Sectors 15,Nifty Growth Sectors 15
+ISIN_NSE_IDX_42,Nifty50 TR 1x Inverse,Nifty50 TR 1x Inverse
+ISIN_NSE_IDX_43,Nifty50 TR 2x Leverage,Nifty50 TR 2x Leverage
+ISIN_NSE_IDX_44,Nifty50 PR 1x Inverse,Nifty50 PR 1x Inverse
+ISIN_NSE_IDX_45,Nifty50 PR 2x Leverage,Nifty50 PR 2x Leverage
+ISIN_NSE_IDX_46,Nifty Quality 30,Nifty Quality 30
+ISIN_NSE_IDX_47,Nifty 50 Arbitrage,Nifty 50 Arbitrage
+ISIN_NSE_IDX_48,NIFTY50 Equal Weight,NIFTY50 Equal Weight
+ISIN_NSE_IDX_49,NIFTY Alpha Quality Low-Volatility 30,NIFTY Alpha Quality Low-Volatility 30
+ISIN_NSE_IDX_50,NIFTY Alpha Quality Value Low-Volatility 30,NIFTY Alpha Quality Value Low-Volatility 30
+ISIN_NSE_IDX_51,Nifty Private Bank,Nifty Private Bank
+ISIN_NSE_IDX_52,Nifty Mahindra Group,Nifty Mahindra Group
+ISIN_NSE_IDX_53,Nifty Full Smallcap 100,Nifty Full Smallcap 100
+ISIN_NSE_IDX_54,Nifty Smallcap 250,Nifty Smallcap 250
+ISIN_NSE_IDX_55,Nifty MidSmallcap 400,Nifty MidSmallcap 400
+ISIN_NSE_IDX_56,Nifty Tata Group 25% Cap,Nifty Tata Group 25% Cap
+ISIN_NSE_IDX_57,Nifty Tata Group,Nifty Tata Group
+ISIN_NSE_IDX_58,Nifty100 Low Volatility 30,Nifty100 Low Volatility 30
+ISIN_NSE_IDX_59,Nifty Midcap 150,Nifty Midcap 150
+ISIN_NSE_IDX_60,NIFTY Quality Low-Volatility 30,NIFTY Quality Low-Volatility 30
+ISIN_NSE_IDX_61,NIFTY Alpha Low-Volatility 30,NIFTY Alpha Low-Volatility 30
+ISIN_NSE_IDX_62,Nifty 50 Futures TR Index,Nifty 50 Futures TR Index
+ISIN_NSE_IDX_63,Nifty 50 Futures Index,Nifty 50 Futures Index
+ISIN_NSE_IDX_64,Nifty Full Midcap 100,Nifty Full Midcap 100
+ISIN_NSE_IDX_65,Nifty Aditya Birla Group,Nifty Aditya Birla Group
+ISIN_NSE_IDX_66,Nifty Smallcap 50,Nifty Smallcap 50
+ISIN_NSE_IDX_67,Nifty 8-13 yr G-Sec,Nifty 8-13 yr G-Sec
+ISIN_NSE_IDX_68,Nifty 10 yr Benchmark G-Sec,Nifty 10 yr Benchmark G-Sec
+ISIN_NSE_IDX_69,Nifty 10 yr Benchmark G-Sec (Clean Price),Nifty 10 yr Benchmark G-Sec (Clean Price)
+ISIN_NSE_IDX_70,Nifty 4-8 yr G-Sec Index,Nifty 4-8 yr G-Sec Index
+ISIN_NSE_IDX_71,Nifty 11-15 yr G-Sec Index,Nifty 11-15 yr G-Sec Index
+ISIN_NSE_IDX_72,Nifty 15 yr and above G-Sec Index,Nifty 15 yr and above G-Sec Index
+ISIN_NSE_IDX_73,Nifty Composite G-sec Index,Nifty Composite G-sec Index
+ISIN_NSE_IDX_74,Nifty 1D Rate Index,Nifty 1D Rate Index
