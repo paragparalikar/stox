@@ -1,7 +1,6 @@
 package com.stox.core.repository;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.stox.core.event.InstrumentsChangedEvent;
@@ -30,6 +30,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	private ApplicationEventPublisher eventPublisher;
 
 	private final Map<String, Instrument> cache = new HashMap<>();
+	private final Map<String, List<Instrument>> componentCache = new HashMap<>();
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(Instrument.class).withHeader();
 
 	private String getPath(final Exchange exchange) {
@@ -41,19 +42,26 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	private void loadInstruments() {
-		try {
-			if (cache.isEmpty()) {
-				for (final Exchange exchange : Exchange.values()) {
+		if (cache.isEmpty()) {
+			for (final Exchange exchange : Exchange.values()) {
+				try {
 					final File file = new File(getPath(exchange));
 					final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Instrument.class);
 					final List<Instrument> instruments = reader.<Instrument> readValues(file).readAll();
 					instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+				} catch (Exception e) {
+				}
+
+				try {
+					final Map<String, List<String>> map = Constant.objectMapper.readValue(FileUtil.getFile(getParentComponentMappingPath(exchange)),
+							new TypeReference<HashMap<String, List<String>>>() {
+							});
+					for (final String indexId : map.keySet()) {
+						componentCache.put(indexId, map.getOrDefault(indexId, Collections.emptyList()).stream().map(id -> getInstrument(id)).collect(Collectors.toList()));
+					}
+				} catch (Exception e) {
 				}
 			}
-		} catch (FileNotFoundException fnfe) {
-			// Do nothing
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
 	}
 
@@ -88,17 +96,9 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public List<Instrument> getComponentInstruments(Instrument instrument) {
-		try {
-			final String path = getParentComponentMappingPath(instrument.getExchange());
-			final Map<String, List<String>> map = Constant.objectMapper.readerFor(Map.class).readValue(FileUtil.getFile(path));
-			final List<String> componentIds = map.get(instrument.getId());
-			if (null != componentIds && !componentIds.isEmpty()) {
-				return componentIds.stream().map(id -> getInstrument(id)).collect(Collectors.toList());
-			}
-			return Collections.emptyList();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		loadInstruments();
+		final List<Instrument> instruments = componentCache.get(instrument.getId());
+		return null == instruments ? Collections.emptyList() : instruments;
 	}
 
 	@Override

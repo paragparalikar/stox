@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.ui.ToastCallback;
 import com.stox.core.ui.filter.FilterPresenter;
 import com.stox.data.DataClient;
@@ -39,6 +40,9 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 
 	@Autowired
 	private TaskExecutor taskExecutor;
+
+	@Autowired
+	private InstrumentRepository instrumentRepository;
 
 	private final NavigatorView view = new NavigatorView();
 	private final List<Instrument> allInstruments = new ArrayList<>(100000);
@@ -63,7 +67,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 
 	@PostConstruct
 	public void postConstruct() {
-		filterPresenter = new FilterPresenter(allInstruments, taskExecutor);
+		filterPresenter = new FilterPresenter(allInstruments, instrumentRepository, taskExecutor);
 	}
 
 	private void showFilter() {
@@ -74,7 +78,6 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 				Platform.runLater(() -> {
 					view.getListView().getItems().setAll(instruments);
 				});
-				return null;
 			});
 		});
 		filterModalPresenter.getModal().show();
@@ -88,7 +91,6 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 			Platform.runLater(() -> {
 				view.getListView().getItems().setAll(instruments);
 			});
-			return null;
 		});
 	}
 
@@ -109,7 +111,6 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 					view.getListView().getItems().setAll(i);
 					view.showSpinner(false);
 				});
-				return null;
 			});
 
 			return null;
