@@ -15,7 +15,6 @@ public class Constant {
 
 	public static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
 	public static final String PATH = System.getProperty("user.home") + File.separator + ".stox" + File.separator;
-	public static final String TEMPDIR = PATH + "temp" + File.separator;
 	public static final DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 	public static final DateFormat dateFormatFull = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
 	public static final NumberFormat currencyFormat = NumberFormat.getInstance();

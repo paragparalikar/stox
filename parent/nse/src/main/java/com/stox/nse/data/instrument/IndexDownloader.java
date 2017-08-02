@@ -26,7 +26,7 @@ public class IndexDownloader extends CsvDownloader<Instrument> {
 
 	@Override
 	protected InputStream createInputStream() throws Exception {
-		return getClass().getResourceAsStream("indexes.csv");
+		return getClass().getResourceAsStream("/indexes.csv");
 	}
 
 }

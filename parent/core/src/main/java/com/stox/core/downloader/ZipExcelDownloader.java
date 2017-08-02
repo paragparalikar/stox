@@ -32,7 +32,7 @@ public abstract class ZipExcelDownloader<T> extends ExcelDownloader<T> {
 	protected InputStream createInputStream() throws Exception {
 		final ZipInputStream zis = new ZipInputStream(new URL(getUrl()).openStream());
 		final ZipEntry zipEntry = zis.getNextEntry();
-		final Path targetPath = Paths.get(Constant.TEMPDIR + zipEntry.getName());
+		final Path targetPath = Paths.get(Constant.PATH + zipEntry.getName());
 		if (!Files.exists(targetPath)) {
 			Files.createDirectories(targetPath.getParent());
 			Files.createFile(targetPath);

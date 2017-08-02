@@ -10,11 +10,15 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.stox.core.util.Constant;
 
 @Data
 @AllArgsConstructor
 public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
+	private static final Logger log = LoggerFactory.getLogger("com.stox.core.downloader.CsvDownloader");
 
 	private String url;
 	private int linesToSkip;
@@ -31,6 +35,7 @@ public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
 
 	@Override
 	public List<T> download() throws Exception {
+		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
 		final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(createInputStream()));
 		return bufferedReader.lines().skip(linesToSkip).map(line -> {
 			try {

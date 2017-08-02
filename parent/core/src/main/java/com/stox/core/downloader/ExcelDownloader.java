@@ -19,12 +19,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.stox.core.util.Constant;
 
 @Data
 @AllArgsConstructor
 public abstract class ExcelDownloader<T> implements Downloader<T, Row> {
+	private static final Logger log = LoggerFactory.getLogger("com.stox.core.downloader.ExcelDownloader");
 
 	private String url;
 	private int linesToSkip;
@@ -35,6 +38,7 @@ public abstract class ExcelDownloader<T> implements Downloader<T, Row> {
 
 	@Override
 	public List<T> download() throws Exception {
+		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
 		final List<T> items = new ArrayList<>();
 		try (Workbook workbook = new XSSFWorkbook(createInputStream())) {
 			final Sheet sheet = workbook.getSheetAt(0);
@@ -52,7 +56,7 @@ public abstract class ExcelDownloader<T> implements Downloader<T, Row> {
 
 	protected InputStream createInputStream() throws Exception {
 		final String fileName = UUID.randomUUID().toString();
-		final Path targetPath = Paths.get(Constant.TEMPDIR + fileName);
+		final Path targetPath = Paths.get(Constant.PATH + fileName);
 		Files.copy(new URL(getUrl()).openStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 		return Files.newInputStream(targetPath, StandardOpenOption.DELETE_ON_CLOSE);
 	}
