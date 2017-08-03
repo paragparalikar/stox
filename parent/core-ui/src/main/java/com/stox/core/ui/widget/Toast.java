@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -29,7 +30,7 @@ public class Toast extends Stage {
 	private final VBox messageContainer = UiUtil.classes(UiUtil.fullWidth(new VBox(messageLabel)), "message-container");
 	private final HBox container = UiUtil.classes(new HBox(messageContainer, buttonContainer), "container");
 	private final StackPane root = UiUtil.classes(new StackPane(container), "toast");
-	private final Scene scene = new Scene(root);
+	private final Scene scene = new Scene(root, Color.TRANSPARENT);
 	private final ResizableRelocatableStageDecorator decorator = new ResizableRelocatableStageDecorator(this);
 
 	public Toast(final String message) {
@@ -41,8 +42,8 @@ public class Toast extends Stage {
 	}
 
 	public Toast(final String style, final String message, final Node node) {
-		setScene(scene);
 		initStyle(StageStyle.TRANSPARENT);
+		setScene(scene);
 		root.getStyleClass().add(style);
 
 		if (null != node) {
