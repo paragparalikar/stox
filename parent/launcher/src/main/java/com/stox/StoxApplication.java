@@ -32,7 +32,6 @@ public class StoxApplication extends Application {
 	public ThreadPoolTaskExecutor taskExecutor() {
 		final ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
 		taskExecutor.setAwaitTerminationSeconds(5);
-		taskExecutor.setDaemon(true);
 		taskExecutor.setCorePoolSize(3);
 		return taskExecutor;
 	}

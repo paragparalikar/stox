@@ -16,7 +16,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -55,10 +58,19 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 	@Autowired
 	private WorkbenchClient workbenchClient;
 
+	@Autowired
+	private ConfigurableApplicationContext applicatinoContext;
+
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
 	public WorkbenchPresenter() {
 		workbench.getTitleBar().getMinimizeButton().addEventHandler(ActionEvent.ACTION, event -> workbench.setIconified(true));
 		workbench.getTitleBar().getMaximizeButton().addEventHandler(ActionEvent.ACTION, event -> toggleMaximized());
-		workbench.getTitleBar().getCloseButton().addEventHandler(ActionEvent.ACTION, event -> Platform.exit());
+		workbench.getTitleBar().getCloseButton().addEventHandler(ActionEvent.ACTION, event -> {
+			Platform.exit();
+			SpringApplication.exit(applicatinoContext, () -> 0);
+		});
 	}
 
 	public Workbench getWorkbench() {
