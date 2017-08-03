@@ -1,4 +1,4 @@
-package com.stox.workbench.ui.titlebar;
+package com.stox.core.ui.widget.titlebar;
 
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Side;

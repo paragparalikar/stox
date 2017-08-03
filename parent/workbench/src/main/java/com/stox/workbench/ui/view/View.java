@@ -10,8 +10,8 @@ import javafx.scene.layout.VBox;
 import com.stox.core.model.Message;
 import com.stox.core.ui.HasSpinner;
 import com.stox.core.ui.util.UiUtil;
+import com.stox.core.ui.widget.titlebar.TitleBar;
 import com.stox.core.util.StringUtil;
-import com.stox.workbench.ui.titlebar.TitleBar;
 
 public abstract class View extends StackPane implements HasSpinner {
 

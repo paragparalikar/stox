@@ -1,4 +1,4 @@
-package com.stox.workbench.ui.stage;
+package com.stox.core.ui;
 
 import java.util.List;
 

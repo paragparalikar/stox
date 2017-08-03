@@ -1,4 +1,4 @@
-package com.stox.workbench.ui.titlebar.decorator;
+package com.stox.core.ui.widget.titlebar.decorator;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import com.stox.core.intf.HasLifecycle;
 import com.stox.core.ui.util.Icon;
 import com.stox.core.ui.util.UiUtil;
-import com.stox.workbench.ui.titlebar.TitleBar;
+import com.stox.core.ui.widget.titlebar.TitleBar;
 
 public class CloseDecorator {
 

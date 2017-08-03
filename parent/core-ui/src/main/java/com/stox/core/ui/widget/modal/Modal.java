@@ -1,4 +1,4 @@
-package com.stox.workbench.ui.modal;
+package com.stox.core.ui.widget.modal;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ import javafx.stage.StageStyle;
 
 import com.stox.core.intf.HasLifecycle;
 import com.stox.core.ui.HasSpinner;
+import com.stox.core.ui.ResizableRelocatableStageDecorator;
 import com.stox.core.ui.util.UiUtil;
-import com.stox.workbench.ui.stage.ResizableRelocatableStageDecorator;
-import com.stox.workbench.ui.stage.Workbench;
-import com.stox.workbench.ui.titlebar.TitleBar;
-import com.stox.workbench.ui.titlebar.decorator.CloseDecorator;
+import com.stox.core.ui.widget.ApplicationStage;
+import com.stox.core.ui.widget.titlebar.TitleBar;
+import com.stox.core.ui.widget.titlebar.decorator.CloseDecorator;
 
 public class Modal implements HasLifecycle, HasSpinner {
 
@@ -88,7 +88,7 @@ public class Modal implements HasLifecycle, HasSpinner {
 	}
 
 	public void show() {
-		final Workbench workbench = Workbench.getInstance();
+		final ApplicationStage workbench = ApplicationStage.getInstance();
 		if (null != workbench) {
 			workbench.showGlass(true);
 		}
@@ -96,7 +96,7 @@ public class Modal implements HasLifecycle, HasSpinner {
 	}
 
 	public void hide() {
-		final Workbench workbench = Workbench.getInstance();
+		final ApplicationStage workbench = ApplicationStage.getInstance();
 		if (null != workbench) {
 			workbench.showGlass(false);
 		}

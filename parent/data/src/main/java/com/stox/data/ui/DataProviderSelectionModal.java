@@ -13,8 +13,8 @@ import com.stox.core.intf.Callback;
 import com.stox.core.ui.HasNameStringConverter;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.FormGroup;
+import com.stox.core.ui.widget.modal.Modal;
 import com.stox.data.DataProvider;
-import com.stox.workbench.ui.modal.Modal;
 
 public class DataProviderSelectionModal extends Modal {
 

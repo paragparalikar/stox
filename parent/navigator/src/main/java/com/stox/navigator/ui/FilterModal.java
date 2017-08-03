@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
 import com.stox.core.ui.util.UiUtil;
-import com.stox.workbench.ui.modal.Modal;
+import com.stox.core.ui.widget.modal.Modal;
 
 public class FilterModal extends Modal {
 

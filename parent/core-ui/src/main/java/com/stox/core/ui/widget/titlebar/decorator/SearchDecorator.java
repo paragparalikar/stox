@@ -1,4 +1,4 @@
-package com.stox.workbench.ui.titlebar.decorator;
+package com.stox.core.ui.widget.titlebar.decorator;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,7 +10,7 @@ import javafx.scene.layout.Pane;
 import com.stox.core.ui.util.Icon;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.AbstractSearchTextField;
-import com.stox.workbench.ui.titlebar.TitleBar;
+import com.stox.core.ui.widget.titlebar.TitleBar;
 
 public class SearchDecorator<T> {
 

@@ -11,8 +11,8 @@ import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
+import com.stox.core.ui.widget.modal.Modal;
 import com.stox.data.DataProvider;
-import com.stox.workbench.ui.modal.Modal;
 import com.stox.zerodha.Zerodha;
 
 @Component

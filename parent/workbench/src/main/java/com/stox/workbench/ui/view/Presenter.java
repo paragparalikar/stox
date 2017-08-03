@@ -10,8 +10,8 @@ import org.springframework.context.ApplicationEvent;
 
 import com.stox.core.intf.HasLifecycle;
 import com.stox.core.intf.Persistable;
+import com.stox.core.ui.widget.titlebar.decorator.CloseDecorator;
 import com.stox.workbench.model.ViewState;
-import com.stox.workbench.ui.titlebar.decorator.CloseDecorator;
 import com.stox.workbench.ui.view.decorator.MaximizeDecorator;
 import com.stox.workbench.ui.view.decorator.RelocationDecorator;
 import com.stox.workbench.ui.view.decorator.ResizeDecorator;

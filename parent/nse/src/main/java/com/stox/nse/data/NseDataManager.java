@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -16,6 +17,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.downloader.Downloader;
+import com.stox.core.event.MessageEvent;
 import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
 import com.stox.core.model.InstrumentType;
@@ -44,11 +46,20 @@ public class NseDataManager {
 	@Autowired
 	private Environment environment;
 
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
 	@EventListener(ContextRefreshedEvent.class)
 	public void onContextRefreshed(final ContextRefreshedEvent event) {
 		if (shouldDownloadInstruments()) {
 			downloadInstruments();
 		}
+
+		downloadBars();
+	}
+
+	private void downloadBars() {
+		eventPublisher.publishEvent(new MessageEvent(this, "some message"));
 	}
 
 	private boolean shouldDownloadInstruments() {
