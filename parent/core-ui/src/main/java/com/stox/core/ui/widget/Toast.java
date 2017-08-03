@@ -8,50 +8,50 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import com.stox.core.ui.ResizableRelocatableStageDecorator;
 import com.stox.core.ui.util.Icon;
 import com.stox.core.ui.util.UiUtil;
-import com.stox.core.util.StringUtil;
 
 public class Toast extends Stage {
 
 	private static final int SPACING = 20;
 	private static final List<Toast> TOASTS = new LinkedList<>();
 
-	private final Label titleLabel = new Label();
-	private final HBox titleBar = UiUtil.classes(new HBox(titleLabel), "title");
 	private final Label messageLabel = UiUtil.classes(new Label(), "message");
 	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "icon");
-	private final BorderPane root = UiUtil.classes(new BorderPane(), "toast");
+	private final VBox buttonContainer = UiUtil.classes(new VBox(closeButton, UiUtil.spacer()), "button-container");
+	private final VBox messageContainer = UiUtil.classes(UiUtil.fullWidth(new VBox(messageLabel)), "message-container");
+	private final HBox container = UiUtil.classes(new HBox(messageContainer, buttonContainer), "container");
+	private final StackPane root = UiUtil.classes(new StackPane(container), "toast");
 	private final Scene scene = new Scene(root);
 	private final ResizableRelocatableStageDecorator decorator = new ResizableRelocatableStageDecorator(this);
 
 	public Toast(final String message) {
-		this(null, message);
+		this("primary", message);
 	}
 
-	public Toast(final String title, final String message) {
-		this(title, message, null);
+	public Toast(final String style, final String message) {
+		this(style, message, null);
 	}
 
-	public Toast(final String title, final String message, final Node node) {
-		this(title, message, node, true);
-	}
-
-	public Toast(final String title, final String message, final Node node, final boolean closeable) {
-		this(title, message, node, closeable, false);
-	}
-
-	public Toast(final String title, final String message, final Node node, final boolean closeable, final boolean autoClose) {
+	public Toast(final String style, final String message, final Node node) {
 		setScene(scene);
 		initStyle(StageStyle.TRANSPARENT);
+		root.getStyleClass().add(style);
 
-		decorator.bindTitleBar(root);
+		if (null != node) {
+			messageContainer.getChildren().add(node);
+		}
+
+		messageLabel.setText(message);
+
+		decorator.bindTitleBar(messageContainer);
 		closeButton.addEventHandler(ActionEvent.ACTION, event -> hide());
 		setOnShowing(event -> {
 			TOASTS.add(this);
@@ -61,31 +61,6 @@ public class Toast extends Stage {
 			TOASTS.remove(this);
 		});
 		scene.getStylesheets().addAll("styles/color-sceme.css", "fonts/open-sans/open-sans.css", "styles/bootstrap.css", "styles/common.css", "styles/toast.css");
-
-		if (StringUtil.hasText(title)) {
-			titleLabel.setText(title);
-			root.setTop(titleBar);
-		}
-
-		if (closeable) {
-			titleBar.getChildren().add(closeButton);
-			if (null == root.getTop()) {
-				root.setTop(titleBar);
-			}
-		}
-
-		if (StringUtil.hasText(message)) {
-			messageLabel.setText(message);
-			root.setCenter(messageLabel);
-		}
-
-		if (null != node) {
-			if (null == root.getCenter()) {
-				root.setCenter(node);
-			} else {
-				root.setBottom(node);
-			}
-		}
 
 	}
 

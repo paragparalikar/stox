@@ -1,27 +1,34 @@
 .toast{
-	-fx-background-radius:1em;
-	-fx-border-radius:1em;
-	-fx-opacity:0.5;
-	-fx-padding:1em;
+	-fx-pref-width:30em;
+	-fx-pref-height:3em;
+	-fx-padding:0.5em;
+	-fx-background-radius:0.5em;
+	-fx-border-radius:0.5em;
 }
-.toat > .message{
+.toast > .container{
+	
+}
+.toast .message{
 	-fx-padding:1em;
 }
 
-.toast.primary .title,
-.toast.primary .title .button,
-.toast.primary .title .label{
+.toast.primary,
+.toast.primary .container,
+.toast.primary .message-container,
+.toast.primary .button-container,
+.toast.primary .button,
+.toast.primary .label{
 	-fx-background-color:background-primary;
 	-fx-text-fill:text-primary;
 	-fx-border-color:background-primary;
 }
 
-.toast.primary .title *.button:hover{
+.toast.primary *.button:hover{
 	-fx-background-color:derive(background-primary, -5%);
 }
 
-.toast.primary .title *.button:pressed,
-.toast.primary .title *.button:selected,
-.toast.primary .title *.button:focused{
+.toast.primary *.button:pressed,
+.toast.primary *.button:selected,
+.toast.primary *.button:focused{
 	-fx-background-color:derive(background-primary, -15%);
 }
