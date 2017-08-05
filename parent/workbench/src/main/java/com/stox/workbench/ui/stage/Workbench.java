@@ -1,8 +1,9 @@
 package com.stox.workbench.ui.stage;
 
 import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 
-import com.stox.core.ui.ResizableRelocatableStageDecorator;
+import com.stox.core.ui.ResizableRelocatableWindowDecorator;
 import com.stox.core.ui.widget.ApplicationStage;
 
 public class Workbench extends ApplicationStage {
@@ -17,10 +18,11 @@ public class Workbench extends ApplicationStage {
 	private final WorkbenchTitleBar titleBar = new WorkbenchTitleBar();
 	private final WorkbenchToolBar toolBar = new WorkbenchToolBar();
 	private final BorderPane container = new BorderPane(contentPane, titleBar, null, toolBar, null);
-	private final ResizableRelocatableStageDecorator decorator = new ResizableRelocatableStageDecorator(this);
+	private final ResizableRelocatableWindowDecorator decorator = new ResizableRelocatableWindowDecorator(this);
 
 	public Workbench() {
 		Workbench.instance = this;
+		initStyle(StageStyle.UNDECORATED);
 		getRoot().getChildren().add(container);
 		decorator.bindTitleBar(titleBar);
 	}

@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+
+import org.controlsfx.control.Notifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,7 +25,7 @@ import com.stox.core.model.Instrument;
 import com.stox.core.model.InstrumentType;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
-import com.stox.core.ui.widget.Toast;
+import com.stox.core.ui.util.UiUtil;
 import com.stox.core.util.StringUtil;
 import com.stox.nse.data.instrument.IndexComponentDownloader;
 import com.stox.nse.data.instrument.InstrumentDownloaderFactory;
@@ -55,8 +59,7 @@ public class NseDataManager {
 	}
 
 	private void downloadBars() {
-		final Toast toast = new Toast("asdfasdfasdfasf");
-		toast.show();
+		Notifications.create().darkStyle().position(Pos.TOP_RIGHT).title("the title text").graphic(UiUtil.classes(new Label("Graphic label"), "primary")).show();
 	}
 
 	private boolean shouldDownloadInstruments() {

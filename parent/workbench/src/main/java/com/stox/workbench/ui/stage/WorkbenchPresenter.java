@@ -79,7 +79,7 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	@Override
 	public String[] getStylesheets() {
-		return new String[] { "styles/color-sceme.css", "styles/bootstrap.css", "styles/common.css", "styles/workbench.css" };
+		return new String[] { "styles/color-sceme.css", "styles/bootstrap.css", "styles/common.css", "styles/controlsfx.css", "styles/workbench.css" };
 	}
 
 	@EventListener(ContextRefreshedEvent.class)

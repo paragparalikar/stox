@@ -16,7 +16,7 @@ import javafx.stage.StageStyle;
 
 import com.stox.core.intf.HasLifecycle;
 import com.stox.core.ui.HasSpinner;
-import com.stox.core.ui.ResizableRelocatableStageDecorator;
+import com.stox.core.ui.ResizableRelocatableWindowDecorator;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.ApplicationStage;
 import com.stox.core.ui.widget.titlebar.TitleBar;
@@ -31,7 +31,7 @@ public class Modal implements HasLifecycle, HasSpinner {
 	private final StackPane root = new StackPane(borderPane);
 	private final Stage stage = new Stage();
 	private final VBox spinner = UiUtil.classes(new VBox(new ProgressIndicator()), "center");
-	private final ResizableRelocatableStageDecorator stageDecorator = new ResizableRelocatableStageDecorator(stage);
+	private final ResizableRelocatableWindowDecorator stageDecorator = new ResizableRelocatableWindowDecorator(stage);
 
 	public Modal() {
 		stage.initModality(Modality.WINDOW_MODAL);
