@@ -55,7 +55,7 @@ public class DateUtil {
 
 	private static final Calendar calendar = Calendar.getInstance();
 
-	public static void trim(final Date date) {
+	public static Date trim(final Date date) {
 		synchronized (DateUtil.calendar) {
 			DateUtil.calendar.setTime(date);
 			DateUtil.calendar.set(Calendar.HOUR, 0);
@@ -63,6 +63,7 @@ public class DateUtil {
 			DateUtil.calendar.set(Calendar.SECOND, 0);
 			DateUtil.calendar.set(Calendar.MILLISECOND, 0);
 			date.setTime(DateUtil.calendar.getTimeInMillis());
+			return date;
 		}
 	}
 

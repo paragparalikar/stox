@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -41,7 +43,8 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 		return Constant.PATH + "com.stox.instruments." + exchange.getId().toLowerCase() + ".parent-component-mapping.json";
 	}
 
-	private void loadInstruments() {
+	@PostConstruct
+	public void loadInstruments() {
 		if (cache.isEmpty()) {
 			for (final Exchange exchange : Exchange.values()) {
 				try {
@@ -67,19 +70,16 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public List<Instrument> getAllInstruments() {
-		loadInstruments();
 		return cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Instrument> getInstruments(Exchange exchange) {
-		loadInstruments();
 		return cache.values().stream().filter(instrument -> exchange.equals(instrument.getExchange())).sorted(new HasNameComaparator<>()).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Instrument> getInstruments(Exchange exchange, InstrumentType type) {
-		loadInstruments();
 		return cache.values().stream().filter(instrument -> exchange.equals(instrument.getExchange()) && type.equals(instrument.getType())).sorted(new HasNameComaparator<>())
 				.collect(Collectors.toList());
 	}
@@ -96,7 +96,6 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public List<Instrument> getComponentInstruments(Instrument instrument) {
-		loadInstruments();
 		final List<Instrument> instruments = componentCache.get(instrument.getId());
 		return null == instruments ? Collections.emptyList() : instruments;
 	}
@@ -115,7 +114,6 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public Instrument getInstrument(String id) {
-		loadInstruments();
 		return cache.get(id);
 	}
 

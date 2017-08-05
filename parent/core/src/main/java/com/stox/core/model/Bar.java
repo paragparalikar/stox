@@ -25,6 +25,8 @@ public class Bar implements Range, Comparable<Bar> {
 
 	private double volume;
 
+	private String instrumentId;
+
 	@Override
 	public double getValue() {
 		return getClose();
