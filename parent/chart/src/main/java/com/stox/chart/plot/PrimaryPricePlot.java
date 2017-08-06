@@ -60,6 +60,7 @@ public class PrimaryPricePlot extends PricePlot {
 	protected void addModels(List<Bar> bars) {
 		super.addModels(bars);
 		final ChartView chartView = chart.getChartView();
+		chart.getPlots().forEach(Plot::load);
 		chartView.getCharts().forEach(c -> {
 			c.getPlots().forEach(Plot::load);
 		});

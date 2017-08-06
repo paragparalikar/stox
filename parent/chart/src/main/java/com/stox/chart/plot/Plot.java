@@ -31,6 +31,10 @@ public abstract class Plot<M extends Range> extends Group {
 			lastMinIndex = Integer.MIN_VALUE;
 			lastMaxIndex = Integer.MAX_VALUE;
 			while (change.next()) {
+				if (change.wasRemoved()) {
+					units.clear();
+					getChildren().clear();
+				}
 				if (change.wasAdded()) {
 					for (int index = change.getFrom(); index < change.getTo(); index++) {
 						final M model = models.get(index);
@@ -38,10 +42,6 @@ public abstract class Plot<M extends Range> extends Group {
 						units.add(unit);
 						getChildren().add(unit);
 					}
-				}
-				if (change.wasRemoved()) {
-					units.clear();
-					getChildren().clear();
 				}
 			}
 		});
