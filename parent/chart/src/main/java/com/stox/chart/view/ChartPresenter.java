@@ -1,5 +1,6 @@
 package com.stox.chart.view;
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 
@@ -86,7 +87,11 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 
 			@Override
 			public void onFailure(Response<List<Bar>> response, Throwable throwable) {
-				view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
+				if (throwable instanceof FileNotFoundException) {
+					view.setMessage(new Message("No data available for \"" + instrumentId + "\"", MessageType.ERROR));
+				} else {
+					view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
+				}
 				callback.onFailure(response, throwable);
 			}
 
