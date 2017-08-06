@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.modal.Notification;
+import com.stox.core.util.StringUtil;
 
 public class BarLengthDownloadNotification {
 
@@ -24,7 +25,10 @@ public class BarLengthDownloadNotification {
 	}
 
 	public void setText(final String text) {
-		Platform.runLater(() -> instrumentLabel.setText(text));
+		Platform.runLater(() -> {
+			if (StringUtil.hasText(text))
+				instrumentLabel.setText(text);
+		});
 	}
 
 	public void setProgress(final double progress) {

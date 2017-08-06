@@ -109,19 +109,23 @@ public class NseBreadthBarDownloadManager {
 		final NseDataState state = dataStateRepository.getDataState();
 		final Date lastInstrumentDownloadDate = state.getLastInstrumentDownloadDate();
 		final Boolean barLengthDownloadCompleted = state.getBarLengthDownloadCompleted();
-		final Date start = DateUtil.trim(getLastBarDownloadDate());
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(start);
-		final Calendar today = Calendar.getInstance();
-		return null != lastInstrumentDownloadDate && null != barLengthDownloadCompleted && barLengthDownloadCompleted && calendar.before(today);
+		final Date lastBarDownloadDate = getLastBarDownloadDate();
+		if (null != lastBarDownloadDate) {
+			final Date start = DateUtil.trim(getLastBarDownloadDate());
+			final Calendar calendar = Calendar.getInstance();
+			calendar.setTime(start);
+			final Calendar today = Calendar.getInstance();
+			return null != lastInstrumentDownloadDate && null != state.getBarLengthDownloadStartDate() && null != barLengthDownloadCompleted && barLengthDownloadCompleted
+					&& calendar.before(today);
+		}
+		return false;
 	}
 
 	private Date getLastBarDownloadDate() {
-		final Date date = dataStateRepository.getDataState().getLastBarDownloadDate();
+		final NseDataState state = dataStateRepository.getDataState();
+		final Date date = state.getLastBarDownloadDate();
 		if (null == date) {
-			final Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.YEAR, -8);
-			return calendar.getTime();
+			return state.getBarLengthDownloadStartDate();
 		}
 		return date;
 	}

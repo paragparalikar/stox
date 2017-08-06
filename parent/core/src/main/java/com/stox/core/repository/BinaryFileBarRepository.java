@@ -65,6 +65,9 @@ public class BinaryFileBarRepository implements BarRepository {
 
 	@Override
 	public void save(List<Bar> bars, String instrumentId, BarSpan barSpan) {
+		if (null == bars || bars.isEmpty()) {
+			return;
+		}
 		final TreeSet<Bar> set = new TreeSet<Bar>(Collections.reverseOrder());
 		set.addAll(bars);
 		final String path = getPath(instrumentId, barSpan).intern();

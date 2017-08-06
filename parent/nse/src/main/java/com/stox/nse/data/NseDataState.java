@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class NseDataState {
 
+	private Date barLengthDownloadStartDate;
+
 	private Boolean barLengthDownloadCompleted;
 
 	private Date lastInstrumentDownloadDate;

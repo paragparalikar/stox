@@ -78,6 +78,13 @@ public class NseLegthBarDownloadManager {
 		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification();
 		notification.setText(staticText);
 		notification.show();
+
+		final NseDataState state = dataStateRepository.getDataState();
+		if (null == state.getBarLengthDownloadStartDate()) {
+			state.setBarLengthDownloadStartDate(new Date());
+			dataStateRepository.persistDataState();
+		}
+
 		allInstruments.stream().parallel().forEach(instrument -> {
 			try {
 				if (!cancel && StringUtil.hasText(instrument.getExchangeCode())) {
@@ -95,7 +102,6 @@ public class NseLegthBarDownloadManager {
 		});
 
 		if (!cancel) {
-			final NseDataState state = dataStateRepository.getDataState();
 			state.setBarLengthDownloadCompleted(Boolean.TRUE);
 			dataStateRepository.persistDataState();
 			repository.drop();
