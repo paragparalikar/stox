@@ -34,7 +34,7 @@ public class VolumePlot extends Plot<DoubleRange> {
 	@Override
 	public void setChart(Chart chart) {
 		super.setChart(chart);
-		setOpacity(chart instanceof PrimaryChart ? 0.3 : 1);
+		setOpacity(chart instanceof PrimaryChart ? 0.2 : 1);
 	}
 
 	@Override
