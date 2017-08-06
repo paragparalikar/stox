@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,13 +19,14 @@ public abstract class Plot<M extends Range> extends Group {
 
 	private Chart chart;
 	private boolean dirty;
+	private Color color = Color.GRAY;
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
 	private int lastMinIndex = Integer.MIN_VALUE, lastMaxIndex = Integer.MAX_VALUE;
 	private final ObservableList<M> models = FXCollections.observableArrayList();
 	private final ObservableList<Unit<M>> units = FXCollections.observableArrayList();
 
 	public Plot(final Chart chart) {
-		this.chart = chart;
+		setChart(chart);
 		models.addListener((ListChangeListener<M>) (change) -> {
 			lastMinIndex = Integer.MIN_VALUE;
 			lastMaxIndex = Integer.MAX_VALUE;
@@ -43,6 +45,10 @@ public abstract class Plot<M extends Range> extends Group {
 				}
 			}
 		});
+	}
+
+	public void setChart(final Chart chart) {
+		this.chart = chart;
 	}
 
 	public abstract void load();
@@ -64,20 +70,18 @@ public abstract class Plot<M extends Range> extends Group {
 			if (index >= 0 && index < units.size()) {
 				final Unit<M> unit = units.get(index);
 				if (null != unit) {
-					min = Math.min(min, min(unit.getModel()));
-					max = Math.max(max, max(unit.getModel()));
+					min = Math.min(min, unit.getModel().getLow());
+					max = Math.max(max, unit.getModel().getHigh());
 				}
 			}
 		}
+		updateChartValueBounds();
 		setDirty();
 	}
 
-	public double min(M model) {
-		return model.getLow();
-	}
-
-	public double max(M model) {
-		return model.getHigh();
+	protected void updateChartValueBounds() {
+		chart.setMin(Math.min(chart.getMin(), min));
+		chart.setMax(Math.max(chart.getMax(), max));
 	}
 
 	protected void preLayout() {
@@ -114,4 +118,5 @@ public abstract class Plot<M extends Range> extends Group {
 			lastMaxIndex = maxIndex;
 		}
 	}
+
 }

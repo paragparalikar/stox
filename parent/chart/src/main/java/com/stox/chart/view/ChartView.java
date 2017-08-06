@@ -1,6 +1,8 @@
 package com.stox.chart.view;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +36,7 @@ public class ChartView extends View {
 	/* configurable properties, these should go into a different object */
 	private Color upBarColor = Color.GREEN;
 	private Color downBarColor = Color.RED;
+	private final List<Color> plotColors = Arrays.asList(Color.BLACK, Color.BLUE, Color.GREEN, Color.BROWN, Color.AQUA, Color.BLUEVIOLET, Color.CADETBLUE);
 
 	private final PrimaryChart primaryChart = new PrimaryChart(this);
 	private final VolumePlot volumePlot = new VolumePlot(primaryChart);
@@ -52,6 +55,7 @@ public class ChartView extends View {
 		setContent(content);
 		setMouseHandler(defaultMouseHandler);
 		getChildren().addAll(crosshair);
+		primaryChart.getPlots().add(volumePlot);
 	}
 
 	public void setDirty() {

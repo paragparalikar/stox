@@ -16,8 +16,9 @@ public class LineUnit<M extends Range> extends Unit<M> {
 
 	@Override
 	public void layoutChartChildren(double x, double width) {
-		if (getIndex() < getPlot().getModels().size() - 1) {
-			final M previous = getPlot().getModels().get(getIndex() + 1);
+		final Plot<M> plot = getPlot();
+		if (getIndex() < plot.getModels().size() - 1) {
+			final M previous = plot.getModels().get(getIndex() + 1);
 			line.setStartX(x);
 			line.setEndX(x + width);
 			final M current = getModel();
