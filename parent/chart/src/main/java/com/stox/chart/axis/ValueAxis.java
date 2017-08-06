@@ -2,17 +2,37 @@ package com.stox.chart.axis;
 
 import javafx.scene.layout.Pane;
 
+import com.stox.chart.axis.helper.ValueAxisTickHelper;
 import com.stox.chart.chart.Chart;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.util.MathUtil;
 
 public class ValueAxis extends Pane {
 
+	private boolean dirty;
 	private final Chart chart;
+	private final ValueAxisTickHelper tickHelper = new ValueAxisTickHelper(this);
 
 	public ValueAxis(final Chart chart) {
 		this.chart = chart;
 		UiUtil.classes(this, "value-axis");
+	}
+
+	@Override
+	protected void layoutChildren() {
+		if (dirty) {
+			dirty = false;
+			tickHelper.layoutTicks();
+		}
+	}
+
+	public void setDirty() {
+		this.dirty = true;
+		requestLayout();
+	}
+
+	public Chart getChart() {
+		return chart;
 	}
 
 	public double getValueForDisplay(final double position, final double plotMin, final double plotMax) {

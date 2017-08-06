@@ -22,6 +22,7 @@ public class VolumePlot extends Plot<DoubleRange> {
 				if (change.wasAdded()) {
 					final List<DoubleRange> models = change.getAddedSubList().stream().map(bar -> new DoubleRange(bar.getVolume())).collect(Collectors.toList());
 					getModels().addAll(models);
+					update();
 				}
 				if (change.wasRemoved()) {
 					getModels().clear();
@@ -43,7 +44,7 @@ public class VolumePlot extends Plot<DoubleRange> {
 
 	@Override
 	public void load() {
-		update();
+
 	}
 
 	@Override

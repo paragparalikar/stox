@@ -9,17 +9,19 @@ import com.stox.chart.plot.Plot;
 import com.stox.chart.plot.PricePlot;
 import com.stox.chart.plot.PrimaryPricePlot;
 import com.stox.chart.view.ChartView;
+import com.stox.chart.widget.Grid;
 
 @Value
 @EqualsAndHashCode(callSuper = false, exclude = { "primaryPricePlot", "pricePlots" })
 public class PrimaryChart extends Chart {
 
+	private final Grid grid = new Grid(this);
 	private final PrimaryPricePlot primaryPricePlot = new PrimaryPricePlot(this);
 	private final ObservableList<PricePlot> pricePlots = FXCollections.observableArrayList();
 
 	public PrimaryChart(final ChartView chartView) {
 		super(chartView);
-		getArea().getChildren().add(primaryPricePlot);
+		getArea().getChildren().addAll(grid, primaryPricePlot);
 	}
 
 	public PrimaryPricePlot getPrimaryPricePlot() {
@@ -35,9 +37,11 @@ public class PrimaryChart extends Chart {
 
 	@Override
 	public void update() {
+		reset();
 		primaryPricePlot.update();
 		pricePlots.forEach(Plot::update);
-		super.update();
+		getPlots().forEach(Plot::update);
+		setDirty();
 	}
 
 	@Override

@@ -39,6 +39,18 @@ public class PrimaryPricePlot extends PricePlot {
 	}
 
 	@Override
+	public void update() {
+		chart.reset();
+		super.update();
+	}
+
+	@Override
+	protected void updateChartValueBounds() {
+		super.updateChartValueBounds();
+		chart.getValueAxis().setDirty();
+	}
+
+	@Override
 	public void load() {
 		super.load();
 		chart.getPricePlots().forEach(Plot::load);

@@ -50,13 +50,29 @@ public class Chart extends BorderPane {
 	}
 
 	public void setDirty() {
+		valueAxis.setDirty();
 		plots.forEach(Plot::setDirty);
 	}
 
-	public void update() {
+	public void reset() {
 		min = Double.MAX_VALUE;
 		max = Double.MIN_VALUE;
+	}
+
+	public void setMin(final double min) {
+		this.min = min;
+		valueAxis.setDirty();
+	}
+
+	public void setMax(final double max) {
+		this.max = max;
+		valueAxis.setDirty();
+	}
+
+	public void update() {
+		reset();
 		plots.forEach(Plot::update);
+		setDirty();
 	}
 
 }
