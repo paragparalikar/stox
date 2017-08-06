@@ -69,7 +69,7 @@
 
 	<modules>
 		<module>core</module>
-		<module>core-ui</module>
+		<module>ui</module>
 		<module>workbench</module>
 		<module>navigator</module>
 		<module>zerodha</module>

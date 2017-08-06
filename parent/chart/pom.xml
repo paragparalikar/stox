@@ -14,7 +14,7 @@
   	</dependency>
   	<dependency>
   		<groupId>com.stox</groupId>
-  		<artifactId>core-ui</artifactId>
+  		<artifactId>ui</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
