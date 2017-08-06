@@ -20,12 +20,13 @@ public class IndexDownloader extends CsvDownloader<Instrument> {
 		instrument.setType(InstrumentType.INDEX);
 		instrument.setIsin(tokens[0]);
 		instrument.setExchangeCode(tokens[1]);
+		instrument.setSymbol(instrument.getExchangeCode());
 		instrument.setName(tokens[2]);
 		return instrument;
 	}
 
 	@Override
-	protected InputStream createInputStream() throws Exception {
+	protected InputStream inputStream() throws Exception {
 		return getClass().getResourceAsStream("/indexes.csv");
 	}
 

@@ -1,11 +1,8 @@
 package com.stox.core.util;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.zip.ZipInputStream;
 
 public class StringUtil {
 
@@ -85,26 +82,15 @@ public class StringUtil {
 		return String.valueOf(Constant.currencyFormat.format(value) + text);
 	}
 
-	public static String toString(final InputStream inputStream, final String lineDelimiter) throws IOException {
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-		String line = null;
-		final StringBuilder sb = new StringBuilder();
-		while (null != (line = reader.readLine())) {
-			sb.append(line + lineDelimiter);
-		}
-		return sb.toString();
-	}
-
-	public static String toString(final ZipInputStream inStream) throws IOException {
+	public static String toString(final InputStream inStream) throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream(102400);
 		final byte[] buffer = new byte[100 * 1024];
-		if (inStream.getNextEntry() != null) {
-			int nrBytesRead = 0;
-			while ((nrBytesRead = inStream.read(buffer)) > 0) {
-				baos.write(buffer, 0, nrBytesRead);
-			}
+		int nrBytesRead = 0;
+		while ((nrBytesRead = inStream.read(buffer)) > 0) {
+			baos.write(buffer, 0, nrBytesRead);
 		}
 		inStream.close();
 		return new String(baos.toByteArray());
 	}
+
 }

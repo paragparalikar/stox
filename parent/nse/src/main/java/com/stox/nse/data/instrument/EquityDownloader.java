@@ -18,6 +18,7 @@ public class EquityDownloader extends CsvDownloader<Instrument> {
 		instrument.setExchange(Exchange.NSE);
 		instrument.setType(InstrumentType.EQUITY);
 		instrument.setSymbol(StringUtil.get(tokens, 0));
+		instrument.setExchangeCode(instrument.getSymbol());
 		instrument.setName(StringUtil.get(tokens, 1));
 		instrument.setLotSize(StringUtil.parseInt(StringUtil.get(tokens, 5)));
 		instrument.setIsin(StringUtil.get(tokens, 6));

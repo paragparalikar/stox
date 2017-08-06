@@ -1,15 +1,9 @@
-.glass{
-	-fx-background-color:light;
-	-fx-opacity:0.5;
-}
 .menu-bar{
 	-fx-background-color:transparent;
 	-fx-pref-height:3em;
 	-fx-alignment:center;
 }
-.primary.title > .center > .label{
-	-fx-text-fill:text-primary;
-}
+
 
 
 .snap-to-grid-group Line {
@@ -57,32 +51,7 @@
 .filter-view{
 	-fx-pref-width:40em;
 }
-.title > .top{
-	-fx-padding: 0 0 0.5em 0;
-}
-.title > .bottom{
-	-fx-padding:0.5em 0 0 0;
-}
-.title > .center > .right, .title > .center > .left, .title > .top, .title > .bottom{
-	-fx-spacing:0.5em;
-}
-.title > .center > .label{
-	-fx-font-size:1.2em;
-	-fx-graphic-text-gap:0.5em;
-	-fx-padding: 0 0.5em 0 0.5em;
-}
 
-.primary > .title,  .primary .title .center .label, .primary > .title > .center > .right > .button{
-	-fx-background-color:background-primary;
-	-fx-border-color:background-primary;
-	-fx-text-fill:text-primary;
-}
-.primary > .title >.center >  .right > .button:hover,
-.primary > .title >.center >  .right > .button:selected,
-.primary > .title >.center >  .right > .button:focused{
-	-fx-background-color:derive(background-primary, -15%);
-	-fx-border-color:derive(background-primary, -15%);
-}
 
 
 .message-pane{

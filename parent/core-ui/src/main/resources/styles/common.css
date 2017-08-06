@@ -2,6 +2,10 @@
 	-fx-border-color:red;
 	-fx-border-width:1px;
 }
+.glass{
+	-fx-background-color:light;
+	-fx-opacity:0.5;
+}
 .icon {
 	-fx-font-family: 'FontAwesome';
 	-fx-font-size:14px;
@@ -10,15 +14,52 @@
 	-fx-pref-height:2em;
 	-fx-pref-width:2em;
 	-fx-border-width:0;
+	
+	-fx-icon-background-color:background-primary;
+	-fx-icon-text-fill:text-primary;
+	-fx-background-color:-fx-icon-background-color;
+	-fx-border-color:-fx-icon-background-color;
+	-fx-text-fill:-fx-icon-text-fill;
 }
-
 .icon.label{
 	-fx-padding:0;
 }
+.icon:hover{
+	-fx-background-color:derive(-fx-icon-background-color, -10%);
+	-fx-border-color:derive(-fx-icon-background-color, -10%);
+}
+.icon:focused, .icon:selected{
+	-fx-background-color:derive(-fx-icon-background-color, -20%);
+	-fx-border-color:derive(-fx-icon-background-color, -20%);
+}
+.icon:pressed{
+	-fx-background-color:derive(-fx-icon-background-color, -30%);
+	-fx-border-color:derive(-fx-icon-background-color, -30%);
+}
 
 
 
-
+.title > .top{
+	-fx-padding: 0 0 0.5em 0;
+}
+.title > .bottom{
+	-fx-padding:0.5em 0 0 0;
+}
+.title > .center > .right, .title > .center > .left, .title > .top, .title > .bottom{
+	-fx-spacing:0.5em;
+}
+.title > .center > .label{
+	-fx-font-size:1.2em;
+	-fx-graphic-text-gap:0.5em;
+	-fx-padding: 0 0.5em 0 0.5em;
+}
+.primary > .title > .center > .right > .icon{
+	-fx-icon-background-color:background-primary;
+}
+.primary > .title,  .primary .title .center .label, .primary.title > .center > .label{
+	-fx-background-color:background-primary;
+	-fx-text-fill:text-primary;
+}
 
 .message{
 	-fx-padding:1em;
@@ -38,6 +79,33 @@
 .message.warning{
 	-fx-background-color:derive(background-warning, 40%);
 	-fx-text-fill:derive(background-warning, -40%);
+}
+
+.notification{
+	-fx-padding:0.5em;
+	-fx-background-radius:0.5em;
+	-fx-border-radius:0.5em;
+	-fx-pref-height:3em;
+	-fx-pref-width:30em;
+}
+.notification > .graphic{
+	-fx-padding:0.5em;
+}
+.notification.success{
+	-fx-background-color:background-success;
+	-fx-text-fill:text-success;
+}
+.notification.success > .right > .icon{
+	-fx-icon-background-color:background-success;
+	-fx-icon-text-fill:text-success;
+}
+.notification.danger{
+	-fx-background-color:background-danger;
+	-fx-text-fill:text-danger;
+}
+.notification.danger > .right > .icon{
+	-fx-icon-background-color:background-danger;
+	-fx-icon-text-fill:text-danger;
 }
 
 

@@ -1,11 +1,11 @@
 package com.stox.core.downloader;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stox.core.util.Constant;
+import com.stox.core.util.StringUtil;
 
 @Data
 @AllArgsConstructor
@@ -35,18 +36,28 @@ public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
 
 	@Override
 	public List<T> download() throws Exception {
-		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
-		final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(createInputStream()));
-		return bufferedReader.lines().skip(linesToSkip).map(line -> {
+		final InputStream inputStream = inputStream();
+		return lines(inputStream).skip(linesToSkip).map(line -> {
 			try {
-				return parse(line.split(tokenDelimiter));
+				final String[] tokens = tokens(line);
+				return parse(tokens);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}).collect(Collectors.toList());
 	}
 
-	protected InputStream createInputStream() throws Exception {
+	protected String[] tokens(final String row) {
+		return row.split(tokenDelimiter);
+	}
+
+	protected Stream<String> lines(final InputStream inputStream) throws Exception {
+		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
+		final String content = StringUtil.toString(inputStream);
+		return Arrays.stream(content.split(lineDelimiter));
+	}
+
+	protected InputStream inputStream() throws Exception {
 		return new URL(url).openStream();
 	}
 

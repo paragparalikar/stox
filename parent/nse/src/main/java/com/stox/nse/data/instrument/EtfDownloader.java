@@ -18,6 +18,7 @@ public class EtfDownloader extends CsvDownloader<Instrument> {
 		instrument.setExchange(Exchange.NSE);
 		instrument.setType(InstrumentType.ETF);
 		instrument.setSymbol(StringUtil.get(tokens, 0));
+		instrument.setExchangeCode(instrument.getSymbol());
 		instrument.setName(StringUtil.get(tokens, 2));
 		instrument.setLotSize(StringUtil.parseInt(StringUtil.get(tokens, 4)));
 		instrument.setIsin(StringUtil.get(tokens, 5));

@@ -17,6 +17,8 @@ public interface InstrumentRepository {
 
 	Instrument getInstrument(final String id);
 
+	String getIdByExchangeCode(final String exchangeCode);
+
 	void save(final Exchange exchange, final List<Instrument> instruments);
 
 	void save(final Exchange exchange, final Map<String, List<String>> parentComponentMapping);

@@ -24,6 +24,7 @@ public class GsecDownloader extends ZipExcelDownloader<Instrument> {
 			instrument.setExpiry(row.getCell(3).getDateCellValue());
 		} catch (NumberFormatException | IllegalStateException e) {
 			instrument.setSymbol(row.getCell(3).getStringCellValue());
+			instrument.setExchangeCode(instrument.getSymbol());
 		}
 		return instrument;
 	}

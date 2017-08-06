@@ -34,7 +34,7 @@ public class NseBarDownloader extends CsvDownloader<Bar> {
 	}
 
 	@Override
-	protected InputStream createInputStream() throws Exception {
+	protected InputStream inputStream() throws Exception {
 		final HttpURLConnection connection = HttpUtil.getConnection(getUrl(), "GET", null, "www.nseindia.com",
 				"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", "https://www.nseindia.com/products/content/equities/equities/archieve_eq.htm",
 				"gzip, deflate, sdch, br", "en-US,en;q=0.8", null);

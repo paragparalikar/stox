@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +32,11 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
+	@Autowired
+	private ThreadPoolTaskExecutor taskExecutor;
+
 	private final Map<String, Instrument> cache = new HashMap<>();
+	private final Map<String, String> exchangeCodeToIdCache = new HashMap<>();
 	private final Map<String, List<Instrument>> componentCache = new HashMap<>();
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(Instrument.class).withHeader();
 
@@ -40,18 +45,25 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	private String getParentComponentMappingPath(final Exchange exchange) {
-		return Constant.PATH + "com.stox.instruments." + exchange.getId().toLowerCase() + ".parent-component-mapping.json";
+		return Constant.PATH + "com.stox.instruments.mapping." + exchange.getId().toLowerCase() + ".json";
 	}
 
 	@PostConstruct
-	public void loadInstruments() {
+	public void postConstruct() {
+		taskExecutor.submit(() -> loadInstruments());
+	}
+
+	private synchronized void loadInstruments() {
 		if (cache.isEmpty()) {
 			for (final Exchange exchange : Exchange.values()) {
 				try {
 					final File file = new File(getPath(exchange));
 					final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Instrument.class);
 					final List<Instrument> instruments = reader.<Instrument> readValues(file).readAll();
-					instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
+					instruments.forEach(instrument -> {
+						cache.put(instrument.getId(), instrument);
+						exchangeCodeToIdCache.put(instrument.getExchangeCode(), instrument.getId());
+					});
 				} catch (Exception e) {
 				}
 
@@ -69,17 +81,25 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
+	public String getIdByExchangeCode(String exchangeCode) {
+		return exchangeCodeToIdCache.get(exchangeCode);
+	}
+
+	@Override
 	public List<Instrument> getAllInstruments() {
+		loadInstruments();
 		return cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Instrument> getInstruments(Exchange exchange) {
+		loadInstruments();
 		return cache.values().stream().filter(instrument -> exchange.equals(instrument.getExchange())).sorted(new HasNameComaparator<>()).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Instrument> getInstruments(Exchange exchange, InstrumentType type) {
+		loadInstruments();
 		return cache.values().stream().filter(instrument -> exchange.equals(instrument.getExchange()) && type.equals(instrument.getType())).sorted(new HasNameComaparator<>())
 				.collect(Collectors.toList());
 	}
@@ -96,6 +116,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public List<Instrument> getComponentInstruments(Instrument instrument) {
+		loadInstruments();
 		final List<Instrument> instruments = componentCache.get(instrument.getId());
 		return null == instruments ? Collections.emptyList() : instruments;
 	}
@@ -114,6 +135,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	public Instrument getInstrument(String id) {
+		loadInstruments();
 		return cache.get(id);
 	}
 

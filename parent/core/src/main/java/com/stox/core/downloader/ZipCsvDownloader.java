@@ -19,7 +19,7 @@ public abstract class ZipCsvDownloader<T> extends CsvDownloader<T> {
 	}
 
 	@Override
-	protected InputStream createInputStream() throws Exception {
+	protected InputStream inputStream() throws Exception {
 		return new ZipInputStream(new URL(getUrl()).openStream());
 	}
 
