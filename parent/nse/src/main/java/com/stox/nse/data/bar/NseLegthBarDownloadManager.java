@@ -45,6 +45,8 @@ public class NseLegthBarDownloadManager {
 	@Autowired
 	private NseBreadthBarDownloadManager breadthBarDownloadManager;
 
+	private final LineRepository repository = new LineRepository("com.stox.data.download.bar.legth.nse.csv");
+
 	private boolean cancel;
 
 	@PostConstruct
@@ -68,36 +70,37 @@ public class NseLegthBarDownloadManager {
 
 	public void download() {
 		final String staticText = "Downloading Data...";
-		final LineRepository repository = new LineRepository("com.stox.data.download.bar.legth.nse.csv");
+		final String url = environment.getProperty("com.stox.nse.url.bar.length");
 		final List<String> downloadedInstrumentIds = repository.findAll();
 		final List<Instrument> allInstruments = instrumentRepository.getInstruments(Exchange.NSE);
+		allInstruments.removeIf(instrument -> downloadedInstrumentIds.contains(instrument.getId()));
+		final AtomicInteger count = new AtomicInteger(downloadedInstrumentIds.size());
 		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification();
 		notification.setText(staticText);
 		notification.show();
-		final AtomicInteger count = new AtomicInteger(downloadedInstrumentIds.size());
-		allInstruments.stream().filter(instrument -> {
-			return StringUtil.hasText(instrument.getExchangeCode()) && !downloadedInstrumentIds.contains(instrument.getId());
-		}).parallel().forEach(instrument -> {
+		allInstruments.stream().parallel().forEach(instrument -> {
 			try {
-				if (!cancel) {
-					final String url = environment.getProperty("com.stox.nse.url.bar.length");
+				if (!cancel && StringUtil.hasText(instrument.getExchangeCode())) {
 					final NseBarLengthDownloader downloader = new NseBarLengthDownloader(url, instrument);
 					final List<Bar> bars = downloader.download();
-					if (null != bars && !bars.isEmpty()) {
-						barRepository.save(bars, instrument.getId(), BarSpan.D);
-						repository.append(instrument.getId());
-						notification.setText(staticText + "\n" + instrument.getName());
-						notification.setProgress(((double) count.incrementAndGet()) / ((double) allInstruments.size()));
-					}
+					barRepository.save(bars, instrument.getId(), BarSpan.D);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				repository.append(instrument.getId());
+				notification.setText(staticText + "\n" + instrument.getName());
+				notification.setProgress(((double) count.incrementAndGet()) / ((double) allInstruments.size()));
 			}
 		});
-		final NseDataState state = dataStateRepository.getDataState();
-		state.setBarLengthDownloadCompleted(Boolean.TRUE);
-		dataStateRepository.persistDataState();
-		notification.hide();
-		breadthBarDownloadManager.download();
+
+		if (!cancel) {
+			final NseDataState state = dataStateRepository.getDataState();
+			state.setBarLengthDownloadCompleted(Boolean.TRUE);
+			dataStateRepository.persistDataState();
+			repository.drop();
+			notification.hide();
+			breadthBarDownloadManager.download();
+		}
 	}
 }

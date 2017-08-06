@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javafx.scene.control.Label;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
 import com.stox.core.model.InstrumentType;
 import com.stox.core.repository.InstrumentRepository;
-import com.stox.core.ui.widget.modal.Notification;
 import com.stox.core.util.StringUtil;
 import com.stox.nse.data.NseDataStateRepository;
 import com.stox.nse.data.bar.NseLegthBarDownloadManager;
@@ -74,7 +71,6 @@ public class NseInstrumentDownloadManager {
 				downloadMappings();
 				dataStateRepository.getDataState().setLastInstrumentDownloadDate(new Date());
 				dataStateRepository.persistDataState();
-				Notification.builder().graphic(new Label("Data Downloaded...\n" + Exchange.NSE.getName())).style("success").build().show();
 				lengthBarDownloadManager.download();
 			} catch (Exception e) {
 				e.printStackTrace();

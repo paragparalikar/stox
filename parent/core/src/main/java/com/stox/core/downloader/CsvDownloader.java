@@ -13,7 +13,6 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.stox.core.util.Constant;
 import com.stox.core.util.StringUtil;
 
 @Data
@@ -31,7 +30,7 @@ public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
 	}
 
 	public CsvDownloader(final String url, final int linesToSkip) {
-		this(url, linesToSkip, Constant.LINEFEED, ",");
+		this(url, linesToSkip, "\n", ",");
 	}
 
 	@Override
