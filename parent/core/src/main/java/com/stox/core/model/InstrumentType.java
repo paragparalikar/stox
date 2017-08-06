@@ -22,7 +22,7 @@ public enum InstrumentType implements HasName, HasId<String> {
 	WARRANTS("WR","Warrants"),
 	ETF("ETF","Exchange Traded Funds"),
 	
-	INDEX("ID","Indexes");
+	INDEX("ID","Indices");
 	//@formatter:on
 
 	@JsonCreator

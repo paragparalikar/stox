@@ -75,8 +75,7 @@ public class NseLegthBarDownloadManager {
 		final List<Instrument> allInstruments = instrumentRepository.getInstruments(Exchange.NSE);
 		allInstruments.removeIf(instrument -> downloadedInstrumentIds.contains(instrument.getId()));
 		final AtomicInteger count = new AtomicInteger(downloadedInstrumentIds.size());
-		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification();
-		notification.setText(staticText);
+		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification(Exchange.NSE);
 		notification.show();
 
 		final NseDataState state = dataStateRepository.getDataState();
@@ -96,7 +95,7 @@ public class NseLegthBarDownloadManager {
 				e.printStackTrace();
 			} finally {
 				repository.append(instrument.getId());
-				notification.setText(staticText + "\n" + instrument.getName());
+				notification.setText(instrument.getName());
 				notification.setProgress(((double) count.incrementAndGet()) / ((double) allInstruments.size()));
 			}
 		});

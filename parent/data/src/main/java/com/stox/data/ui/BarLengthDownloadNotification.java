@@ -5,16 +5,25 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 
+import com.stox.core.model.Exchange;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.modal.Notification;
 import com.stox.core.util.StringUtil;
 
 public class BarLengthDownloadNotification {
 
+	private final Label titleLabel = UiUtil.fullWidth(new Label("Downloading Data..."));
+	private final Label exchangeLabel = UiUtil.fullWidth(new Label());
 	private final Label instrumentLabel = UiUtil.fullWidth(new Label());
 	private final ProgressBar progressBar = UiUtil.fullWidth(new ProgressBar());
-	private final VBox container = UiUtil.fullArea(new VBox(instrumentLabel, progressBar));
-	private Notification notification = Notification.builder().graphic(container).style("success").build();
+	private final VBox container = UiUtil.fullArea(new VBox(titleLabel, exchangeLabel, instrumentLabel, UiUtil.spacer(), progressBar));
+	private final Notification notification = Notification.builder().graphic(container).style("success").build();
+
+	public BarLengthDownloadNotification(final Exchange exchange) {
+		Platform.runLater(() -> {
+			exchangeLabel.setText(exchange.getName());
+		});
+	}
 
 	public void show() {
 		notification.show();

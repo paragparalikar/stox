@@ -16,7 +16,7 @@ import com.stox.workbench.ui.view.View;
 
 public class NavigatorView extends View {
 
-	private final ListView<Instrument> listView = new ListView<Instrument>(FXCollections.observableArrayList());
+	private final ListView<Instrument> listView = UiUtil.fullArea(new ListView<Instrument>(FXCollections.observableArrayList()));
 	private final Button filterButton = UiUtil.classes(new Button(Icon.FILTER), "icon", "primary");
 	private final ToggleButton searchButton = UiUtil.classes(new ToggleButton(Icon.SEARCH), "icon", "primary");
 	private final TextField searchTextField = new ListViewSearchTextField<>(listView, new InstrumentMatcher());
