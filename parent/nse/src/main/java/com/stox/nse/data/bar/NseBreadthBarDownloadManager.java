@@ -78,29 +78,33 @@ public class NseBreadthBarDownloadManager {
 		today.setTime(DateUtil.trim(today.getTime()));
 		if (!cancel && calendar.before(today)) {
 			final BarDownloadNotification notification = new BarDownloadNotification(start, today.getTime());
-			notification.show();
-			for (; !cancel && calendar.before(today); calendar.add(Calendar.DATE, 1)) {
-				try {
-					if (DateUtil.isWeekend(calendar)) {
-						continue;
-					}
-					final Date date = calendar.getTime();
-					final String effectiveUrl = url.replace("{date}", bhavcopyDateFormat.format(date));
-					final NseBarDownloader downloader = new NseBarDownloader(effectiveUrl);
-					final List<Bar> bars = downloader.download();
-					final NseBarIndexDownloader indexDownloader = new NseBarIndexDownloader(url_index.replace("", indexUrlDateFormat.format(date)), instrumentRepository);
-					bars.addAll(indexDownloader.download());
-					if (!bars.isEmpty()) {
-						bars.forEach(bar -> barRepository.save(bar, bar.getInstrumentId(), BarSpan.D));
-						dataStateRepository.getDataState().setLastBarDownloadDate(date);
-						dataStateRepository.persistDataState();
-						notification.setDate(date);
-					}
-				} catch (IOException e) {
+			try {
+				notification.show();
+				for (; !cancel && calendar.before(today); calendar.add(Calendar.DATE, 1)) {
+					try {
+						if (DateUtil.isWeekend(calendar)) {
+							continue;
+						}
+						final Date date = calendar.getTime();
+						final String effectiveUrl = url.replace("{date}", bhavcopyDateFormat.format(date));
+						final NseBarDownloader downloader = new NseBarDownloader(effectiveUrl);
+						final List<Bar> bars = downloader.download();
+						final NseBarIndexDownloader indexDownloader = new NseBarIndexDownloader(url_index.replace("", indexUrlDateFormat.format(date)), instrumentRepository);
+						bars.addAll(indexDownloader.download());
+						if (!bars.isEmpty()) {
+							bars.forEach(bar -> barRepository.save(bar, bar.getInstrumentId(), BarSpan.D));
+							dataStateRepository.getDataState().setLastBarDownloadDate(date);
+							dataStateRepository.persistDataState();
+							notification.setDate(date);
+						}
+					} catch (IOException e) {
 
-				} catch (Exception e) {
-					e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
+			} finally {
+				notification.hide();
 			}
 		}
 	}

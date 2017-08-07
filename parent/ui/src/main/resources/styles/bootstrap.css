@@ -139,14 +139,16 @@
 }
 
 
-
-
-
-
-
 .transparent{
 	-fx-background-color:transparent;
 }
+.container{
+	-fx-padding:0.5em;
+}
+
+
+
+
 
 
 /*  default  */
