@@ -80,9 +80,11 @@ public class UnitTypeTool extends ChartingTool {
 			graphic.getStyleClass().add("unit-type-graphic");
 			body.setLayoutX(2);
 			body.setLayoutY(3);
-			body.setPrefHeight(4);
-			body.setPrefWidth(6);
+			body.setMinHeight(4);
+			body.setMinWidth(6);
+			body.setStyle("-fx-background-color:red;");
 			wick.setStrokeWidth(2);
+			wick.setStroke(Color.WHITE);
 			return graphic;
 		case HLC:
 			final Line line2 = new Line(0, 0, 0, 10);
@@ -90,16 +92,19 @@ public class UnitTypeTool extends ChartingTool {
 			final Group hlc = new Group(line2, line3);
 			hlc.getStyleClass().add("unit-type-graphic");
 			line2.setStrokeWidth(2);
+			line2.setStroke(Color.WHITE);
 			line3.setStrokeWidth(2);
+			line3.setStroke(Color.WHITE);
 			return hlc;
 		case LINE:
 			final Line line = new Line(0, 10, 10, 0);
 			line.getStyleClass().add("unit-type-graphic");
 			line.setStrokeWidth(2);
+			line.setStroke(Color.WHITE);
 			return line;
 		case AREA:
 			final Polygon polygon = new Polygon(0, 7, 10, 0, 10, 10, 0, 10);
-			polygon.setFill(Color.BLACK);
+			polygon.setFill(Color.WHITE);
 			polygon.getStyleClass().add("unit-type-graphic");
 			return polygon;
 		case OHLC:
@@ -107,8 +112,11 @@ public class UnitTypeTool extends ChartingTool {
 			final Line lineO = new Line(5, 0, 5, 10);
 			final Line lineC = new Line(5, 3, 10, 3);
 			line1.setStrokeWidth(2);
+			line1.setStroke(Color.WHITE);
 			lineO.setStrokeWidth(2);
+			lineO.setStroke(Color.WHITE);
 			lineC.setStrokeWidth(2);
+			lineC.setStroke(Color.WHITE);
 			final Group ohlc = new Group(line1, lineO, lineC);
 			ohlc.getStyleClass().add("unit-type-graphic");
 			return ohlc;

@@ -29,13 +29,13 @@ public class ChartView extends View {
 
 	private boolean semilog = false;
 	private BarSpan barSpan = BarSpan.D;
+	private PriceUnitType priceUnitType = PriceUnitType.CANDLE;
 	private Date to;
 	private Date from;
 
 	/* configurable properties, these should go into a different object */
 	private Color upBarColor = Color.GREEN;
 	private Color downBarColor = Color.RED;
-	private PriceUnitType priceUnitType = PriceUnitType.CANDLE;
 	private final List<Color> plotColors = Arrays.asList(Color.BLACK, Color.BLUE, Color.GREEN, Color.BROWN, Color.AQUA, Color.BLUEVIOLET, Color.CADETBLUE);
 
 	private final PrimaryChart primaryChart = new PrimaryChart(this);
