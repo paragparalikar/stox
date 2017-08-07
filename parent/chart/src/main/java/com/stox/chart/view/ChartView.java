@@ -12,8 +12,6 @@ import javafx.scene.paint.Color;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import com.stox.chart.ChartViewPanMouseHandler;
-import com.stox.chart.MouseHandler;
 import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;

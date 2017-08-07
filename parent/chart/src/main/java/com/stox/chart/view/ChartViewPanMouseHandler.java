@@ -1,9 +1,7 @@
-package com.stox.chart;
+package com.stox.chart.view;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-
-import com.stox.chart.view.ChartView;
 
 public class ChartViewPanMouseHandler implements MouseHandler {
 
