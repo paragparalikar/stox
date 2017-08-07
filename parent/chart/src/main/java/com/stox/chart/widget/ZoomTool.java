@@ -3,6 +3,7 @@ package com.stox.chart.widget;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ public class ZoomTool extends ChartingTool {
 	private final HBox container = UiUtil.box(new HBox(in, out));
 
 	public ZoomTool() {
+		in.setTooltip(new Tooltip("Zoom In")); // TODO I18N
 		in.addEventHandler(ActionEvent.ACTION, event -> {
 			final ChartView chartView = getChartView();
 			if (null != chartView) {
@@ -26,6 +28,7 @@ public class ZoomTool extends ChartingTool {
 				chartView.update();
 			}
 		});
+		out.setTooltip(new Tooltip("Zoom Out")); // TODO I18N
 		out.addEventHandler(ActionEvent.ACTION, event -> {
 			final ChartView chartView = getChartView();
 			if (null != chartView) {
