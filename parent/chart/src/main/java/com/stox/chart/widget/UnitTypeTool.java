@@ -82,7 +82,7 @@ public class UnitTypeTool extends ChartingTool {
 			body.setLayoutY(3);
 			body.setMinHeight(4);
 			body.setMinWidth(6);
-			body.setStyle("-fx-background-color:red;");
+			body.setStyle("-fx-background-color:white;");
 			wick.setStrokeWidth(2);
 			wick.setStroke(Color.WHITE);
 			return graphic;
