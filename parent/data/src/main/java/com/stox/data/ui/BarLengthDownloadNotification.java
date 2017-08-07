@@ -15,9 +15,9 @@ public class BarLengthDownloadNotification {
 	private final Label titleLabel = UiUtil.fullWidth(new Label("Downloading Data..."));
 	private final Label exchangeLabel = UiUtil.fullWidth(new Label());
 	private final Label instrumentLabel = UiUtil.fullWidth(new Label());
-	private final ProgressBar progressBar = UiUtil.fullWidth(new ProgressBar());
+	private final ProgressBar progressBar = UiUtil.fullWidth(UiUtil.classes(new ProgressBar(), "success"));
 	private final VBox container = UiUtil.fullArea(new VBox(titleLabel, exchangeLabel, instrumentLabel, UiUtil.spacer(), progressBar));
-	private final Notification notification = Notification.builder().graphic(container).style("success").build();
+	private final Notification notification = Notification.builder().graphic(container).build();
 
 	public BarLengthDownloadNotification(final Exchange exchange) {
 		Platform.runLater(() -> {

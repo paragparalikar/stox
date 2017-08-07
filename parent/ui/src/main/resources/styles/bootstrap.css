@@ -25,6 +25,31 @@
 	-fx-border-color: lighter;
 }
 
+.progress-bar > .track {
+	-fx-pref-height: 10;
+	-fx-background-radius: 3;
+	-fx-effect: innershadow(gaussian, light, 4, 0, 0, 1);
+	-fx-background-color: lighter;
+}
+.progress-bar > .bar {
+	-fx-background-insets: 0;
+	-fx-background-color: background-primary;
+}
+.progress-bar.success > .bar {
+	-fx-background-color: background-success;
+}
+
+.progress-bar.info > .bar {
+	-fx-background-color: background-info;
+}
+
+.progress-bar.warning > .bar {
+	-fx-background-color: background-warning;
+}
+
+.progress-bar.danger > .bar {
+	-fx-background-color: background-danger;
+}
 
 
 .scroll-bar:vertical {

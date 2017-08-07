@@ -78,15 +78,17 @@ public class DateAxis extends Pane {
 
 	public void zoomIn() {
 		if (MIN <= 0.9 * barCount) {
+			int oldBarCount = barCount;
 			barCount = (int) Math.ceil(0.9 * barCount);
-			// upperBound += 0.05 * barCount;
+			int delta = oldBarCount - barCount;
+			upperBound -= (delta * getUnitWidth() / 2);
 		}
 	}
 
 	public void zoomOut() {
 		if (MAX >= 1.1 * barCount) {
 			barCount = (int) Math.floor(1.1 * barCount);
-			// upperBound -= 0.05 * barCount;
+			upperBound -= 0.05 * barCount;
 			checkExtraDataNeeded();
 		}
 	}

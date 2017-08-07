@@ -15,9 +15,9 @@ public class BarDownloadNotification {
 
 	private final Date start, end;
 	private final Label dateLabel = UiUtil.fullWidth(new Label());
-	private final ProgressBar progressBar = UiUtil.fullWidth(new ProgressBar());
+	private final ProgressBar progressBar = UiUtil.fullWidth(UiUtil.classes(new ProgressBar(), "success"));
 	private final VBox container = UiUtil.fullArea(new VBox(dateLabel, progressBar));
-	private Notification notification = Notification.builder().graphic(container).style("success").build();
+	private Notification notification = Notification.builder().graphic(container).build();
 
 	public BarDownloadNotification(final Date start, final Date end) {
 		this.start = start;

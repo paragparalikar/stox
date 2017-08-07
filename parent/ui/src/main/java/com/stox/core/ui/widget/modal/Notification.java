@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.stox.core.ui.util.Icon;
+import com.stox.core.ui.util.ResizeRelocateDecorator;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.ApplicationStage;
 
@@ -48,6 +49,7 @@ public class Notification {
 		UiUtil.classes(graphic, "graphic");
 		container.setRight(right);
 		container.setCenter(graphic);
+		new ResizeRelocateDecorator(container);
 		container.layoutBoundsProperty().addListener((observable, old, bounds) -> {
 			handleDefaultPosition();
 		});
