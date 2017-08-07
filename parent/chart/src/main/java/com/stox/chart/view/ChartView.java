@@ -16,6 +16,7 @@ import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;
 import com.stox.chart.plot.VolumePlot;
+import com.stox.chart.unit.PriceUnitType;
 import com.stox.chart.util.ChartConstant;
 import com.stox.chart.widget.Crosshair;
 import com.stox.core.model.BarSpan;
@@ -34,6 +35,7 @@ public class ChartView extends View {
 	/* configurable properties, these should go into a different object */
 	private Color upBarColor = Color.GREEN;
 	private Color downBarColor = Color.RED;
+	private PriceUnitType priceUnitType = PriceUnitType.OHLC;
 	private final List<Color> plotColors = Arrays.asList(Color.BLACK, Color.BLUE, Color.GREEN, Color.BROWN, Color.AQUA, Color.BLUEVIOLET, Color.CADETBLUE);
 
 	private final PrimaryChart primaryChart = new PrimaryChart(this);

@@ -6,7 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import com.stox.chart.chart.PrimaryChart;
+import com.stox.chart.unit.AreaUnit;
 import com.stox.chart.unit.CandlePriceUnit;
+import com.stox.chart.unit.HlcPriceUnit;
+import com.stox.chart.unit.LineUnit;
+import com.stox.chart.unit.OhlcPriceUnit;
 import com.stox.chart.unit.PriceUnitType;
 import com.stox.chart.unit.Unit;
 import com.stox.chart.view.ChartView;
@@ -27,7 +31,19 @@ public class PrimaryPricePlot extends PricePlot {
 
 	@Override
 	protected Unit<Bar> create(int index, Bar model) {
-		return new CandlePriceUnit(index, model, this);
+		switch (chart.getChartView().getPriceUnitType()) {
+		case LINE:
+			return new LineUnit<>(index, model, this);
+		case AREA:
+			return new AreaUnit<>(index, model, this);
+		case HLC:
+			return new HlcPriceUnit(index, model, this);
+		case OHLC:
+			return new OhlcPriceUnit(index, model, this);
+		case CANDLE:
+			return new CandlePriceUnit(index, model, this);
+		}
+		return null;
 	}
 
 	@Override
