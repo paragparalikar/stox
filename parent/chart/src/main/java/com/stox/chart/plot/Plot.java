@@ -1,5 +1,7 @@
 package com.stox.chart.plot;
 
+import java.util.stream.IntStream;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -32,18 +34,26 @@ public abstract class Plot<M extends Range> extends Group {
 			lastMaxIndex = Integer.MAX_VALUE;
 			while (change.next()) {
 				if (change.wasRemoved()) {
-					units.clear();
-					getChildren().clear();
+					clearUnits();
 				}
 				if (change.wasAdded()) {
-					for (int index = change.getFrom(); index < change.getTo(); index++) {
-						final M model = models.get(index);
-						final Unit<M> unit = create(index, model);
-						units.add(unit);
-						getChildren().add(unit);
-					}
+					createUnits(change.getFrom(), change.getTo());
 				}
 			}
+		});
+	}
+
+	public void clearUnits() {
+		units.clear();
+		getChildren().clear();
+	}
+
+	public void createUnits(final int from, final int to) {
+		IntStream.range(from, to).forEach(index -> {
+			final M model = models.get(index);
+			final Unit<M> unit = create(index, model);
+			units.add(unit);
+			getChildren().add(unit);
 		});
 	}
 

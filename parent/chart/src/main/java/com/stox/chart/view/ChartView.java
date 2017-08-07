@@ -35,7 +35,7 @@ public class ChartView extends View {
 	/* configurable properties, these should go into a different object */
 	private Color upBarColor = Color.GREEN;
 	private Color downBarColor = Color.RED;
-	private PriceUnitType priceUnitType = PriceUnitType.OHLC;
+	private PriceUnitType priceUnitType = PriceUnitType.CANDLE;
 	private final List<Color> plotColors = Arrays.asList(Color.BLACK, Color.BLUE, Color.GREEN, Color.BROWN, Color.AQUA, Color.BLUEVIOLET, Color.CADETBLUE);
 
 	private final PrimaryChart primaryChart = new PrimaryChart(this);
