@@ -87,14 +87,20 @@
 	-fx-border-radius:0.5em;
 	-fx-pref-height:3em;
 	-fx-pref-width:30em;
+	
 	-fx-border-width:2px;
-	-fx-border-color:neutral;
-	-fx-background-color:light;
-	-fx-text-fill:dark;
+	-fx-border-color:light;
+	-fx-background-color:lighter;
+	-fx-text-fill:darker;
 }
 .notification > .graphic{
 	-fx-padding:0.5em;
 }
+.notification > .right > .icon{
+	-fx-icon-background-color:lighter;
+	-fx-icon-text-fill:darker;
+}
+
 .notification.success{
 	-fx-border-width:0;
 	-fx-background-color:background-success;

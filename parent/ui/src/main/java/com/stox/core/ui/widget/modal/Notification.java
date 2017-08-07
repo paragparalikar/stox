@@ -21,8 +21,8 @@ public class Notification {
 	@Getter(AccessLevel.NONE)
 	@Setter(AccessLevel.NONE)
 	private boolean defaultPositionHandled = false;
-	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "icon");
-	private final VBox right = UiUtil.classes(new VBox(closeButton, UiUtil.spacer()), "right");
+	private final Button closeButton = UiUtil.classes(new Button(Icon.CROSS), "icon", "top");
+	private final VBox right = UiUtil.classes(new VBox(closeButton, UiUtil.spacer()), "right", "top");
 	private final BorderPane container = UiUtil.classes(new BorderPane(), "notification");
 	@Getter(AccessLevel.NONE)
 	private final ApplicationStage applicationStage = ApplicationStage.getInstance();
