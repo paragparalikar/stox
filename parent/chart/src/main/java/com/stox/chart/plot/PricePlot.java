@@ -8,8 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import com.stox.chart.chart.Chart;
 import com.stox.chart.event.BarRequestEvent;
-import com.stox.chart.unit.LineUnit;
-import com.stox.chart.unit.Unit;
+import com.stox.chart.unit.UnitType;
 import com.stox.chart.util.ChartUtil;
 import com.stox.chart.view.ChartView;
 import com.stox.core.intf.ResponseCallback;
@@ -31,16 +30,16 @@ public class PricePlot extends Plot<Bar> {
 		super(chart);
 	}
 
-	@Override
-	protected Unit<Bar> create(final int index, final Bar model) {
-		return new LineUnit<>(index, model, this);
-	}
-
 	public void setInstrument(final Instrument instrument) {
 		if (this.instrument != instrument) {
 			this.instrument = instrument;
 			dataAvailable = true;
 		}
+	}
+
+	@Override
+	public UnitType getUnitType() {
+		return UnitType.LINE;
 	}
 
 	protected void addModels(final List<Bar> bars) {

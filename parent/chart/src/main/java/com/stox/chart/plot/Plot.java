@@ -12,7 +12,13 @@ import lombok.EqualsAndHashCode;
 
 import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
+import com.stox.chart.unit.AreaPlotNode;
+import com.stox.chart.unit.AreaUnit;
+import com.stox.chart.unit.BarUnit;
+import com.stox.chart.unit.LinePlotNode;
+import com.stox.chart.unit.LineUnit;
 import com.stox.chart.unit.Unit;
+import com.stox.chart.unit.UnitType;
 import com.stox.core.intf.Range;
 
 @Data
@@ -49,6 +55,20 @@ public abstract class Plot<M extends Range> extends Group {
 	}
 
 	public void createUnits(final int from, final int to) {
+		switch (getUnitType()) {
+		case LINE:
+			getChildren().remove(getUserData());
+			final LinePlotNode linePlotNode = new LinePlotNode(this);
+			setUserData(linePlotNode);
+			getChildren().add(linePlotNode);
+			break;
+		case AREA:
+			getChildren().remove(getUserData());
+			final AreaPlotNode areaPlotNode = new AreaPlotNode(this);
+			setUserData(areaPlotNode);
+			getChildren().add(areaPlotNode);
+			break;
+		}
 		IntStream.range(from, to).forEach(index -> {
 			final M model = models.get(index);
 			final Unit<M> unit = create(index, model);
@@ -63,7 +83,19 @@ public abstract class Plot<M extends Range> extends Group {
 
 	public abstract void load();
 
-	protected abstract Unit<M> create(final int index, final M model);
+	public abstract UnitType getUnitType();
+
+	protected Unit<M> create(final int index, final M model) {
+		switch (getUnitType()) {
+		case LINE:
+			return new LineUnit<>(index, model, this);
+		case BAR:
+			return new BarUnit<>(index, model, this);
+		case AREA:
+			return new AreaUnit<>(index, model, this);
+		}
+		return null;
+	}
 
 	public void setDirty() {
 		dirty = true;

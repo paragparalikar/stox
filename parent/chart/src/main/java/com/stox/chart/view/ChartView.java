@@ -16,7 +16,7 @@ import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;
 import com.stox.chart.plot.VolumePlot;
-import com.stox.chart.unit.PriceUnitType;
+import com.stox.chart.unit.UnitType;
 import com.stox.chart.util.ChartConstant;
 import com.stox.chart.widget.Crosshair;
 import com.stox.core.model.BarSpan;
@@ -29,7 +29,7 @@ public class ChartView extends View {
 
 	private boolean semilog = false;
 	private BarSpan barSpan = BarSpan.D;
-	private PriceUnitType priceUnitType = PriceUnitType.CANDLE;
+	private UnitType unitType = UnitType.CANDLE;
 	private Date to;
 	private Date from;
 

@@ -15,7 +15,7 @@ import javafx.scene.shape.Polygon;
 import org.springframework.stereotype.Component;
 
 import com.stox.chart.plot.PrimaryPricePlot;
-import com.stox.chart.unit.PriceUnitType;
+import com.stox.chart.unit.UnitType;
 import com.stox.chart.view.ChartView;
 import com.stox.core.ui.util.UiUtil;
 
@@ -23,19 +23,19 @@ import com.stox.core.ui.util.UiUtil;
 public class UnitTypeTool extends ChartingTool {
 
 	private final ToggleGroup toggleGroup = new ToggleGroup();
-	private final ToggleButton lineButton = createButton(PriceUnitType.LINE);
-	private final ToggleButton areaButton = createButton(PriceUnitType.AREA);
-	private final ToggleButton hlcButton = createButton(PriceUnitType.HLC);
-	private final ToggleButton ohlcButton = createButton(PriceUnitType.OHLC);
-	private final ToggleButton candleButton = createButton(PriceUnitType.CANDLE);
+	private final ToggleButton lineButton = createButton(UnitType.LINE);
+	private final ToggleButton areaButton = createButton(UnitType.AREA);
+	private final ToggleButton hlcButton = createButton(UnitType.HLC);
+	private final ToggleButton ohlcButton = createButton(UnitType.OHLC);
+	private final ToggleButton candleButton = createButton(UnitType.CANDLE);
 	private final HBox container = UiUtil.box(new HBox(lineButton, areaButton, hlcButton, ohlcButton, candleButton));
 
 	public UnitTypeTool() {
 		toggleGroup.selectedToggleProperty().addListener((observable, old, toggle) -> {
 			final ChartView chartView = getChartView();
 			if (null != chartView) {
-				final PriceUnitType type = (PriceUnitType) toggle.getUserData();
-				chartView.setPriceUnitType(type);
+				final UnitType type = (UnitType) toggle.getUserData();
+				chartView.setUnitType(type);
 				final PrimaryPricePlot plot = chartView.getPrimaryChart().getPrimaryPricePlot();
 				plot.clearUnits();
 				plot.createUnits(0, plot.getModels().size());
@@ -53,7 +53,7 @@ public class UnitTypeTool extends ChartingTool {
 	public void onChartViewSelected(ChartView chartView) {
 		if (null != chartView) {
 			for (final Toggle toggle : toggleGroup.getToggles()) {
-				if (chartView.getPriceUnitType().equals(toggle.getUserData())) {
+				if (chartView.getUnitType().equals(toggle.getUserData())) {
 					toggleGroup.selectToggle(toggle);
 					break;
 				}
@@ -61,7 +61,7 @@ public class UnitTypeTool extends ChartingTool {
 		}
 	}
 
-	private ToggleButton createButton(final PriceUnitType type) {
+	private ToggleButton createButton(final UnitType type) {
 		final ToggleButton button = new ToggleButton();
 		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		button.setGraphic(createGraphic(type));
@@ -71,7 +71,7 @@ public class UnitTypeTool extends ChartingTool {
 		return button;
 	}
 
-	private Node createGraphic(final PriceUnitType unitType) {
+	private Node createGraphic(final UnitType unitType) {
 		switch (unitType) {
 		case CANDLE:
 			final Line wick = new Line(5, 0, 5, 10);

@@ -5,8 +5,7 @@ import java.util.stream.Collectors;
 
 import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;
-import com.stox.chart.unit.BarUnit;
-import com.stox.chart.unit.Unit;
+import com.stox.chart.unit.UnitType;
 import com.stox.core.intf.Range.DoubleRange;
 
 public class VolumePlot extends Plot<DoubleRange> {
@@ -22,8 +21,8 @@ public class VolumePlot extends Plot<DoubleRange> {
 	}
 
 	@Override
-	protected Unit<DoubleRange> create(final int index, final DoubleRange model) {
-		return new BarUnit<>(index, model, this);
+	public UnitType getUnitType() {
+		return UnitType.BAR;
 	}
 
 	@Override

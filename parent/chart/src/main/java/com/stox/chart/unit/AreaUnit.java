@@ -24,7 +24,7 @@ public class AreaUnit<M extends Range> extends Unit<M> {
 			final M previous = plot.getModels().get(getIndex() + 1);
 			final M current = getModel();
 			final Pane area = plot.getChart().getArea();
-			polygon.getPoints().setAll(x, getDisplayPosition(previous.getValue()), x, area.getHeight(), x + width, area.getHeight(), x + width,
+			polygon.getPoints().setAll(x, getDisplayPosition(previous.getValue()), x, area.getHeight(), x + width + 0.5, area.getHeight(), x + width + 0.5,
 					getDisplayPosition(current.getValue()));
 		}
 	}
