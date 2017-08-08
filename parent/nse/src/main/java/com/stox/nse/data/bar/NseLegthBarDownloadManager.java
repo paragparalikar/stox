@@ -8,10 +8,13 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
+import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Exchange;
@@ -20,6 +23,7 @@ import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.repository.LineRepository;
 import com.stox.core.util.StringUtil;
+import com.stox.data.event.BarLengthDownloadCompletedEvent;
 import com.stox.data.ui.BarLengthDownloadNotification;
 import com.stox.nse.data.NseDataState;
 import com.stox.nse.data.NseDataStateRepository;
@@ -43,7 +47,7 @@ public class NseLegthBarDownloadManager {
 	private TaskExecutor taskExecutor;
 
 	@Autowired
-	private NseBreadthBarDownloadManager breadthBarDownloadManager;
+	private ApplicationEventPublisher eventPublisher;
 
 	private final LineRepository repository = new LineRepository("com.stox.data.download.bar.legth.nse.csv");
 
@@ -51,6 +55,13 @@ public class NseLegthBarDownloadManager {
 
 	@PostConstruct
 	public void postConstruct() {
+		if (shouldDownload()) {
+			taskExecutor.execute(() -> download());
+		}
+	}
+
+	@EventListener
+	public void onInstrumentsChanged(final InstrumentsChangedEvent event) {
 		if (shouldDownload()) {
 			taskExecutor.execute(() -> download());
 		}
@@ -69,7 +80,6 @@ public class NseLegthBarDownloadManager {
 	}
 
 	public void download() {
-		final String staticText = "Downloading Data...";
 		final String url = environment.getProperty("com.stox.nse.url.bar.length");
 		final List<String> downloadedInstrumentIds = repository.findAll();
 		final List<Instrument> allInstruments = instrumentRepository.getInstruments(Exchange.NSE);
@@ -105,7 +115,7 @@ public class NseLegthBarDownloadManager {
 			dataStateRepository.persistDataState();
 			repository.drop();
 			notification.hide();
-			breadthBarDownloadManager.download();
+			eventPublisher.publishEvent(new BarLengthDownloadCompletedEvent(Exchange.NSE));
 		}
 	}
 }

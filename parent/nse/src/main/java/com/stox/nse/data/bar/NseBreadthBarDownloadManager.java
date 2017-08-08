@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
+import com.stox.core.model.Exchange;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.DateUtil;
@@ -77,7 +78,7 @@ public class NseBreadthBarDownloadManager {
 		final Calendar today = Calendar.getInstance();
 		today.setTime(DateUtil.trim(today.getTime()));
 		if (!cancel && calendar.before(today)) {
-			final BarDownloadNotification notification = new BarDownloadNotification(start, today.getTime());
+			final BarDownloadNotification notification = new BarDownloadNotification(Exchange.NSE, start, today.getTime());
 			try {
 				notification.show();
 				for (; !cancel && calendar.before(today); calendar.add(Calendar.DATE, 1)) {

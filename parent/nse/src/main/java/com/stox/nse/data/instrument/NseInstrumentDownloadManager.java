@@ -10,18 +10,19 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.downloader.Downloader;
+import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
 import com.stox.core.model.InstrumentType;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.StringUtil;
 import com.stox.nse.data.NseDataStateRepository;
-import com.stox.nse.data.bar.NseLegthBarDownloadManager;
 
 @Component
 public class NseInstrumentDownloadManager {
@@ -39,7 +40,7 @@ public class NseInstrumentDownloadManager {
 	private NseDataStateRepository dataStateRepository;
 
 	@Autowired
-	private NseLegthBarDownloadManager lengthBarDownloadManager;
+	private ApplicationEventPublisher eventPublisher;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -67,11 +68,13 @@ public class NseInstrumentDownloadManager {
 						throw new RuntimeException(e);
 					}
 				}).flatMap(x -> x.stream()).collect(Collectors.toList());
-				instrumentRepository.save(Exchange.NSE, allInstruments);
-				downloadMappings();
-				dataStateRepository.getDataState().setLastInstrumentDownloadDate(new Date());
-				dataStateRepository.persistDataState();
-				lengthBarDownloadManager.download();
+				if (!allInstruments.isEmpty()) {
+					instrumentRepository.save(Exchange.NSE, allInstruments);
+					downloadMappings();
+					dataStateRepository.getDataState().setLastInstrumentDownloadDate(new Date());
+					dataStateRepository.persistDataState();
+					eventPublisher.publishEvent(new InstrumentsChangedEvent(Exchange.NSE, allInstruments));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
