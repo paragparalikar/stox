@@ -2,10 +2,13 @@ package com.stox.chart.plot;
 
 import java.util.stream.IntStream;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +20,7 @@ import com.stox.chart.unit.AreaUnit;
 import com.stox.chart.unit.BarUnit;
 import com.stox.chart.unit.LinePlotNode;
 import com.stox.chart.unit.LineUnit;
+import com.stox.chart.unit.PlotNode;
 import com.stox.chart.unit.Unit;
 import com.stox.chart.unit.UnitType;
 import com.stox.core.intf.Range;
@@ -30,11 +34,18 @@ public abstract class Plot<M extends Range> extends Group {
 	private Color color = Color.GRAY;
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
 	private int lastMinIndex = Integer.MIN_VALUE, lastMaxIndex = Integer.MAX_VALUE;
+	private final ObjectProperty<PlotNode> plotNodeProperty = new SimpleObjectProperty<>();
 	private final ObservableList<M> models = FXCollections.observableArrayList();
 	private final ObservableList<Unit<M>> units = FXCollections.observableArrayList();
 
 	public Plot(final Chart chart) {
 		setChart(chart);
+		plotNodeProperty.addListener((observable, old, node) -> {
+			getChildren().remove(old);
+			if (null != node) {
+				getChildren().add((Node) node);
+			}
+		});
 		models.addListener((ListChangeListener<M>) (change) -> {
 			lastMinIndex = Integer.MIN_VALUE;
 			lastMaxIndex = Integer.MAX_VALUE;
@@ -57,17 +68,13 @@ public abstract class Plot<M extends Range> extends Group {
 	public void createUnits(final int from, final int to) {
 		switch (getUnitType()) {
 		case LINE:
-			getChildren().remove(getUserData());
-			final LinePlotNode linePlotNode = new LinePlotNode(this);
-			setUserData(linePlotNode);
-			getChildren().add(linePlotNode);
+			plotNodeProperty.set(new LinePlotNode(this));
 			break;
 		case AREA:
-			getChildren().remove(getUserData());
-			final AreaPlotNode areaPlotNode = new AreaPlotNode(this);
-			setUserData(areaPlotNode);
-			getChildren().add(areaPlotNode);
+			plotNodeProperty.set(new AreaPlotNode(this));
 			break;
+		default:
+			plotNodeProperty.set(null);
 		}
 		IntStream.range(from, to).forEach(index -> {
 			final M model = models.get(index);
@@ -129,6 +136,17 @@ public abstract class Plot<M extends Range> extends Group {
 	protected void preLayout() {
 		lastMinIndex = Math.max(lastMinIndex, 0);
 		lastMaxIndex = Math.min(lastMaxIndex, units.size() - 1);
+		final PlotNode plotNode = plotNodeProperty.get();
+		if (null != plotNode) {
+			plotNode.preLayout();
+		}
+	}
+
+	protected void postLayout() {
+		final PlotNode plotNode = plotNodeProperty.get();
+		if (null != plotNode) {
+			plotNode.postLayout();
+		}
 	}
 
 	protected void layoutUnit(final Unit<M> unit, final double x, final double width) {
@@ -158,6 +176,7 @@ public abstract class Plot<M extends Range> extends Group {
 			}
 			lastMinIndex = minIndex;
 			lastMaxIndex = maxIndex;
+			postLayout();
 		}
 	}
 
