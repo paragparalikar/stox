@@ -3,6 +3,7 @@ package com.stox.chart.plot;
 import java.util.Date;
 import java.util.List;
 
+import javafx.application.Platform;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,7 @@ import com.stox.chart.event.BarRequestEvent;
 import com.stox.chart.unit.UnitType;
 import com.stox.chart.util.ChartUtil;
 import com.stox.chart.view.ChartView;
+import com.stox.core.intf.DelayedResponseCallback;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
@@ -70,10 +72,31 @@ public class PricePlot extends Plot<Bar> {
 			final Date from = chartView.getFrom();
 			final BarSpan barSpan = chartView.getBarSpan();
 			getModels().clear();
-			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
+			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new DelayedResponseCallback<List<Bar>>() {
+
+				/**
+				 * Need to keep instrument and the barspan used for making the request. After some delay when the delayedResponse is received these details might have changed Thus
+				 * equality has to be checked for conditions at request and response
+				 */
+				private final BarSpan requestBarSpan = barSpan;
+				private final Instrument requestInstrument = instrument;
+
 				@Override
 				public void onSuccess(Response<List<Bar>> response) {
 					addData(from, barSpan, response.getPayload());
+				}
+
+				@Override
+				public void onDelayedSuccess(Response<List<Bar>> response) {
+					if (requestBarSpan.equals(chartView.getBarSpan()) && requestInstrument.equals(instrument)) {
+						Platform.runLater(() -> {
+							if (requestBarSpan.equals(chartView.getBarSpan()) && requestInstrument.equals(instrument)) {
+								final List<Bar> bars = response.getPayload();
+								getModels().addAll(0, bars);
+								update();
+							}
+						});
+					}
 				}
 
 				@Override

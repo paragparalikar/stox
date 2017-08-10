@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,10 +31,13 @@ import com.stox.core.util.FileUtil;
 public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Autowired
+	private CacheManager cacheManager;
+
+	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
 	@Autowired
-	private ThreadPoolTaskExecutor taskExecutor;
+	private TaskExecutor taskExecutor;
 
 	private final Map<String, Instrument> cache = new HashMap<>();
 	private final Map<String, String> exchangeCodeToIdCache = new HashMap<>();
@@ -50,7 +54,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@PostConstruct
 	public synchronized void postConstruct() {
-		taskExecutor.submit(() -> loadInstruments());
+		taskExecutor.execute(() -> loadInstruments());
 	}
 
 	private synchronized void loadInstruments() {

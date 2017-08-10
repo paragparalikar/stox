@@ -9,16 +9,14 @@ import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.stox.core.util.StringUtil;
 
 @Data
+@Slf4j
 @AllArgsConstructor
 public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
-	private static final Logger log = LoggerFactory.getLogger("com.stox.core.downloader.CsvDownloader");
 
 	private String url;
 	private int linesToSkip;

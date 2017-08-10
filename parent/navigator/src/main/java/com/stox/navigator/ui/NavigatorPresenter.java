@@ -20,7 +20,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.event.InstrumentsChangedEvent;
-import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.ui.filter.FilterPresenter;
@@ -52,8 +51,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		view.getFilterButton().addEventHandler(ActionEvent.ACTION, event -> showFilter());
 		view.getListView().getSelectionModel().selectedItemProperty().addListener((observable, old, instrument) -> {
 			if (null != instrument) {
-				final State state = getLinkState();
-				publish(new State(instrument.getId(), null == state ? BarSpan.D : state.getBarSpan(), 0));
+				publish(new State(instrument.getId(), null, 0));
 			}
 		});
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
