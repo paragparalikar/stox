@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.event.InstrumentsChangedEvent;
@@ -98,19 +99,18 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 		return view;
 	}
 
+	@Async
 	@Override
 	public void start() {
 		view.showSpinner(true);
 		super.start();
-		taskExecutor.execute(() -> {
-			final List<Instrument> instruments = instrumentRepository.getAllInstruments();
-			allInstruments.clear();
-			allInstruments.addAll(instruments);
-			filterPresenter.filter(i -> {
-				Platform.runLater(() -> {
-					view.getListView().getItems().setAll(i);
-					view.showSpinner(false);
-				});
+		final List<Instrument> instruments = instrumentRepository.getAllInstruments();
+		allInstruments.clear();
+		allInstruments.addAll(instruments);
+		filterPresenter.filter(i -> {
+			Platform.runLater(() -> {
+				view.getListView().getItems().setAll(i);
+				view.showSpinner(false);
 			});
 		});
 	}

@@ -1,5 +1,7 @@
 package com.stox;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -34,6 +36,12 @@ public class StoxApplication extends Application {
 		taskExecutor.setAwaitTerminationSeconds(5);
 		taskExecutor.setCorePoolSize(3);
 		return taskExecutor;
+	}
+
+	@Bean
+	public ScheduledThreadPoolExecutor scheduledTaskExecutor() {
+		final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+		return executor;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.stox.google.data.bar;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,7 +13,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.event.InstrumentsChangedEvent;
@@ -30,7 +30,7 @@ public class GoogleBarDownloadManager {
 	private static final BarSpan[] BARSPANS = { BarSpan.H, BarSpan.M30, BarSpan.M15, BarSpan.M10, BarSpan.M5, BarSpan.M1 };
 
 	@Autowired
-	private TaskExecutor taskExecutor;
+	private ScheduledExecutorService taskExecutor;
 
 	@Autowired
 	private Environment environment;
@@ -58,9 +58,9 @@ public class GoogleBarDownloadManager {
 
 	@EventListener({ ContextRefreshedEvent.class, InstrumentsChangedEvent.class })
 	public void downloadIfIdle() {
-		taskExecutor.execute(() -> {
-			if (!busy) {
-				busy = true;
+		if (!busy) {
+			busy = true;
+			taskExecutor.schedule(() -> {
 				try {
 					download();
 				} catch (final Exception e) {
@@ -68,8 +68,8 @@ public class GoogleBarDownloadManager {
 				} finally {
 					busy = false;
 				}
-			}
-		});
+			}, 3, TimeUnit.SECONDS);
+		}
 	}
 
 	private void download() throws Exception {
