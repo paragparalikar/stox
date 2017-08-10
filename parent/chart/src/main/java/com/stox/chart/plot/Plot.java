@@ -51,6 +51,10 @@ public abstract class Plot<M extends Range> extends Group {
 			lastMaxIndex = Integer.MAX_VALUE;
 			while (change.next()) {
 				if (change.wasRemoved()) {
+					/*
+					 * final List<Unit<M>> removableUnits = units.subList(change.getFrom(), change.getTo()); units.removeAll(removableUnits);
+					 * getChildren().removeAll(removableUnits);
+					 */
 					clearUnits();
 				}
 				if (change.wasAdded()) {
@@ -79,7 +83,7 @@ public abstract class Plot<M extends Range> extends Group {
 		IntStream.range(from, to).forEach(index -> {
 			final M model = models.get(index);
 			final Unit<M> unit = create(index, model);
-			units.add(unit);
+			units.add(index, unit);
 			getChildren().add(unit);
 		});
 	}

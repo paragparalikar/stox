@@ -1,5 +1,6 @@
 package com.stox.google.data;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +44,9 @@ public class GoogleDataProvider implements DataProvider {
 	@Override
 	public List<Bar> getBars(Instrument instrument, BarSpan barSpan, Date from, Date to) throws Exception {
 		final GoogleBarDownloader downloader = new GoogleBarDownloader(environment.getProperty("com.stox.google.data.download.url.bar"), from, barSpan, instrument);
-		return downloader.download();
+		final List<Bar> bars = downloader.download();
+		Collections.sort(bars);
+		return bars;
 	}
 
 }
