@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,46 @@ import com.stox.core.util.Constant;
 
 @Component
 public class BinaryFileBarRepository implements BarRepository {
+
+	public static void main(String[] args) {
+		final BinaryFileBarRepository repo = new BinaryFileBarRepository();
+		final List<Bar> bars = new ArrayList<>();
+
+		Bar bar = new Bar();
+		bar.setDate(new Date(1502346600000l));
+		bars.add(bar);
+
+		bar = new Bar();
+		bar.setDate(new Date(1502346600001l));
+		bars.add(bar);
+
+		bar = new Bar();
+		bar.setDate(new Date(1502346600002l));
+		bars.add(bar);
+
+		bar = new Bar();
+		bar.setDate(new Date(1502346600003l));
+		bars.add(bar);
+
+		repo.save(bars, "test", BarSpan.H);
+
+		bars.clear();
+
+		bar = new Bar();
+		bar.setDate(new Date(1502346600003l));
+		bars.add(bar);
+
+		bar = new Bar();
+		bar.setDate(new Date(1502346600002l));
+		bars.add(bar);
+
+		repo.save(bars, "test", BarSpan.H);
+
+		final List<Bar> bars1 = repo.find("test", BarSpan.H, new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)), new Date());
+		for (final Bar bar1 : bars1) {
+			System.out.println(bar1.getDate().getTime());
+		}
+	}
 
 	@Override
 	public Date getLastTradingDate(String instrumentId, BarSpan barSpan) {
@@ -74,7 +115,7 @@ public class BinaryFileBarRepository implements BarRepository {
 		synchronized (path) {
 			new File(path).getParentFile().mkdirs();
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
-				final long date = set.last().getDate().getTime();
+				final long date = set.first().getDate().getTime();
 				if (file.length() >= Bar.BYTES) {
 					file.seek(file.length() - Bar.BYTES);
 					Bar original = read(file);
