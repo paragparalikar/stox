@@ -10,10 +10,6 @@ import com.stox.core.model.Instrument;
 
 public interface DataClient {
 
-	void getAllInstruments(final ResponseCallback<List<Instrument>> callback);
-
-	void getInstrument(final String code, final ResponseCallback<Instrument> callback);
-
-	void loadBars(final String instrumentCode, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback);
+	void loadBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback);
 
 }

@@ -50,7 +50,7 @@ public abstract class View extends StackPane implements HasSpinner {
 	}
 
 	public void clearMessages() {
-		top.getChildren().stream().filter(node -> node instanceof MessagePane).forEach(node -> top.getChildren().remove(node));
+		top.getChildren().removeIf(node -> node instanceof MessagePane);
 	}
 
 	public void setContent(final Node node) {

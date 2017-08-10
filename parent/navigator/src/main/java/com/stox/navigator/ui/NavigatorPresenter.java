@@ -22,7 +22,6 @@ import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
 import com.stox.core.repository.InstrumentRepository;
-import com.stox.core.ui.ToastCallback;
 import com.stox.core.ui.filter.FilterPresenter;
 import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
@@ -103,7 +102,8 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	public void start() {
 		view.showSpinner(true);
 		super.start();
-		dataClient.getAllInstruments(new ToastCallback<>(instruments -> {
+		taskExecutor.execute(() -> {
+			final List<Instrument> instruments = instrumentRepository.getAllInstruments();
 			allInstruments.clear();
 			allInstruments.addAll(instruments);
 			filterPresenter.filter(i -> {
@@ -112,9 +112,7 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 					view.showSpinner(false);
 				});
 			});
-
-			return null;
-		}));
+		});
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.stox.core.intf.Callback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
+import com.stox.core.model.Instrument;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.ui.widget.modal.Modal;
@@ -71,7 +72,7 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 
 	// @Secured
 	@Override
-	public List<Bar> getBars(final String exchangeCode, final BarSpan barSpan, final Date from, final Date to) {
-		return barRepository.find(exchangeCode, barSpan, from, to);
+	public List<Bar> getBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to) {
+		return barRepository.find(instrument.getId(), barSpan, from, to);
 	}
 }

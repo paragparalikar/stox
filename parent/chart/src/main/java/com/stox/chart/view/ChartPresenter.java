@@ -23,12 +23,13 @@ import com.stox.core.model.Instrument;
 import com.stox.core.model.Message;
 import com.stox.core.model.MessageType;
 import com.stox.core.model.Response;
+import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.StringUtil;
 import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.SubscriberPresenter;
 
-@Component("chartPresenter")
+@Component
 @Scope("prototype")
 public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewState> {
 
@@ -40,9 +41,13 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
+	@Autowired
+	private InstrumentRepository instrumentRepository;
+
 	public ChartPresenter() {
 		view.addEventHandler(BarRequestEvent.TYPE, event -> {
-			loadBars(event.getInstrumentId(), event.getBarSpan(), event.getFrom(), event.getTo(), event.getCallback());
+			final Instrument instrument = instrumentRepository.getInstrument(event.getInstrumentId());
+			loadBars(instrument, event.getBarSpan(), event.getFrom(), event.getTo(), event.getCallback());
 		});
 	}
 
@@ -57,29 +62,15 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 			view.setFrom(from);
 			view.setTo(to);
 			final PrimaryPricePlot primaryPricePlot = view.getPrimaryChart().getPrimaryPricePlot();
-			dataClient.getInstrument(state.getInstrumentId(), new ResponseCallback<Instrument>() {
-				@Override
-				public void onSuccess(Response<Instrument> response) {
-					primaryPricePlot.setInstrument(response.getPayload());
-					primaryPricePlot.load();
-				}
-
-				@Override
-				public void onFailure(Response<Instrument> response, Throwable throwable) {
-					view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
-				}
-
-				@Override
-				public void onDone() {
-					view.showSpinner(false);
-				}
-			});
+			final Instrument instrument = instrumentRepository.getInstrument(state.getInstrumentId());
+			primaryPricePlot.setInstrument(instrument);
+			primaryPricePlot.load();
 		}
 	}
 
-	private void loadBars(final String instrumentId, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback) {
+	private void loadBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback) {
 		view.showSpinner(true);
-		dataClient.loadBars(instrumentId, barSpan, from, to, new ResponseCallback<List<Bar>>() {
+		dataClient.loadBars(instrument, barSpan, from, to, new ResponseCallback<List<Bar>>() {
 			@Override
 			public void onSuccess(Response<List<Bar>> response) {
 				callback.onSuccess(response);
@@ -88,7 +79,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 			@Override
 			public void onFailure(Response<List<Bar>> response, Throwable throwable) {
 				if (throwable instanceof FileNotFoundException) {
-					view.setMessage(new Message("No data available for \"" + instrumentId + "\"", MessageType.ERROR));
+					view.setMessage(new Message("No data available for \"" + instrument.getName() + "\"", MessageType.ERROR));
 				} else {
 					view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
 				}
