@@ -1,6 +1,6 @@
 package com.stox.data;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +13,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.intf.Callback;
+import com.stox.core.intf.HasName.HasNameComaparator;
 import com.stox.data.event.DataProviderChangedEvent;
 import com.stox.data.ui.DataProviderSelectionModal;
 
@@ -20,7 +21,7 @@ import com.stox.data.ui.DataProviderSelectionModal;
 public class DataProviderManager {
 
 	private volatile boolean selectionInProgress = false;
-	private Collection<DataProvider> dataProviders;
+	private List<DataProvider> dataProviders;
 	private DataProvider selectedDataProvider;
 	private final List<Callback<DataProvider, Void>> callbacks = new LinkedList<>();
 
@@ -30,7 +31,8 @@ public class DataProviderManager {
 	@EventListener(ContextRefreshedEvent.class)
 	public void onContextRefreshed(final ContextRefreshedEvent event) {
 		selectedDataProvider = null;
-		dataProviders = event.getApplicationContext().getBeansOfType(DataProvider.class).values();
+		dataProviders = new ArrayList<>(event.getApplicationContext().getBeansOfType(DataProvider.class).values());
+		dataProviders.sort(new HasNameComaparator<>());
 	}
 
 	public void execute(final Callback<DataProvider, Void> callback) {

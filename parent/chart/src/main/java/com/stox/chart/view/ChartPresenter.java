@@ -57,14 +57,17 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	public void setLinkState(State state) {
 		if (null != state && StringUtil.hasText(state.getInstrumentId())) {
 			view.showSpinner(true);
-			final Date to = new Date(0 >= state.getDate() ? System.currentTimeMillis() : state.getDate());
-			final Date from = ChartUtil.getFrom(to, state.getBarSpan());
-			view.setBarSpan(null == state.getBarSpan() ? view.getBarSpan() : state.getBarSpan());
-			view.setFrom(from);
-			view.setTo(to);
+
 			final PrimaryPricePlot primaryPricePlot = view.getPrimaryChart().getPrimaryPricePlot();
 			final Instrument instrument = instrumentRepository.getInstrument(state.getInstrumentId());
 			primaryPricePlot.setInstrument(instrument);
+
+			view.setBarSpan(null == state.getBarSpan() ? view.getBarSpan() : state.getBarSpan());
+			final Date to = new Date(0 >= state.getDate() ? System.currentTimeMillis() : state.getDate());
+			final Date from = ChartUtil.getFrom(to, view.getBarSpan());
+			view.setFrom(from);
+			view.setTo(to);
+
 			primaryPricePlot.load();
 		}
 	}

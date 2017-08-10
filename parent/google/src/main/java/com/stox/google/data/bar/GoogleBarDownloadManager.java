@@ -41,9 +41,9 @@ public class GoogleBarDownloadManager {
 	@Autowired
 	private InstrumentRepository instrumentRepository;
 
-	private boolean busy;
+	private volatile boolean busy;
 
-	private boolean cancelled;
+	private volatile boolean cancelled;
 
 	private volatile int total = 0;
 

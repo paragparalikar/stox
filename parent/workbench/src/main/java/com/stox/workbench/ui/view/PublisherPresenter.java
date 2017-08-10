@@ -7,7 +7,7 @@ import com.stox.workbench.ui.view.Link.State;
 public abstract class PublisherPresenter<V extends View, S extends ViewState> extends LinkedPresenter<V, S> {
 
 	public void publish(final State state) {
-		if (StringUtil.hasText(state.getInstrumentId()) && null != state.getBarSpan()) {
+		if (StringUtil.hasText(state.getInstrumentId())) {
 			getLinkButton().getLink().setState(state);
 		}
 	}
