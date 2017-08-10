@@ -45,9 +45,9 @@ public class GoogleBarDownloadManager {
 
 	private boolean cancelled;
 
-	private BarLengthDownloadNotification notification;
-
 	private volatile int total = 0;
+
+	private BarLengthDownloadNotification notification;
 
 	private final AtomicInteger counter = new AtomicInteger(0);
 
@@ -99,18 +99,24 @@ public class GoogleBarDownloadManager {
 					if (cancelled) {
 						return;
 					}
-					notification.setBarSpan(barSpan);
-					notification.setInstrument(instrument);
-					notification.setExchange(instrument.getExchange());
+					if (null != notification) {
+						notification.setBarSpan(barSpan);
+						notification.setInstrument(instrument);
+						notification.setExchange(instrument.getExchange());
+					}
 					download(instrument, barSpan);
 				} catch (Exception e) {
 				} finally {
-					final int remaining = counter.decrementAndGet();
-					if (0 == remaining) {
-						notification.hide();
-						notification = null;
-					} else {
-						notification.setProgress(((((double) total) - ((double) remaining)) / (total)));
+					if (null != notification) {
+						final int remaining = counter.decrementAndGet();
+						if (0 == remaining) {
+							notification.hide();
+							notification = null;
+							total = 0;
+							counter.set(0);
+						} else {
+							notification.setProgress(((((double) total) - ((double) remaining)) / (total)));
+						}
 					}
 				}
 			});
