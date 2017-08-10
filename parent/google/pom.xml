@@ -5,18 +5,8 @@
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>nse</artifactId>
+  <artifactId>google</artifactId>
   <dependencies>
-  	<dependency>
-  		<groupId>com.stox</groupId>
-  		<artifactId>core</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.stox</groupId>
-  		<artifactId>ui</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
   	<dependency>
   		<groupId>com.stox</groupId>
   		<artifactId>data</artifactId>

@@ -83,7 +83,9 @@ public class NseLegthBarDownloadManager {
 		final String url = environment.getProperty("com.stox.nse.url.bar.length");
 		final List<String> downloadedInstrumentIds = repository.findAll();
 		final List<Instrument> allInstruments = instrumentRepository.getInstruments(Exchange.NSE);
-		allInstruments.removeIf(instrument -> downloadedInstrumentIds.contains(instrument.getId()));
+		allInstruments.removeIf(instrument -> {
+			return downloadedInstrumentIds.contains(instrument.getId()) || null != barRepository.getLastTradingDate(instrument.getId(), BarSpan.D);
+		});
 		final AtomicInteger count = new AtomicInteger(downloadedInstrumentIds.size());
 		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification(Exchange.NSE);
 		notification.show();

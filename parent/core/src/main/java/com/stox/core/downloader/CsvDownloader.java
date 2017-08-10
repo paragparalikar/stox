@@ -51,13 +51,14 @@ public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
 	}
 
 	protected Stream<String> lines(final InputStream inputStream) throws Exception {
-		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
 		final String content = StringUtil.toString(inputStream);
 		return Arrays.stream(content.split(lineDelimiter));
 	}
 
 	protected InputStream inputStream() throws Exception {
-		return new URL(url).openStream();
+		final String url = getUrl();
+		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
+		return new URL(getUrl()).openStream();
 	}
 
 }

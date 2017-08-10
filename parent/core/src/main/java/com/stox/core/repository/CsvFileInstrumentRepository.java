@@ -49,7 +49,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@PostConstruct
-	public void postConstruct() {
+	public synchronized void postConstruct() {
 		taskExecutor.submit(() -> loadInstruments());
 	}
 
@@ -72,7 +72,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 							new TypeReference<HashMap<String, List<String>>>() {
 							});
 					for (final String indexId : map.keySet()) {
-						componentCache.put(indexId, map.getOrDefault(indexId, Collections.emptyList()).stream().map(id -> getInstrument(id)).collect(Collectors.toList()));
+						componentCache.put(indexId, map.getOrDefault(indexId, Collections.emptyList()).stream().map(id -> cache.get(id)).collect(Collectors.toList()));
 					}
 				} catch (Exception e) {
 				}
@@ -81,31 +81,31 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
-	public String getIdByExchangeCode(String exchangeCode) {
+	public synchronized String getIdByExchangeCode(String exchangeCode) {
 		return exchangeCodeToIdCache.get(exchangeCode);
 	}
 
 	@Override
-	public List<Instrument> getAllInstruments() {
+	public synchronized List<Instrument> getAllInstruments() {
 		loadInstruments();
 		return cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Instrument> getInstruments(Exchange exchange) {
+	public synchronized List<Instrument> getInstruments(Exchange exchange) {
 		loadInstruments();
 		return cache.values().stream().filter(instrument -> exchange.equals(instrument.getExchange())).sorted(new HasNameComaparator<>()).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Instrument> getInstruments(Exchange exchange, InstrumentType type) {
+	public synchronized List<Instrument> getInstruments(Exchange exchange, InstrumentType type) {
 		loadInstruments();
 		return cache.values().stream().filter(instrument -> exchange.equals(instrument.getExchange()) && type.equals(instrument.getType())).sorted(new HasNameComaparator<>())
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public void save(Exchange exchange, Map<String, List<String>> parentComponentMapping) {
+	public synchronized void save(Exchange exchange, Map<String, List<String>> parentComponentMapping) {
 		try {
 			final String path = getParentComponentMappingPath(exchange);
 			Constant.objectMapper.writeValue(FileUtil.getFile(path), parentComponentMapping);
@@ -115,14 +115,14 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
-	public List<Instrument> getComponentInstruments(Instrument instrument) {
+	public synchronized List<Instrument> getComponentInstruments(Instrument instrument) {
 		loadInstruments();
 		final List<Instrument> instruments = componentCache.get(instrument.getId());
 		return null == instruments ? Collections.emptyList() : instruments;
 	}
 
 	@Override
-	public void save(final Exchange exchange, final List<Instrument> instruments) {
+	public synchronized void save(final Exchange exchange, final List<Instrument> instruments) {
 		try {
 			Constant.csvMapper.writer(schema).writeValues(new File(getPath(exchange))).writeAll(instruments).flush();
 			instruments.forEach(instrument -> cache.put(instrument.getId(), instrument));
@@ -134,7 +134,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
-	public Instrument getInstrument(String id) {
+	public synchronized Instrument getInstrument(String id) {
 		loadInstruments();
 		return cache.get(id);
 	}

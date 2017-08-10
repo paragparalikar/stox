@@ -2,17 +2,23 @@ package com.stox.core.model;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Wither;
 
 import com.stox.core.intf.Identifiable;
 import com.stox.core.intf.Nameable;
 import com.stox.core.util.StringUtil;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Instrument implements Identifiable<String>, Nameable {
 
 	private String exchangeCode;
 
+	@Wither
 	private String symbol;
 
 	private String isin;
