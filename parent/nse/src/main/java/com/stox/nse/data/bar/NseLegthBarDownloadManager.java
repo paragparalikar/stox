@@ -87,7 +87,9 @@ public class NseLegthBarDownloadManager {
 			return downloadedInstrumentIds.contains(instrument.getId()) || null != barRepository.getLastTradingDate(instrument.getId(), BarSpan.D);
 		});
 		final AtomicInteger count = new AtomicInteger(downloadedInstrumentIds.size());
-		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification(Exchange.NSE);
+		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification();
+		notification.setExchange(Exchange.NSE);
+		notification.setBarSpan(BarSpan.D);
 		notification.show();
 
 		final NseDataState state = dataStateRepository.getDataState();
@@ -107,7 +109,7 @@ public class NseLegthBarDownloadManager {
 				e.printStackTrace();
 			} finally {
 				repository.append(instrument.getId());
-				notification.setText(instrument.getName());
+				notification.setInstrument(instrument);
 				notification.setProgress(((double) count.incrementAndGet()) / ((double) allInstruments.size()));
 			}
 		});

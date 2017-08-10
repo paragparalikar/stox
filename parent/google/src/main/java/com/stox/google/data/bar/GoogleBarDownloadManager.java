@@ -3,6 +3,7 @@ package com.stox.google.data.bar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PreDestroy;
 
@@ -20,6 +21,7 @@ import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
+import com.stox.data.ui.BarLengthDownloadNotification;
 
 @Component
 @PropertySource("classpath:google.properties")
@@ -42,6 +44,10 @@ public class GoogleBarDownloadManager {
 	private boolean busy;
 
 	private boolean cancelled;
+
+	private BarLengthDownloadNotification notification;
+
+	private final AtomicInteger counter = new AtomicInteger(0);
 
 	@PreDestroy
 	public void preDestroy() {
@@ -67,8 +73,13 @@ public class GoogleBarDownloadManager {
 	private void download() throws Exception {
 		final String indexId = environment.getProperty("com.stox.google.data.download.bar.index");
 		final Instrument indexInstrument = instrumentRepository.getInstrument(indexId);
-		download(indexInstrument.withSymbol(environment.getProperty("com.stox.google.mapping." + indexId, indexId)));
 		final List<Instrument> components = instrumentRepository.getComponentInstruments(indexInstrument);
+
+		notification = new BarLengthDownloadNotification();
+		notification.show();
+		counter.set((1 + components.size()) * BARSPANS.length);
+
+		download(indexInstrument.withSymbol(environment.getProperty("com.stox.google.mapping." + indexId, indexId)));
 		components.forEach(instrument -> {
 			try {
 				download(instrument);
@@ -82,18 +93,25 @@ public class GoogleBarDownloadManager {
 		for (final BarSpan barSpan : BARSPANS) {
 			taskExecutor.execute(() -> {
 				try {
+					if (cancelled) {
+						return;
+					}
+					notification.setBarSpan(barSpan);
+					notification.setInstrument(instrument);
+					notification.setExchange(instrument.getExchange());
 					download(instrument, barSpan);
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+				} finally {
+					if (0 == counter.decrementAndGet()) {
+						notification.hide();
+						notification = null;
+					}
 				}
 			});
 		}
 	}
 
 	private void download(final Instrument instrument, final BarSpan barSpan) throws Exception {
-		if (cancelled) {
-			return;
-		}
 		final Date start = getLastDownloadDate(instrument, barSpan);
 		final GoogleBarDownloader downloader = new GoogleBarDownloader(environment.getProperty("com.stox.google.data.download.url.bar"), start, barSpan, instrument);
 		final List<Bar> bars = downloader.download();
