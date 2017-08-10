@@ -47,6 +47,8 @@ public class GoogleBarDownloadManager {
 
 	private BarLengthDownloadNotification notification;
 
+	private volatile int total = 0;
+
 	private final AtomicInteger counter = new AtomicInteger(0);
 
 	@PreDestroy
@@ -77,7 +79,8 @@ public class GoogleBarDownloadManager {
 
 		notification = new BarLengthDownloadNotification();
 		notification.show();
-		counter.set((1 + components.size()) * BARSPANS.length);
+		total = (1 + components.size()) * BARSPANS.length;
+		counter.set(total);
 
 		download(indexInstrument.withSymbol(environment.getProperty("com.stox.google.mapping." + indexId, indexId)));
 		components.forEach(instrument -> {
@@ -102,9 +105,12 @@ public class GoogleBarDownloadManager {
 					download(instrument, barSpan);
 				} catch (Exception e) {
 				} finally {
-					if (0 == counter.decrementAndGet()) {
+					final int remaining = counter.decrementAndGet();
+					if (0 == remaining) {
 						notification.hide();
 						notification = null;
+					} else {
+						notification.setProgress(((((double) total) - ((double) remaining)) / (total)));
 					}
 				}
 			});
