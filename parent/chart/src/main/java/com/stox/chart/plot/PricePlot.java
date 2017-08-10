@@ -1,6 +1,7 @@
 package com.stox.chart.plot;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -92,8 +93,11 @@ public class PricePlot extends Plot<Bar> {
 						Platform.runLater(() -> {
 							if (requestBarSpan.equals(chartView.getBarSpan()) && requestInstrument.equals(instrument)) {
 								final List<Bar> bars = response.getPayload();
-								getModels().addAll(0, bars);
-								update();
+								if (null != bars && !bars.isEmpty()) {
+									merge(getModels(), bars);
+									getModels().addAll(0, bars);
+									update();
+								}
 							}
 						});
 					}
@@ -104,6 +108,23 @@ public class PricePlot extends Plot<Bar> {
 					dataAvailable = false;
 				}
 			}));
+		}
+	}
+
+	private void merge(final List<Bar> existingBars, final List<Bar> newBars) {
+		final Bar first = existingBars.get(0);
+		final Iterator<Bar> iterator = newBars.iterator();
+		while (iterator.hasNext()) {
+			final Bar bar = iterator.next();
+			if (bar.getDate().getTime() <= first.getDate().getTime()) {
+				for (final Bar model : existingBars) {
+					if (bar.getDate().equals(model.getDate())) {
+						model.copy(bar);
+						break;
+					}
+				}
+				iterator.remove();
+			}
 		}
 	}
 
