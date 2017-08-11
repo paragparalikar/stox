@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
@@ -90,6 +91,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
+	@Cacheable("instruments")
 	public synchronized List<Instrument> getAllInstruments() {
 		loadInstruments();
 		return cache.values().stream().sorted(new HasNameComaparator<>()).collect(Collectors.toList());

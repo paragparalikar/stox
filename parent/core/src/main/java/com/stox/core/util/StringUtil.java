@@ -6,6 +6,10 @@ import java.io.InputStream;
 
 public class StringUtil {
 
+	public static String trim(final String text) {
+		return null == text ? null : text.trim();
+	}
+
 	public static String get(final String[] tokens, final int index) {
 		if (null != tokens && index < tokens.length) {
 			return tokens[index];
