@@ -1,5 +1,7 @@
 package com.stox.data;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,10 +35,38 @@ public class DataClientImpl implements DataClient {
 	@Autowired
 	private TaskExecutor taskExecutor;
 
-	public void loadBars1(Instrument instrument, BarSpan barSpan, Date from, Date to, ResponseCallback<List<Bar>> callback) {
+	@Override
+	public void loadBars(Instrument instrument, BarSpan barSpan, Date from, Date to, ResponseCallback<List<Bar>> callback) {
 		dataProviderManager.execute(dataProvider -> {
 			try {
-				final List<Bar> bars = dataProvider.getBars(instrument, barSpan, from, to);
+				final List<Bar> bars = new ArrayList<>();
+				synchronized (bars) {
+					taskExecutor.execute(() -> {
+						final List<Bar> downloadedBars = new ArrayList<Bar>();
+						try {
+							final Date date = barRepository.getLastTradingDate(instrument.getId(), barSpan);
+							downloadedBars.addAll(dataProvider.getBars(instrument, barSpan, date, to));
+							if (!downloadedBars.isEmpty()) {
+								taskExecutor.execute(() -> {
+									barRepository.save(downloadedBars, instrument.getId(), barSpan);
+								});
+							}
+						} catch (Exception e) {
+
+						} finally {
+							synchronized (bars) {
+								try {
+									bars.addAll(0, downloadedBars);
+								} finally {
+									bars.notifyAll();
+								}
+							}
+						}
+					});
+					bars.addAll(barRepository.find(instrument.getId(), barSpan, from, to));
+					bars.wait();
+				}
+				Collections.sort(bars);
 				callback.onSuccess(new Response<>(bars));
 			} catch (Exception e) {
 				callback.onFailure(null, e);
@@ -48,23 +78,20 @@ public class DataClientImpl implements DataClient {
 	}
 
 	@Override
-	public void loadBars(Instrument instrument, BarSpan barSpan, Date from, Date to, final ResponseCallback<List<Bar>> callback) {
+	public void loadBars(Instrument instrument, BarSpan barSpan, Date from, Date to, final DelayedResponseCallback<List<Bar>> callback) {
 		dataProviderManager.execute(dataProvider -> {
 			try {
 				synchronized (callback) {
-					if (callback instanceof DelayedResponseCallback) {
-						taskExecutor.execute(() -> {
-							try {
-								final Date date = barRepository.getLastTradingDate(instrument.getId(), barSpan);
-								final List<Bar> bars = dataProvider.getBars(instrument, barSpan, date, to);
-								final DelayedResponseCallback<List<Bar>> delayedCallback = (DelayedResponseCallback<List<Bar>>) callback;
-								synchronized (callback) {
-									delayedCallback.onDelayedSuccess(new Response<>(bars));
-								}
-							} catch (Exception e) {
+					taskExecutor.execute(() -> {
+						try {
+							final Date date = barRepository.getLastTradingDate(instrument.getId(), barSpan);
+							final List<Bar> bars = dataProvider.getBars(instrument, barSpan, date, to);
+							synchronized (callback) {
+								callback.onDelayedSuccess(new Response<>(bars));
 							}
-						});
-					}
+						} catch (Exception e) {
+						}
+					});
 					final List<Bar> bars = barRepository.find(instrument.getId(), barSpan, from, to);
 					callback.onSuccess(new Response<>(bars));
 				}
