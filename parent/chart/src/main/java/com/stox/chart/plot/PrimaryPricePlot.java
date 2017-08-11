@@ -72,8 +72,8 @@ public class PrimaryPricePlot extends PricePlot {
 	}
 
 	@Override
-	protected void addModels(List<Bar> bars) {
-		super.addModels(bars);
+	protected void addModels(int index, List<Bar> bars) {
+		super.addModels(index, bars);
 		final ChartView chartView = chart.getChartView();
 		chart.getPlots().forEach(Plot::load);
 		chartView.getCharts().forEach(c -> {

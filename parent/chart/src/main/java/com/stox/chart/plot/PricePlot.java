@@ -45,8 +45,9 @@ public class PricePlot extends Plot<Bar> {
 		return UnitType.LINE;
 	}
 
-	protected void addModels(final List<Bar> bars) {
-		getModels().addAll(bars);
+	protected void addModels(final int index, final List<Bar> bars) {
+		getModels().addAll(index, bars);
+		update();
 	}
 
 	private void addData(final Date from, final BarSpan barSpan, final List<Bar> bars) {
@@ -57,11 +58,9 @@ public class PricePlot extends Plot<Bar> {
 			final Date date = new Date(barSpan.next(from.getTime()));
 			dataAvailable = date.after(bar.getDate()) || date.equals(bar.getDate());
 		}
-		addModels(bars);
+		addModels(getModels().size(), bars);
 		if (dataAvailable) {
 			loadExtra();
-		} else {
-			update();
 		}
 	}
 
@@ -95,8 +94,7 @@ public class PricePlot extends Plot<Bar> {
 								final List<Bar> bars = response.getPayload();
 								if (null != bars && !bars.isEmpty()) {
 									merge(getModels(), bars);
-									getModels().addAll(0, bars);
-									update();
+									addModels(0, bars);
 								}
 							}
 						});
@@ -146,8 +144,6 @@ public class PricePlot extends Plot<Bar> {
 						addData(from, barSpan, response.getPayload());
 						if (dataAvailable) {
 							loadExtra();
-						} else {
-							update();
 						}
 					}
 
@@ -162,7 +158,6 @@ public class PricePlot extends Plot<Bar> {
 					}
 				}));
 			}
-			update();
 		}
 	}
 }
