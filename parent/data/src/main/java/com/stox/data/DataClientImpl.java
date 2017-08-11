@@ -89,6 +89,9 @@ public class DataClientImpl implements DataClient {
 							synchronized (callback) {
 								callback.onDelayedSuccess(new Response<>(bars));
 							}
+							taskExecutor.execute(() -> {
+								barRepository.save(bars, instrument.getId(), barSpan);
+							});
 						} catch (Exception e) {
 						}
 					});

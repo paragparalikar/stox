@@ -17,11 +17,11 @@ public interface InstrumentRepository {
 
 	Instrument getInstrument(final String id);
 
-	String getIdByExchangeCode(final String exchangeCode);
+	Instrument findByExchangeCode(final String exchangeCode);
 
-	void save(final Exchange exchange, final List<Instrument> instruments);
+	List<Instrument> save(final Exchange exchange, final List<Instrument> instruments);
 
-	void save(final Exchange exchange, final Map<String, List<String>> parentComponentMapping);
+	Map<String, List<String>> saveParentComponentMapping(final Exchange exchange, final Map<String, List<String>> parentComponentMapping);
 
 	List<Instrument> getComponentInstruments(final Instrument instrument);
 

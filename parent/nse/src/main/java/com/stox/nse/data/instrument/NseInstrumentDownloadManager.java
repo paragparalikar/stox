@@ -95,7 +95,7 @@ public class NseInstrumentDownloadManager {
 			}
 			return Collections.emptyList();
 		}));
-		instrumentRepository.save(Exchange.NSE, map);
+		instrumentRepository.saveParentComponentMapping(Exchange.NSE, map);
 	}
 
 }

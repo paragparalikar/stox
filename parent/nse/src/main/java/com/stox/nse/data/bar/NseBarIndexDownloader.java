@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import com.stox.core.downloader.CsvDownloader;
 import com.stox.core.model.Bar;
+import com.stox.core.model.Instrument;
 import com.stox.core.repository.InstrumentRepository;
 
 public class NseBarIndexDownloader extends CsvDownloader<Bar> {
@@ -20,7 +21,8 @@ public class NseBarIndexDownloader extends CsvDownloader<Bar> {
 	@Override
 	public Bar parse(String[] tokens) throws Exception {
 		final Bar bar = new Bar();
-		bar.setInstrumentId(instrumentRepository.getIdByExchangeCode(tokens[0]));
+		final Instrument instrument = instrumentRepository.findByExchangeCode(tokens[0]);
+		bar.setInstrumentId(instrument.getId());
 		bar.setDate(DATEFORMAT.parse(tokens[1]));
 		bar.setOpen(Double.parseDouble(tokens[2]));
 		bar.setHigh(Double.parseDouble(tokens[3]));
