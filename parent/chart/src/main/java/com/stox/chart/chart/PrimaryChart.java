@@ -1,6 +1,7 @@
 package com.stox.chart.chart;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -15,13 +16,28 @@ import com.stox.chart.widget.Grid;
 @EqualsAndHashCode(callSuper = false, exclude = { "primaryPricePlot", "pricePlots" })
 public class PrimaryChart extends Chart {
 
-	private final Grid grid = new Grid(this);
-	private final PrimaryPricePlot primaryPricePlot = new PrimaryPricePlot(this);
+	private final Grid grid;
+	private final PrimaryPricePlot primaryPricePlot;
 	private final ObservableList<PricePlot> pricePlots = FXCollections.observableArrayList();
 
 	public PrimaryChart(final ChartView chartView) {
 		super(chartView);
+		grid = new Grid(this);
+		primaryPricePlot = new PrimaryPricePlot(this);
+
 		getArea().getChildren().addAll(grid, primaryPricePlot);
+		getChartInfoPane().getChildren().add(primaryPricePlot.getPlotInfoPane());
+
+		pricePlots.addListener((ListChangeListener<PricePlot>) (change) -> {
+			while (change.next()) {
+				if (change.wasRemoved()) {
+					change.getAddedSubList().forEach(plot -> getChartInfoPane().getChildren().add(plot.getPlotInfoPane()));
+				}
+				if (change.wasAdded()) {
+					change.getRemoved().forEach(plot -> getChartInfoPane().getChildren().remove(plot.getPlotInfoPane()));
+				}
+			}
+		});
 	}
 
 	public PrimaryPricePlot getPrimaryPricePlot() {

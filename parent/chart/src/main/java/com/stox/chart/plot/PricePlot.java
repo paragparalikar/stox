@@ -8,11 +8,12 @@ import javafx.application.Platform;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import com.stox.chart.chart.Chart;
+import com.stox.chart.chart.PrimaryChart;
 import com.stox.chart.event.BarRequestEvent;
 import com.stox.chart.unit.UnitType;
 import com.stox.chart.util.ChartUtil;
 import com.stox.chart.view.ChartView;
+import com.stox.chart.widget.PricePlotInfoPanel;
 import com.stox.core.intf.DelayedResponseCallback;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
@@ -28,16 +29,34 @@ public class PricePlot extends Plot<Bar> {
 	private Instrument instrument;
 	private volatile boolean locked;
 	private boolean dataAvailable = true;
+	private final PrimaryChart primaryChart;
 
-	public PricePlot(final Chart chart) {
+	public PricePlot(final PrimaryChart chart) {
 		super(chart);
+		this.primaryChart = chart;
+	}
+
+	@Override
+	public PrimaryChart getChart() {
+		return null == primaryChart ? (PrimaryChart) super.getChart() : primaryChart;
+	}
+
+	@Override
+	protected PricePlotInfoPanel createPlotInfoPanel() {
+		return new PricePlotInfoPanel(this);
 	}
 
 	public void setInstrument(final Instrument instrument) {
 		if (this.instrument != instrument) {
 			this.instrument = instrument;
+
 			dataAvailable = true;
 		}
+	}
+
+	@Override
+	public String getName() {
+		return null == instrument ? null : instrument.getName();
 	}
 
 	@Override

@@ -38,12 +38,12 @@ public class ChartView extends View {
 	private Color downBarColor = Color.RED;
 	private final List<Color> plotColors = Arrays.asList(Color.BLACK, Color.BLUE, Color.GREEN, Color.BROWN, Color.AQUA, Color.BLUEVIOLET, Color.CADETBLUE);
 
-	private final PrimaryChart primaryChart = new PrimaryChart(this);
-	private final VolumePlot volumePlot = new VolumePlot(primaryChart);
-	private final SplitPane splitPane = UiUtil.classes(new SplitPane(primaryChart), "transparent");
-	private final DateAxis dateAxis = new DateAxis(this);
-	private final BorderPane content = new BorderPane(splitPane, null, null, dateAxis, null);
-	private final Crosshair crosshair = new Crosshair(this);
+	private final SplitPane splitPane;
+	private final VolumePlot volumePlot;
+	private final PrimaryChart primaryChart;
+	private final DateAxis dateAxis;
+	private final BorderPane content;
+	private final Crosshair crosshair;
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 
 	private MouseHandler mouseHandler;
@@ -51,10 +51,18 @@ public class ChartView extends View {
 
 	public ChartView() {
 		super(ChartConstant.CODE, ChartConstant.NAME, ChartConstant.ICON);
+		splitPane = UiUtil.classes(new SplitPane(), "transparent");
+		primaryChart = new PrimaryChart(this);
+		volumePlot = new VolumePlot(primaryChart);
+		dateAxis = new DateAxis(this);
+		content = new BorderPane(splitPane, null, null, dateAxis, null);
+		crosshair = new Crosshair(this);
+
 		UiUtil.classes(this, "chart-view");
 		setContent(content);
 		setMouseHandler(defaultMouseHandler);
 		getChildren().addAll(crosshair);
+		splitPane.getItems().add(primaryChart);
 		primaryChart.getPlots().add(volumePlot);
 	}
 

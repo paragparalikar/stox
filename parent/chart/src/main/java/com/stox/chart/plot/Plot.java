@@ -23,23 +23,27 @@ import com.stox.chart.unit.LineUnit;
 import com.stox.chart.unit.PlotNode;
 import com.stox.chart.unit.Unit;
 import com.stox.chart.unit.UnitType;
+import com.stox.chart.widget.PlotInfoPanel;
+import com.stox.core.intf.HasName;
 import com.stox.core.intf.Range;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "chart", "units", "models" })
-public abstract class Plot<M extends Range> extends Group {
+public abstract class Plot<M extends Range> extends Group implements HasName {
 
 	private Chart chart;
 	private boolean dirty;
 	private Color color = Color.GRAY;
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
 	private int lastMinIndex = Integer.MIN_VALUE, lastMaxIndex = Integer.MAX_VALUE;
+	private final PlotInfoPanel<M> plotInfoPane;
 	private final ObjectProperty<PlotNode> plotNodeProperty = new SimpleObjectProperty<>();
 	private final ObservableList<M> models = FXCollections.observableArrayList();
 	private final ObservableList<Unit<M>> units = FXCollections.observableArrayList();
 
 	public Plot(final Chart chart) {
 		setChart(chart);
+		plotInfoPane = createPlotInfoPanel();
 		plotNodeProperty.addListener((observable, old, node) -> {
 			getChildren().remove(old);
 			if (null != node) {
@@ -58,6 +62,10 @@ public abstract class Plot<M extends Range> extends Group {
 				}
 			}
 		});
+	}
+
+	protected PlotInfoPanel<M> createPlotInfoPanel() {
+		return new PlotInfoPanel<M>(this);
 	}
 
 	public void clearUnits() {
@@ -84,6 +92,15 @@ public abstract class Plot<M extends Range> extends Group {
 		});
 	}
 
+	public Unit<M> getUnitAt(final double screenX, final double screenY) {
+		final DateAxis dateAxis = getChart().getChartView().getDateAxis();
+		final int index = dateAxis.getIndexForDisplay(dateAxis.screenToLocal(screenX, screenY).getX());
+		if (index >= 0 && index < units.size()) {
+			return units.get(index);
+		}
+		return null;
+	}
+
 	public void setChart(final Chart chart) {
 		this.chart = chart;
 	}
@@ -100,8 +117,9 @@ public abstract class Plot<M extends Range> extends Group {
 			return new BarUnit<>(index, model, this);
 		case AREA:
 			return new AreaUnit<>(index, model, this);
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	public void setDirty() {

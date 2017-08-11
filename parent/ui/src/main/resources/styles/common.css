@@ -15,8 +15,8 @@
 	-fx-pref-width:2em;
 	-fx-border-width:0;
 	
-	-fx-icon-background-color:background-primary;
-	-fx-icon-text-fill:text-primary;
+	-fx-icon-background-color:lighter;
+	-fx-icon-text-fill:darker;
 	-fx-background-color:-fx-icon-background-color;
 	-fx-border-color:-fx-icon-background-color;
 	-fx-text-fill:-fx-icon-text-fill;

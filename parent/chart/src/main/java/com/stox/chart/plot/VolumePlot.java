@@ -15,6 +15,11 @@ public class VolumePlot extends Plot<DoubleRange> {
 	}
 
 	@Override
+	public String getName() {
+		return "Volume"; // TODO I18N here
+	}
+
+	@Override
 	public void setChart(Chart chart) {
 		super.setChart(chart);
 		setOpacity(chart instanceof PrimaryChart ? 0.2 : 1);

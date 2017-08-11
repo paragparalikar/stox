@@ -9,6 +9,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,16 +23,18 @@ import com.stox.core.ui.util.UiUtil;
 @EqualsAndHashCode(callSuper = true, exclude = { "chartView", "plots" })
 public class Chart extends BorderPane {
 
+	private final ValueAxis valueAxis;
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
 	private final ChartView chartView;
+	private final VBox chartInfoPane = UiUtil.classes(new VBox(), "chart-info-pane");
 	private final Pane area = UiUtil.classes(new Pane(), "content-area");
-	private final ValueAxis valueAxis = new ValueAxis(this);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 
 	public Chart(final ChartView chartView) {
 		this.chartView = chartView;
+		valueAxis = new ValueAxis(this);
 		UiUtil.classes(this, "chart");
-		setCenter(area);
+		setCenter(new StackPane(area, new Pane(chartInfoPane)));
 		setRight(valueAxis);
 		plots.addListener((ListChangeListener<Plot<?>>) (change) -> {
 			while (change.next()) {
@@ -40,10 +44,14 @@ public class Chart extends BorderPane {
 					IntStream.range(0, addedPlots.size()).forEachOrdered(index -> {
 						final Plot<?> plot = addedPlots.get(index);
 						plot.setColor(chartView.getPlotColors().get(index));
+						chartInfoPane.getChildren().add(plot.getPlotInfoPane());
 					});
 				}
 				if (change.wasRemoved()) {
 					area.getChildren().removeAll(change.getRemoved());
+					change.getRemoved().forEach(plot -> {
+						chartInfoPane.getChildren().remove(plot.getPlotInfoPane());
+					});
 				}
 			}
 		});

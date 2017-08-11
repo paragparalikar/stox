@@ -38,3 +38,27 @@
 .grid Line {
 	-fx-stroke: lighter;
 }
+
+.chart-info-pane{
+	-fx-spacing:0.5em;
+	-fx-fill-width:false;
+}
+.plot-info-pane{
+	-fx-background-radius:0.5em;
+	-fx-border-radius:0.5em;
+	-fx-background-color:lighter;
+	-fx-text-fill:darker;
+	-fx-padding:0.2em;
+}
+.bar-info-panel{
+	
+}
+.bar-info-panel .name-label{
+	-fx-pref-width:1.5em;
+}
+.bar-info-panel .value-label{
+	-fx-pref-width:4em;
+}
+.bar-info-panel .date-value-label{
+	-fx-pref-width:9em;
+}

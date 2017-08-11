@@ -12,6 +12,7 @@ import com.stox.chart.unit.OhlcPriceUnit;
 import com.stox.chart.unit.Unit;
 import com.stox.chart.unit.UnitType;
 import com.stox.chart.view.ChartView;
+import com.stox.chart.widget.PrimaryPricePlotInfoPanel;
 import com.stox.core.model.Bar;
 import com.stox.core.model.Instrument;
 
@@ -19,12 +20,20 @@ import com.stox.core.model.Instrument;
 @EqualsAndHashCode(callSuper = true, exclude = { "chart", "priceUnitType" })
 public class PrimaryPricePlot extends PricePlot {
 
-	private final PrimaryChart chart;
 	private UnitType priceUnitType;
+	private final PrimaryChart chart;
+	private PrimaryPricePlotInfoPanel primaryPricePlotInfoPanel;
 
 	public PrimaryPricePlot(final PrimaryChart chart) {
 		super(chart);
 		this.chart = chart;
+		primaryPricePlotInfoPanel.attach();
+	}
+
+	@Override
+	protected PrimaryPricePlotInfoPanel createPlotInfoPanel() {
+		primaryPricePlotInfoPanel = new PrimaryPricePlotInfoPanel(this);
+		return primaryPricePlotInfoPanel;
 	}
 
 	@Override
@@ -36,8 +45,9 @@ public class PrimaryPricePlot extends PricePlot {
 			return new OhlcPriceUnit(index, model, this);
 		case CANDLE:
 			return new CandlePriceUnit(index, model, this);
+		default:
+			return super.create(index, model);
 		}
-		return super.create(index, model);
 	}
 
 	@Override
