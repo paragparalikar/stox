@@ -36,12 +36,16 @@ public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
 		final InputStream inputStream = inputStream();
 		return lines(inputStream).skip(linesToSkip).map(line -> {
 			try {
-				final String[] tokens = tokens(line);
-				return parse(tokens);
+				try {
+					final String[] tokens = tokens(line);
+					return parse(tokens);
+				} catch (Exception exception) {
+					return null;
+				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		}).collect(Collectors.toList());
+		}).filter(t -> null != t).collect(Collectors.toList());
 	}
 
 	protected String[] tokens(final String row) {

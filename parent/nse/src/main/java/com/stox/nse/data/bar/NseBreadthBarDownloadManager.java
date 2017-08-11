@@ -90,7 +90,7 @@ public class NseBreadthBarDownloadManager {
 						final String effectiveUrl = url.replace("{date}", bhavcopyDateFormat.format(date));
 						final NseBarDownloader downloader = new NseBarDownloader(effectiveUrl);
 						final List<Bar> bars = downloader.download();
-						final NseBarIndexDownloader indexDownloader = new NseBarIndexDownloader(url_index.replace("", indexUrlDateFormat.format(date)), instrumentRepository);
+						final NseBarIndexDownloader indexDownloader = new NseBarIndexDownloader(url_index.replace("{date}", indexUrlDateFormat.format(date)), instrumentRepository);
 						bars.addAll(indexDownloader.download());
 						if (!bars.isEmpty()) {
 							bars.forEach(bar -> barRepository.save(bar, bar.getInstrumentId(), BarSpan.D));
@@ -99,7 +99,7 @@ public class NseBreadthBarDownloadManager {
 							notification.setDate(date);
 						}
 					} catch (IOException e) {
-
+						e.printStackTrace();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
