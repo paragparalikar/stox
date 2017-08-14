@@ -1,8 +1,11 @@
 package com.stox.core.repository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
+import com.stox.core.model.Instrument;
 import com.stox.core.util.Constant;
 
 @Component
@@ -57,6 +61,8 @@ public class BinaryFileBarRepository implements BarRepository {
 					}
 				}
 				return bars;
+			} catch (final FileNotFoundException fileNotFoundException) {
+				return Collections.emptyList();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -111,6 +117,11 @@ public class BinaryFileBarRepository implements BarRepository {
 
 	protected String getPath(final String instrumentId, final BarSpan barSpan) {
 		return Constant.PATH + "bar" + File.separator + barSpan.getShortName() + File.separator + instrumentId;
+	}
+
+	@Override
+	public void drop(final Instrument instrument, final BarSpan barSpan) throws Exception {
+		Files.deleteIfExists(Paths.get(getPath(instrument.getId(), barSpan)));
 	}
 
 	public Bar read(final RandomAccessFile file) {

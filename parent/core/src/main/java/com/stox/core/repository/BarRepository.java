@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
+import com.stox.core.model.Instrument;
 
 public interface BarRepository {
 
@@ -15,5 +16,7 @@ public interface BarRepository {
 	void save(final Bar bar, final String instrumentId, final BarSpan barSpan);
 
 	Date getLastTradingDate(final String instrumentId, final BarSpan barSpan);
+
+	public void drop(final Instrument instrument, final BarSpan barSpan) throws Exception;
 
 }

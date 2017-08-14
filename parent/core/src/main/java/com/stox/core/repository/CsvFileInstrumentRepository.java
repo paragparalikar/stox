@@ -36,7 +36,6 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	private static final String ALL = "all";
 	private static final String CACHE = "instruments";
 
-	@Autowired
 	private CacheManager cacheManager;
 
 	@Autowired
@@ -55,6 +54,11 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	private String getParentComponentMappingPath(final Exchange exchange) {
 		return Constant.PATH + "com.stox.instruments.mapping." + exchange.getId().toLowerCase() + ".json";
+	}
+
+	@Autowired
+	public void setCacheManager(CacheManager cacheManager) {
+		this.cacheManager = cacheManager;
 	}
 
 	@PostConstruct
