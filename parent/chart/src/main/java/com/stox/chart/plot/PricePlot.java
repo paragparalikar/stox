@@ -112,7 +112,7 @@ public class PricePlot extends Plot<Bar> {
 							if (requestBarSpan.equals(chartView.getBarSpan()) && requestInstrument.equals(instrument)) {
 								final List<Bar> bars = response.getPayload();
 								if (null != bars && !bars.isEmpty()) {
-									merge(getModels(), bars);
+									merge(getModels(), bars, requestBarSpan);
 									addModels(0, bars);
 								}
 							}
@@ -128,14 +128,15 @@ public class PricePlot extends Plot<Bar> {
 		}
 	}
 
-	private void merge(final List<Bar> existingBars, final List<Bar> newBars) {
+	private void merge(final List<Bar> existingBars, final List<Bar> newBars, final BarSpan barSpan) {
 		final Bar first = existingBars.get(0);
+		final long nextDate = barSpan.next(first.getDate().getTime());
 		final Iterator<Bar> iterator = newBars.iterator();
 		while (iterator.hasNext()) {
 			final Bar bar = iterator.next();
-			if (bar.getDate().getTime() <= first.getDate().getTime()) {
+			if (bar.getDate().getTime() <= nextDate) {
 				for (final Bar model : existingBars) {
-					if (bar.getDate().equals(model.getDate())) {
+					if (barSpan.next(model.getDate().getTime()) >= bar.getDate().getTime() && model.getDate().getTime() <= bar.getDate().getTime()) {
 						model.copy(bar);
 						break;
 					}

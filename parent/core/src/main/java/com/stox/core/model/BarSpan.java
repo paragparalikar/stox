@@ -119,4 +119,12 @@ public enum BarSpan implements HasName {
 		}
 	}
 
+	public long previous(final long date) {
+		synchronized (calendar) {
+			calendar.setTimeInMillis(date);
+			calendar.add(unit, -1 * count);
+			return calendar.getTimeInMillis();
+		}
+	}
+
 }
