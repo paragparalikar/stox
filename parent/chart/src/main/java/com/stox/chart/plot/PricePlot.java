@@ -156,7 +156,6 @@ public class PricePlot extends Plot<Bar> {
 				final Date to = oldestBar.getDate();
 				final BarSpan barSpan = chartView.getBarSpan();
 				final Date from = ChartUtil.getFrom(to, barSpan);
-
 				chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
 
 					@Override
@@ -174,6 +173,8 @@ public class PricePlot extends Plot<Bar> {
 						locked = false;
 					}
 				}));
+			} else {
+				update();
 			}
 		} else {
 			update();
