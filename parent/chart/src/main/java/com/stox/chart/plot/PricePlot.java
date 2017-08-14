@@ -162,9 +162,6 @@ public class PricePlot extends Plot<Bar> {
 					@Override
 					public void onSuccess(Response<List<Bar>> response) {
 						addData(from, barSpan, response.getPayload());
-						if (dataAvailable) {
-							loadExtra();
-						}
 					}
 
 					@Override
@@ -178,6 +175,8 @@ public class PricePlot extends Plot<Bar> {
 					}
 				}));
 			}
+		} else {
+			update();
 		}
 	}
 }
