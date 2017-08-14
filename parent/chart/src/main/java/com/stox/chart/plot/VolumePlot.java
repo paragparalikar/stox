@@ -12,6 +12,7 @@ public class VolumePlot extends Plot<DoubleRange> {
 
 	public VolumePlot(final Chart chart) {
 		super(chart);
+		getPlotInfoPane().setName(getName());
 	}
 
 	@Override

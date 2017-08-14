@@ -55,6 +55,7 @@
 }
 .primary > .title > .center > .right > .icon{
 	-fx-icon-background-color:background-primary;
+	-fx-icon-text-fill:text-primary;
 }
 .primary > .title,  .primary .title .center .label, .primary.title > .center > .label{
 	-fx-background-color:background-primary;

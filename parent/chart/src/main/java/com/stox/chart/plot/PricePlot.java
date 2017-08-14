@@ -49,7 +49,7 @@ public class PricePlot extends Plot<Bar> {
 	public void setInstrument(final Instrument instrument) {
 		if (this.instrument != instrument) {
 			this.instrument = instrument;
-
+			getPlotInfoPane().setName(getName());
 			dataAvailable = true;
 		}
 	}

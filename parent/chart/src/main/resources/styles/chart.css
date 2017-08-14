@@ -40,15 +40,15 @@
 }
 
 .chart-info-pane{
-	-fx-spacing:0.5em;
 	-fx-fill-width:false;
 }
 .plot-info-pane{
 	-fx-background-radius:0.5em;
 	-fx-border-radius:0.5em;
-	-fx-background-color:lighter;
+	-fx-background-color:transparent;
 	-fx-text-fill:darker;
 	-fx-padding:0.2em;
+	-fx-spacing:0.5em;
 }
 .bar-info-panel{
 	
