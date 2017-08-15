@@ -160,18 +160,16 @@ public class PricePlot extends Plot<Bar> {
 
 					@Override
 					public void onSuccess(Response<List<Bar>> response) {
+						locked = false;
 						addData(from, barSpan, response.getPayload());
 					}
 
 					@Override
 					public void onFailure(Response<List<Bar>> response, Throwable throwable) {
+						locked = false;
 						dataAvailable = false;
 					}
 
-					@Override
-					public void onDone() {
-						locked = false;
-					}
 				}));
 			} else {
 				update();
