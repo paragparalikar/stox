@@ -109,15 +109,16 @@ public class BinaryFileBarRepository implements BarRepository {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
 				if (Bar.BYTES <= file.length()) {
 					file.seek(file.length());
+					final long barDate = bar.getDate().getTime();
 					while (true) {
 						file.seek(file.getFilePointer() - Bar.BYTES);
-						if (Bar.BYTES > file.getFilePointer()) {
-							break;
-						} else if (file.readLong() < bar.getDate().getTime()) {
-							file.seek(file.getFilePointer() - Long.BYTES + Bar.BYTES);
-							break;
-						} else if (file.readLong() == bar.getDate().getTime()) {
+						final long fileDate = file.readLong();
+						final long nextDate = barSpan.next(fileDate);
+						if (Bar.BYTES > file.getFilePointer() || (fileDate <= barDate && barDate < nextDate)) {
 							file.seek(file.getFilePointer() - Long.BYTES);
+							break;
+						} else if (barDate >= nextDate) {
+							file.seek(file.getFilePointer() - Long.BYTES + Bar.BYTES);
 							break;
 						} else {
 							file.seek(file.getFilePointer() - Long.BYTES);

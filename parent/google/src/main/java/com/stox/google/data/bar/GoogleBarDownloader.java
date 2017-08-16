@@ -8,6 +8,7 @@ import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
+import com.stox.core.util.DateUtil;
 
 public class GoogleBarDownloader extends CsvDownloader<Bar> {
 
@@ -58,6 +59,9 @@ public class GoogleBarDownloader extends CsvDownloader<Bar> {
 			bar.setDate(new Date(offset));
 		} else {
 			bar.setDate(new Date(offset + (Long.parseLong(values[0]) * getSeconds(barSpan) * 1000l)));
+		}
+		if (BarSpan.D.equals(barSpan) || BarSpan.W.equals(barSpan) || BarSpan.M.equals(barSpan)) {
+			bar.setDate(DateUtil.trim(bar.getDate()));
 		}
 		bar.setClose(Double.parseDouble(values[1]));
 		bar.setPreviousClose(previousClose);
