@@ -74,8 +74,9 @@
 
 .control-point:hover,
 .control-point:pressed {
-	-fx-opacity: 0.6;
+	-fx-opacity: 1;
 	-fx-cursor: move;
+	-fx-fill: darkest;
 }
 
 .drawing Line {

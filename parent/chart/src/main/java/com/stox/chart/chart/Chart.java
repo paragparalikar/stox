@@ -29,6 +29,7 @@ public class Chart extends BorderPane {
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
 	private final Pane area = UiUtil.classes(new Pane(), "content-area");
 	private final VBox chartInfoPane = UiUtil.classes(new VBox(), "chart-info-pane");
+	private final Pane glassPane = new Pane(chartInfoPane);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 	private final ObservableList<Drawing> drawings = FXCollections.observableArrayList();
 
@@ -36,15 +37,17 @@ public class Chart extends BorderPane {
 		this.chartView = chartView;
 		valueAxis = new ValueAxis(this);
 		UiUtil.classes(this, "chart");
-		setCenter(new StackPane(area, new Pane(chartInfoPane)));
+		setCenter(new StackPane(area, glassPane));
+		chartInfoPane.setBackground(null);
+		chartInfoPane.setPickOnBounds(false);
 		setRight(valueAxis);
 		drawings.addListener((ListChangeListener<Drawing>) (change) -> {
 			while (change.next()) {
 				if (change.wasRemoved()) {
-					area.getChildren().removeAll(change.getRemoved());
+					glassPane.getChildren().removeAll(change.getRemoved());
 				}
 				if (change.wasAdded()) {
-					area.getChildren().addAll(change.getAddedSubList());
+					glassPane.getChildren().addAll(change.getAddedSubList());
 				}
 			}
 		});
