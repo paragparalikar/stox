@@ -62,7 +62,7 @@ public class GoogleBarDownloadManager {
 			busy = true;
 			taskExecutor.schedule(() -> {
 				try {
-					// download();
+					download();
 				} catch (final Exception e) {
 					e.printStackTrace();
 				} finally {

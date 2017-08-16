@@ -19,11 +19,9 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
-import com.stox.core.model.Exchange;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.DateUtil;
-import com.stox.data.ui.BarDownloadNotification;
 import com.stox.nse.data.NseDataState;
 import com.stox.nse.data.NseDataStateRepository;
 
@@ -78,34 +76,27 @@ public class NseBreadthBarDownloadManager {
 		final Calendar today = Calendar.getInstance();
 		today.setTime(DateUtil.trim(today.getTime()));
 		if (!cancel && calendar.before(today)) {
-			final BarDownloadNotification notification = new BarDownloadNotification(Exchange.NSE, start, today.getTime());
-			try {
-				notification.show();
-				for (; !cancel && calendar.before(today); calendar.add(Calendar.DATE, 1)) {
-					try {
-						if (DateUtil.isWeekend(calendar)) {
-							continue;
-						}
-						final Date date = calendar.getTime();
-						final String effectiveUrl = url.replace("{date}", bhavcopyDateFormat.format(date));
-						final NseBarDownloader downloader = new NseBarDownloader(effectiveUrl);
-						final List<Bar> bars = downloader.download();
-						final NseBarIndexDownloader indexDownloader = new NseBarIndexDownloader(url_index.replace("{date}", indexUrlDateFormat.format(date)), instrumentRepository);
-						bars.addAll(indexDownloader.download());
-						if (!bars.isEmpty()) {
-							bars.forEach(bar -> barRepository.save(bar, bar.getInstrumentId(), BarSpan.D));
-							dataStateRepository.getDataState().setLastBarDownloadDate(date);
-							dataStateRepository.persistDataState();
-							notification.setDate(date);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						e.printStackTrace();
+			for (; !cancel && calendar.before(today); calendar.add(Calendar.DATE, 1)) {
+				try {
+					if (DateUtil.isWeekend(calendar)) {
+						continue;
 					}
+					final Date date = calendar.getTime();
+					final String effectiveUrl = url.replace("{date}", bhavcopyDateFormat.format(date));
+					final NseBarDownloader downloader = new NseBarDownloader(effectiveUrl);
+					final List<Bar> bars = downloader.download();
+					final NseBarIndexDownloader indexDownloader = new NseBarIndexDownloader(url_index.replace("{date}", indexUrlDateFormat.format(date)), instrumentRepository);
+					bars.addAll(indexDownloader.download());
+					if (!bars.isEmpty()) {
+						bars.forEach(bar -> barRepository.save(bar, bar.getInstrumentId(), BarSpan.D));
+						dataStateRepository.getDataState().setLastBarDownloadDate(date);
+						dataStateRepository.persistDataState();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} finally {
-				notification.hide();
 			}
 		}
 	}
