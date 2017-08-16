@@ -143,6 +143,16 @@ public class BinaryFileBarRepository implements BarRepository {
 		Files.deleteIfExists(Paths.get(getPath(instrument.getId(), barSpan)));
 	}
 
+	@Override
+	public void truncate(final Instrument instrument, final BarSpan barSpan, int barCount) throws Exception {
+		final String path = getPath(instrument.getId(), barSpan);
+		synchronized (path) {
+			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
+				file.setLength(Math.max(0, file.length() - Bar.BYTES * barCount));
+			}
+		}
+	}
+
 	public Bar read(final RandomAccessFile file) {
 		try {
 			final Bar bar = new Bar();

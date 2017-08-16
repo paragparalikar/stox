@@ -19,4 +19,6 @@ public interface BarRepository {
 
 	public void drop(final Instrument instrument, final BarSpan barSpan) throws Exception;
 
+	void truncate(Instrument instrument, BarSpan barSpan, int barCount) throws Exception;
+
 }
