@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.chart.view.ChartView;
 import com.stox.chart.widget.ChartingTool;
+import com.stox.core.ui.util.UiUtil;
 
 @Component
 public class DrawingButtonBox extends ChartingTool {
@@ -38,6 +39,7 @@ public class DrawingButtonBox extends ChartingTool {
 		clearDrawingsButton = new ClearDrawingsButton(this);
 		container.getChildren().addAll(verticalLineToggleButton, horizontalLineToggleButton, verticalSegmentToggleButton, horizontalSegmentToggleButton, segmentToggleButton,
 				levelToggleButton, clearDrawingsButton);
+		UiUtil.box(container);
 	}
 
 	@Override

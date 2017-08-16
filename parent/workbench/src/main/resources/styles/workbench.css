@@ -24,6 +24,15 @@
 .workbench-tool-bar .icon{
 	-fx-icon-background-color:background-primary;
 	-fx-icon-text-fill:text-primary;
+	-fx-min-width:2.2em;
+	-fx-min-height:2.2em;
+}
+.workbench-tool-bar .icon Line,
+.workbench-tool-bar .icon Region,
+.workbench-tool-bar .icon Circle,
+.workbench-tool-bar .icon Polygon{
+	-fx-stroke:lightest;
+	-fx-fill:lightest;
 }
 
 .scrip-link-context-menu {
