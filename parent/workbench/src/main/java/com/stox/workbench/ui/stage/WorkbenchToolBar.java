@@ -7,7 +7,7 @@ import com.stox.core.ui.util.UiUtil;
 public class WorkbenchToolBar extends ToolBar {
 
 	public WorkbenchToolBar() {
-		UiUtil.classes(this, "right");
+		UiUtil.classes(this, "workbench-tool-bar", "right");
 	}
 
 }

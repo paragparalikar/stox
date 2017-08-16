@@ -21,6 +21,10 @@
 	-fx-cursor:hand;
 }
 
+.workbench-tool-bar .icon{
+	-fx-icon-background-color:background-primary;
+	-fx-icon-text-fill:text-primary;
+}
 
 .scrip-link-context-menu {
 	-fx-padding: 0;

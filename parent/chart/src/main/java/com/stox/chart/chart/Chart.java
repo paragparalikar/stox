@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import com.stox.chart.axis.ValueAxis;
+import com.stox.chart.drawing.Drawing;
 import com.stox.chart.plot.Plot;
 import com.stox.chart.view.ChartView;
 import com.stox.core.ui.util.UiUtil;
@@ -23,12 +24,13 @@ import com.stox.core.ui.util.UiUtil;
 @EqualsAndHashCode(callSuper = true, exclude = { "chartView", "plots" })
 public class Chart extends BorderPane {
 
+	private final ChartView chartView;
 	private final ValueAxis valueAxis;
 	private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-	private final ChartView chartView;
-	private final VBox chartInfoPane = UiUtil.classes(new VBox(), "chart-info-pane");
 	private final Pane area = UiUtil.classes(new Pane(), "content-area");
+	private final VBox chartInfoPane = UiUtil.classes(new VBox(), "chart-info-pane");
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
+	private final ObservableList<Drawing> drawings = FXCollections.observableArrayList();
 
 	public Chart(final ChartView chartView) {
 		this.chartView = chartView;
@@ -36,6 +38,16 @@ public class Chart extends BorderPane {
 		UiUtil.classes(this, "chart");
 		setCenter(new StackPane(area, new Pane(chartInfoPane)));
 		setRight(valueAxis);
+		drawings.addListener((ListChangeListener<Drawing>) (change) -> {
+			while (change.next()) {
+				if (change.wasRemoved()) {
+					area.getChildren().removeAll(change.getRemoved());
+				}
+				if (change.wasAdded()) {
+					area.getChildren().addAll(change.getAddedSubList());
+				}
+			}
+		});
 		plots.addListener((ListChangeListener<Plot<?>>) (change) -> {
 			while (change.next()) {
 				if (change.wasAdded() && Collections.disjoint(getChildren(), change.getAddedSubList())) {
@@ -60,6 +72,7 @@ public class Chart extends BorderPane {
 	public void setDirty() {
 		valueAxis.setDirty();
 		plots.forEach(Plot::setDirty);
+		drawings.forEach(Drawing::setDirty);
 	}
 
 	public void reset() {

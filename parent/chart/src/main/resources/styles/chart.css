@@ -62,3 +62,29 @@
 .bar-info-panel .date-value-label{
 	-fx-pref-width:9em;
 }
+
+
+
+
+
+.control-point {
+	-fx-fill: derive(background-primary, 40%);
+	-fx-opacity: 0.3;
+}
+
+.control-point:hover,
+.control-point:pressed {
+	-fx-opacity: 0.6;
+	-fx-cursor: move;
+}
+
+.drawing Line {
+	-fx-stroke: darker;
+	-fx-stroke-width: 1px;
+}
+
+.drawing Line:hover, .drawing Line:pressed {
+	-fx-stroke: darkest;
+	-fx-stroke-width: 3px;
+	-fx-cursor: move;
+}

@@ -65,9 +65,10 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 	private ApplicationEventPublisher eventPublisher;
 
 	public WorkbenchPresenter() {
-		workbench.getTitleBar().getMinimizeButton().addEventHandler(ActionEvent.ACTION, event -> workbench.setIconified(true));
-		workbench.getTitleBar().getMaximizeButton().addEventHandler(ActionEvent.ACTION, event -> toggleMaximized());
-		workbench.getTitleBar().getCloseButton().addEventHandler(ActionEvent.ACTION, event -> {
+		final WorkbenchTitleBar titleBar = workbench.getTitleBar();
+		titleBar.getMinimizeButton().addEventHandler(ActionEvent.ACTION, event -> workbench.setIconified(true));
+		titleBar.getMaximizeButton().addEventHandler(ActionEvent.ACTION, event -> toggleMaximized());
+		titleBar.getCloseButton().addEventHandler(ActionEvent.ACTION, event -> {
 			Platform.exit();
 			SpringApplication.exit(applicatinoContext, () -> 0);
 		});
