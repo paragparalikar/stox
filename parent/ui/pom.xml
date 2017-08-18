@@ -6,7 +6,9 @@
 		<artifactId>parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+	
 	<artifactId>ui</artifactId>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.stox</groupId>
@@ -14,4 +16,5 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+	
 </project> 
