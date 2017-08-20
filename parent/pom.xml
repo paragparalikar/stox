@@ -78,6 +78,7 @@
 		<module>chart</module>
 		<module>nse</module>
 		<module>google</module>
+		<module>watchlist</module>
 	</modules>
 
 
