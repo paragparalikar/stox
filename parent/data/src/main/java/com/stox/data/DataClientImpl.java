@@ -102,34 +102,39 @@ public class DataClientImpl implements DataClient {
 			try {
 				synchronized (callback) {
 					final Date date = barRepository.getLastTradingDate(instrument.getId(), barSpan);
-					if (date.before(to)) {
-						taskExecutor.execute(() -> {
-							try {
-								final List<Bar> bars = dataProvider.getBars(instrument, barSpan, date, to);
-								synchronized (callback) {
-									if (log.isDebugEnabled()) {
-										final String fromText = Constant.dateFormatFull.format(from);
-										final String toText = Constant.dateFormatFull.format(to);
-										log.debug("Downloaded " + bars.size() + " bars for " + instrument.getName() + " From : " + fromText + " To : " + toText);
+					if(null != date) {
+						if (date.before(to)) {
+							taskExecutor.execute(() -> {
+								try {
+									final List<Bar> bars = dataProvider.getBars(instrument, barSpan, date, to);
+									synchronized (callback) {
+										if (log.isDebugEnabled()) {
+											final String fromText = Constant.dateFormatFull.format(from);
+											final String toText = Constant.dateFormatFull.format(to);
+											log.debug("Downloaded " + bars.size() + " bars for " + instrument.getName() + " From : " + fromText + " To : " + toText);
+										}
+										callback.onDelayedSuccess(new Response<>(bars));
+										if (null != bars && !bars.isEmpty()) {
+											taskExecutor.execute(() -> {
+												barRepository.save(bars, instrument.getId(), barSpan);
+											});
+										}
 									}
-									callback.onDelayedSuccess(new Response<>(bars));
-									if (null != bars && !bars.isEmpty()) {
-										taskExecutor.execute(() -> {
-											barRepository.save(bars, instrument.getId(), barSpan);
-										});
-									}
+								} catch (Exception e) {
 								}
-							} catch (Exception e) {
-							}
-						});
+							});
+						}
+						final List<Bar> bars = barRepository.find(instrument.getId(), barSpan, from, to);
+						if (log.isDebugEnabled()) {
+							final String fromText = Constant.dateFormatFull.format(from);
+							final String toText = Constant.dateFormatFull.format(to);
+							log.debug("Loaded " + bars.size() + " bars from repository for " + instrument.getName() + " From : " + fromText + " To : " + toText);
+						}
+						callback.onSuccess(new Response<>(bars));
+					}else {
+						log.debug("No data available for "+instrument.getName()+" for barSpan "+barSpan.getName());
+						callback.onSuccess(new Response<>(Collections.emptyList()));
 					}
-					final List<Bar> bars = barRepository.find(instrument.getId(), barSpan, from, to);
-					if (log.isDebugEnabled()) {
-						final String fromText = Constant.dateFormatFull.format(from);
-						final String toText = Constant.dateFormatFull.format(to);
-						log.debug("Loaded " + bars.size() + " bars from repository for " + instrument.getName() + " From : " + fromText + " To : " + toText);
-					}
-					callback.onSuccess(new Response<>(bars));
 				}
 			} catch (Exception e) {
 				callback.onFailure(null, e);
