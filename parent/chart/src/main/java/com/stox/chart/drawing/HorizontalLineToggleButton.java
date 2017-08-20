@@ -1,5 +1,12 @@
 package com.stox.chart.drawing;
 
+import com.stox.chart.chart.Chart;
+import com.stox.chart.drawing.HorizontalLine.State;
+import com.stox.chart.view.ChartView;
+import com.stox.chart.view.MouseHandler;
+import com.stox.chart.widget.ChartingTool;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -12,12 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.util.Callback;
-
-import com.stox.chart.chart.Chart;
-import com.stox.chart.view.ChartView;
-import com.stox.chart.view.MouseHandler;
-import com.stox.chart.widget.ChartingTool;
-import com.stox.core.ui.util.UiUtil;
+import lombok.Data;
 
 public class HorizontalLineToggleButton extends ToggleButton implements ChangeListener<Boolean>, Callback<HorizontalLine, Void> {
 
@@ -106,10 +108,39 @@ class HorizontalLineMouseHandler implements MouseHandler {
 
 }
 
-class HorizontalLine extends Drawing {
+class HorizontalLine extends Drawing<State> {
+	public static final String CODE = "hline";
+	
+	@Data
+	public static class State implements Drawing.State<State>{
+		
+		private double value;
+		
+		@Override
+		public String getCode() {
+			return CODE;
+		}
 
-	private double value;
+		@Override
+		public void copy(State state) {
+			this.value = state.getValue();
+		}
+		
+	}
+
+	
 	private final Line line = new Line();
+	private final State state = new State();
+	
+	@Override
+	public State getState() {
+		return state;
+	}
+	
+	@Override
+	public String getCode() {
+		return CODE;
+	}
 
 	private class MouseHandler implements EventHandler<MouseEvent> {
 		private double y;
@@ -150,13 +181,13 @@ class HorizontalLine extends Drawing {
 	@Override
 	public void layoutChartChildren() {
 		final Chart chart = getChart();
-		line.setStartY(chart.getValueAxis().getDisplayPosition(value, chart.getMin(), chart.getMax()));
+		line.setStartY(chart.getValueAxis().getDisplayPosition(state.getValue(), chart.getMin(), chart.getMax()));
 	}
 
 	@Override
 	public void update() {
 		final Chart chart = getChart();
-		value = chart.getValueAxis().getValueForDisplay(line.getStartY(), chart.getMin(), chart.getMax());
+		state.setValue(chart.getValueAxis().getValueForDisplay(line.getStartY(), chart.getMin(), chart.getMax()));
 	}
 
 	public void move(final double y) {

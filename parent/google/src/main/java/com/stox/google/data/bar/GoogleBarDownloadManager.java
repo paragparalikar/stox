@@ -62,13 +62,13 @@ public class GoogleBarDownloadManager {
 			busy = true;
 			taskExecutor.schedule(() -> {
 				try {
-					download();
+					//download();
 				} catch (final Exception e) {
 					e.printStackTrace();
 				} finally {
 					busy = false;
 				}
-			}, 3, TimeUnit.SECONDS);
+			}, 30, TimeUnit.SECONDS);
 		}
 	}
 

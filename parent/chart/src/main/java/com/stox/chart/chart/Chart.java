@@ -31,7 +31,7 @@ public class Chart extends BorderPane {
 	private final VBox chartInfoPane = UiUtil.classes(new VBox(), "chart-info-pane");
 	private final Pane glassPane = new Pane(chartInfoPane);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
-	private final ObservableList<Drawing> drawings = FXCollections.observableArrayList();
+	private final ObservableList<Drawing<?>> drawings = FXCollections.observableArrayList();
 
 	public Chart(final ChartView chartView) {
 		this.chartView = chartView;
@@ -41,7 +41,7 @@ public class Chart extends BorderPane {
 		chartInfoPane.setBackground(null);
 		chartInfoPane.setPickOnBounds(false);
 		setRight(valueAxis);
-		drawings.addListener((ListChangeListener<Drawing>) (change) -> {
+		drawings.addListener((ListChangeListener<Drawing<?>>) (change) -> {
 			while (change.next()) {
 				if (change.wasRemoved()) {
 					glassPane.getChildren().removeAll(change.getRemoved());

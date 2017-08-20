@@ -3,8 +3,7 @@ package com.stox.chart.view;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
-
-import javafx.scene.layout.Pane;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
@@ -13,6 +12,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.stox.chart.drawing.Drawing;
+import com.stox.chart.drawing.DrawingFactory;
+import com.stox.chart.drawing.DrawingStateClient;
 import com.stox.chart.event.BarRequestEvent;
 import com.stox.chart.plot.PrimaryPricePlot;
 import com.stox.chart.util.ChartUtil;
@@ -30,6 +32,8 @@ import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.SubscriberPresenter;
 
+import javafx.scene.layout.Pane;
+
 @Component
 @Scope("prototype")
 public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewState> {
@@ -38,6 +42,11 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 
 	@Autowired
 	private DataClient dataClient;
+
+	@Autowired
+	private DrawingStateClient drawingStateClient;
+
+	private final DrawingFactory drawingFactory = new DrawingFactory();
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -55,6 +64,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	@Async
 	@Override
 	public void setLinkState(State state) {
+		saveDrawings();
 		if (null != state && StringUtil.hasText(state.getInstrumentId())) {
 			view.showSpinner(true);
 
@@ -69,10 +79,45 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 			view.setTo(to);
 
 			primaryPricePlot.load();
+			loadDrawings();
 		}
 	}
 
-	private void loadBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback) {
+	private void loadDrawings() {
+		view.getPrimaryChart().getDrawings().clear();
+		drawingStateClient.load(view.getPrimaryChart().getPrimaryPricePlot().getInstrument(),
+				new ResponseCallback<List<Drawing.State<?>>>() {
+					@Override
+					@SuppressWarnings({ "unchecked", "rawtypes" })
+					public void onSuccess(final Response<List<Drawing.State<?>>> response) {
+						if (null != response.getPayload()) {
+							final List<Drawing<?>> drawings = response.getPayload().stream().map(state -> {
+								final Drawing drawing = drawingFactory.create(state.getCode(), view.getPrimaryChart());
+								drawing.getState().copy(state);
+								return drawing;
+							}).collect(Collectors.toList());
+							view.getPrimaryChart().getDrawings().addAll(drawings);
+							view.getPrimaryChart().setDirty();
+						}
+					}
+				});
+	}
+	
+	private void saveDrawings() {
+		final Instrument instrument = view.getPrimaryChart().getPrimaryPricePlot().getInstrument();
+		if(null != instrument) {
+			final List<Drawing.State<?>> states = view.getPrimaryChart().getDrawings().stream().map(Drawing::getState).collect(Collectors.toList());
+			drawingStateClient.save(instrument, states, new ResponseCallback<Void>() {
+				@Override
+				public void onSuccess(Response<Void> response) {
+					
+				}
+			});
+		}
+	}
+
+	private void loadBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to,
+			final ResponseCallback<List<Bar>> callback) {
 		view.showSpinner(true);
 		dataClient.loadBars(instrument, barSpan, from, to, new DelayedResponseCallback<List<Bar>>() {
 			@Override
@@ -91,7 +136,8 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 			@Override
 			public void onFailure(Response<List<Bar>> response, Throwable throwable) {
 				if (throwable instanceof FileNotFoundException) {
-					view.setMessage(new Message("No data available for \"" + instrument.getName() + "\"", MessageType.ERROR));
+					view.setMessage(
+							new Message("No data available for \"" + instrument.getName() + "\"", MessageType.ERROR));
 				} else {
 					view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
 				}

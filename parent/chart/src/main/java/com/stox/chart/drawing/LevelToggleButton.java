@@ -1,5 +1,12 @@
 package com.stox.chart.drawing;
 
+import com.stox.chart.chart.Chart;
+import com.stox.chart.drawing.Level.State;
+import com.stox.chart.view.ChartView;
+import com.stox.chart.view.MouseHandler;
+import com.stox.chart.widget.ChartingTool;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.binding.When;
 import javafx.beans.value.ChangeListener;
@@ -12,12 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
-
-import com.stox.chart.chart.Chart;
-import com.stox.chart.view.ChartView;
-import com.stox.chart.view.MouseHandler;
-import com.stox.chart.widget.ChartingTool;
-import com.stox.core.ui.util.UiUtil;
+import lombok.Value;
 
 public class LevelToggleButton extends ToggleButton implements ChangeListener<Boolean>, Callback<Level, Void> {
 
@@ -63,12 +65,44 @@ public class LevelToggleButton extends ToggleButton implements ChangeListener<Bo
 
 }
 
-class Level extends Drawing {
+class Level extends Drawing<State> {
+	public static final String CODE = "level";
+	
+	@Value
+	public static class State implements Drawing.State<State>{
+		
+		private ControlPoint.State oneState;
+		
+		private ControlPoint.State twoState;	
+		
+		@Override
+		public String getCode() {
+			return CODE;
+		}
+		
+		@Override
+		public void copy(State state) {
+			oneState.copy(state.getOneState());
+			twoState.copy(state.getTwoState());
+		}
+		
+	}
 
 	private final ControlPoint one;
 	private final ControlPoint two;
+	private final State state;
 	private final Rectangle rectangle = new Rectangle();
 	private final MouseEventHandler mouseEventHandler = new MouseEventHandler();
+	
+	@Override
+	public State getState() {
+		return state;
+	}
+	
+	@Override
+	public String getCode() {
+		return CODE;
+	}
 
 	private class MouseEventHandler implements EventHandler<MouseEvent> {
 		private double x;
@@ -100,6 +134,7 @@ class Level extends Drawing {
 		super(chart);
 		one = new ControlPoint(chart);
 		two = new ControlPoint(chart);
+		state = new State(one.getState(), two.getState());
 		rectangle.setOpacity(0.4);
 		rectangle.setFill(Color.BURLYWOOD);
 		getChildren().addAll(one, two, rectangle);

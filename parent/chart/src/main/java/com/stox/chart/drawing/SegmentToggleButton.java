@@ -1,5 +1,11 @@
 package com.stox.chart.drawing;
 
+import com.stox.chart.chart.Chart;
+import com.stox.chart.view.ChartView;
+import com.stox.chart.view.MouseHandler;
+import com.stox.chart.widget.ChartingTool;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -10,12 +16,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import javafx.util.Callback;
-
-import com.stox.chart.chart.Chart;
-import com.stox.chart.view.ChartView;
-import com.stox.chart.view.MouseHandler;
-import com.stox.chart.widget.ChartingTool;
-import com.stox.core.ui.util.UiUtil;
+import lombok.Value;
 
 public class SegmentToggleButton extends ToggleButton implements ChangeListener<Boolean>, Callback<Segment, Void> {
 
@@ -109,11 +110,34 @@ class SegmentMouseHandler implements MouseHandler {
 
 }
 
-class Segment extends Drawing {
+class Segment extends Drawing<Segment.State> {
+	public static final String CODE = "segment";
+	
+	@Value
+	public static class State implements Drawing.State<Segment.State>{
+		
+		private ControlPoint.State oneState;
+		
+		private ControlPoint.State twoState;	
+		
+		@Override
+		public String getCode() {
+			return CODE;
+		}
+		
+		@Override
+		public void copy(State state) {
+			oneState.copy(state.getOneState());
+			twoState.copy(state.getTwoState());
+		}
+		
+	}
 
 	private final Line line = new Line();
 	protected final ControlPoint one;
 	protected final ControlPoint two;
+	protected final State state;
+	
 
 	private class MouseEventHandler implements EventHandler<MouseEvent> {
 		private double x;
@@ -140,6 +164,16 @@ class Segment extends Drawing {
 			}
 		}
 	}
+	
+	@Override
+	public State getState() {
+		return state;
+	}
+	
+	@Override
+	public String getCode() {
+		return CODE;
+	}
 
 	protected void move(final double xDelta, final double yDelta) {
 		one.setCenterX(one.getCenterX() + xDelta);
@@ -152,6 +186,7 @@ class Segment extends Drawing {
 		super(chart);
 		one = new ControlPoint(chart);
 		two = new ControlPoint(chart);
+		state = new State(one.getState(), two.getState());
 		getChildren().addAll(one, line, two);
 
 		line.startXProperty().bind(one.centerXProperty());

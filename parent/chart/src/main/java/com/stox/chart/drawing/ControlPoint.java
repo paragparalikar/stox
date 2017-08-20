@@ -3,16 +3,30 @@ package com.stox.chart.drawing;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import lombok.Data;
 
 import com.stox.chart.chart.Chart;
 
 public class ControlPoint extends Circle {
+	
+	@Data
+	public static class State {
+		
+		private long date;
+		
+		private double value;
+		
+		public void copy(final State state){
+			this.date = state.date;
+			this.value = state.value;
+		}
+
+	}
 
 	private double x;
 	private double y;
-	private long date;
-	private double value;
 	private final Chart chart;
+	private final State state = new State();
 
 	private class ControlPointMouseHandler implements EventHandler<MouseEvent> {
 		@Override
@@ -33,10 +47,14 @@ public class ControlPoint extends Circle {
 			}
 		}
 	}
+	
+	public State getState() {
+		return state;
+	}
 
 	public void update() {
-		value = chart.getValueAxis().getValueForDisplay(getCenterY(), chart.getMin(), chart.getMax());
-		date = chart.getChartView().getDateAxis().getValueForDisplay(getCenterX());
+		state.setValue(chart.getValueAxis().getValueForDisplay(getCenterY(), chart.getMin(), chart.getMax()));
+		state.setDate(chart.getChartView().getDateAxis().getValueForDisplay(getCenterX()));
 	}
 
 	public ControlPoint(final Chart chart) {
@@ -51,8 +69,8 @@ public class ControlPoint extends Circle {
 	}
 
 	public void layoutChartChildren() {
-		setCenterX(chart.getChartView().getDateAxis().getDisplayPosition(date));
-		setCenterY(chart.getValueAxis().getDisplayPosition(value, chart.getMin(), chart.getMax()));
+		setCenterX(chart.getChartView().getDateAxis().getDisplayPosition(state.getDate()));
+		setCenterY(chart.getValueAxis().getDisplayPosition(state.getValue(), chart.getMin(), chart.getMax()));
 	}
 
 }

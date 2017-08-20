@@ -1,5 +1,13 @@
 package com.stox.chart.drawing;
 
+import com.stox.chart.axis.DateAxis;
+import com.stox.chart.chart.Chart;
+import com.stox.chart.drawing.VerticalLine.State;
+import com.stox.chart.view.ChartView;
+import com.stox.chart.view.MouseHandler;
+import com.stox.chart.widget.ChartingTool;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -12,13 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.util.Callback;
-
-import com.stox.chart.axis.DateAxis;
-import com.stox.chart.chart.Chart;
-import com.stox.chart.view.ChartView;
-import com.stox.chart.view.MouseHandler;
-import com.stox.chart.widget.ChartingTool;
-import com.stox.core.ui.util.UiUtil;
+import lombok.Data;
 
 public class VerticalLineToggleButton extends ToggleButton implements ChangeListener<Boolean>, Callback<VerticalLine, Void> {
 
@@ -107,11 +109,40 @@ class VerticalLineMouseHandler implements MouseHandler {
 
 }
 
-class VerticalLine extends Drawing {
+class VerticalLine extends Drawing<State> {
+	public static final String CODE = "vline";
+	
+	@Data
+	public static class State implements Drawing.State<State>{
+		
+		private long value;
+		
+		@Override
+		public String getCode() {
+			return CODE;
+		}
 
-	private long value;
+		@Override
+		public void copy(State state) {
+			this.value = state.getValue();
+		}
+		
+	}
+
+
 	private final Line line = new Line();
 	private final DateAxis dateAxis;
+	private final State state = new State();
+	
+	@Override
+	public State getState() {
+		return state;
+	}
+	
+	@Override
+	public String getCode() {
+		return CODE;
+	}
 
 	private class MouseEventHandler implements EventHandler<MouseEvent> {
 		private double x;
@@ -152,12 +183,12 @@ class VerticalLine extends Drawing {
 
 	@Override
 	public void layoutChartChildren() {
-		line.setStartX(dateAxis.getDisplayPosition(value));
+		line.setStartX(dateAxis.getDisplayPosition(state.getValue()));
 	}
 
 	@Override
 	public void update() {
-		value = dateAxis.getValueForDisplay(line.getStartX());
+		state.setValue(dateAxis.getValueForDisplay(line.getStartX()));
 	}
 
 	public void move(final double x) {

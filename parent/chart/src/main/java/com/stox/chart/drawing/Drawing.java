@@ -1,14 +1,25 @@
 package com.stox.chart.drawing;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.stox.chart.chart.Chart;
+import com.stox.chart.drawing.Drawing.State;
+
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import com.stox.chart.chart.Chart;
-
-public abstract class Drawing extends Group {
-
+public abstract class Drawing<T extends State<T>> extends Group {
+	
+	public static interface State<T extends State<T>>{
+		
+		@JsonIgnore
+		String getCode();
+		
+		void copy(T state);
+		
+	}
+	
 	private boolean dirty;
 	private final Chart chart;
 
@@ -44,8 +55,12 @@ public abstract class Drawing extends Group {
 			layoutChartChildren();
 		}
 	}
+	
+	public abstract String getCode();
 
+	public abstract T getState();
+	
 	public abstract void update();
-
+	
 	public abstract void layoutChartChildren();
 }
