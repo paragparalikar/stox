@@ -24,7 +24,7 @@ public class BinaryFileBarRepository implements BarRepository {
 
 	@Override
 	public Date getLastTradingDate(String instrumentId, BarSpan barSpan) {
-		final String path = getPath(instrumentId, barSpan).intern();
+		final String path = getPath(instrumentId, BarSpan.M.equals(barSpan) || BarSpan.W.equals(barSpan) ? BarSpan.D : barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
 				if (file.length() >= Bar.BYTES) {
@@ -39,6 +39,11 @@ public class BinaryFileBarRepository implements BarRepository {
 
 	@Override
 	public List<Bar> find(String instrumentId, BarSpan barSpan, Date from, Date to) {
+		BarSpan requstedBarSpan = null;
+		if(BarSpan.W.equals(barSpan) || BarSpan.M.equals(barSpan)) {
+			requstedBarSpan = barSpan;
+			barSpan = BarSpan.D;
+		}
 		final String path = getPath(instrumentId, barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
@@ -60,7 +65,11 @@ public class BinaryFileBarRepository implements BarRepository {
 						break;
 					}
 				}
-				return bars;
+				if(null != requstedBarSpan) {
+					return requstedBarSpan.merge(bars);
+				}else {
+					return bars;
+				}
 			} catch (final FileNotFoundException fileNotFoundException) {
 				return Collections.emptyList();
 			} catch (Exception e) {
