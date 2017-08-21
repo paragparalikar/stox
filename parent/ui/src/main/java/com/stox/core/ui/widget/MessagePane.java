@@ -1,4 +1,4 @@
-package com.stox.workbench.ui.view;
+package com.stox.core.ui.widget;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;

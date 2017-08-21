@@ -16,5 +16,10 @@ public class Watchlist implements Identifiable<Integer>, Comparable<Watchlist>, 
 	public int compareTo(Watchlist o) {
 		return name.compareToIgnoreCase(o.getName());
 	}
+	
+	public void copy(final Watchlist watchlist) {
+		setId(watchlist.getId());
+		setName(watchlist.getName());
+	}
 
 }

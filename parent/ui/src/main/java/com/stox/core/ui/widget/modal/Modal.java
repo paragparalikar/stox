@@ -2,6 +2,17 @@ package com.stox.core.ui.widget.modal;
 
 import java.util.List;
 
+import com.stox.core.intf.HasLifecycle;
+import com.stox.core.model.Message;
+import com.stox.core.ui.HasSpinner;
+import com.stox.core.ui.ResizableRelocatableWindowDecorator;
+import com.stox.core.ui.util.UiUtil;
+import com.stox.core.ui.widget.ApplicationStage;
+import com.stox.core.ui.widget.MessagePane;
+import com.stox.core.ui.widget.titlebar.TitleBar;
+import com.stox.core.ui.widget.titlebar.decorator.CloseDecorator;
+import com.stox.core.util.StringUtil;
+
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -14,20 +25,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import com.stox.core.intf.HasLifecycle;
-import com.stox.core.ui.HasSpinner;
-import com.stox.core.ui.ResizableRelocatableWindowDecorator;
-import com.stox.core.ui.util.UiUtil;
-import com.stox.core.ui.widget.ApplicationStage;
-import com.stox.core.ui.widget.titlebar.TitleBar;
-import com.stox.core.ui.widget.titlebar.decorator.CloseDecorator;
-
 public class Modal implements HasLifecycle, HasSpinner {
 
 	private final TitleBar titleBar = new TitleBar();
+	private final VBox top = new VBox(titleBar.getNode());
 	private final CloseDecorator closeDecorator = new CloseDecorator();
 	private final VBox container = new VBox();
-	private final BorderPane borderPane = new BorderPane(container, titleBar.getNode(), null, null, null);
+	private final BorderPane borderPane = new BorderPane(container, top, null, null, null);
 	private final StackPane root = new StackPane(borderPane);
 	private final Stage stage = new Stage();
 	private final VBox spinner = UiUtil.classes(new VBox(new ProgressIndicator()), "center");
@@ -48,6 +52,25 @@ public class Modal implements HasLifecycle, HasSpinner {
 		scene.getStylesheets().addAll("styles/color-sceme.css", "fonts/open-sans/open-sans.css", "styles/bootstrap.css", "styles/common.css", "styles/workbench.css",
 				"styles/modal.css");
 		stage.setScene(scene);
+	}
+	
+	public void setMessage(final Message message) {
+		clearMessages();
+		addMessage(message);
+	}
+
+	public void addMessage(final Message message) {
+		if (null != message && null != message.getType() && StringUtil.hasText(message.getText())) {
+			final MessagePane messagePane = new MessagePane();
+			top.getChildren().add(messagePane);
+			messagePane.setMessage(message);
+		} else {
+			clearMessages();
+		}
+	}
+
+	public void clearMessages() {
+		top.getChildren().removeIf(node -> node instanceof MessagePane);
 	}
 
 	@Override
