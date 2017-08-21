@@ -28,7 +28,8 @@ import com.stox.watchlist.model.Watchlist;
 @Lazy
 @Component
 public class CsvFileWatchlistRepository implements WatchlistRepository {
-	private static final String CACHE = "watchlist";
+	private static final String ALL = "all";
+	private static final String CACHE = "watchlists";
 
 	@Autowired
 	private CacheManager cacheManager;
@@ -56,6 +57,7 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 			if (0 < file.length()) {
 				final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Watchlist.class);
 				final List<Watchlist> watchlists = reader.<Watchlist>readValues(file).readAll();
+				cache.put(ALL, watchlists);
 				watchlists.forEach(watchlist -> {
 					cache.put(watchlist.getId(), watchlist);
 					idGenerator.set(Math.max(idGenerator.get(), watchlist.getId()));
@@ -65,37 +67,38 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 	}
 
 	@Override
-	@Cacheable(CACHE)
+	@Cacheable(value = CACHE, key = "'" + ALL + "'")
 	@SuppressWarnings("unchecked")
 	public List<Watchlist> loadAll() throws Exception {
 		load();
-		final ValueWrapper wrapper = cache.get("");
+		final ValueWrapper wrapper = cache.get(ALL);
 		return null == wrapper ? Collections.emptyList() : (List<Watchlist>) wrapper.get();
 	}
 
 	@Override
-	@CachePut(CACHE)
+	@CachePut(value = CACHE, key = "#a0.getId()")
 	public Watchlist save(Watchlist watchlist) throws Exception {
 		load();
 		if (null == watchlist.getId() || 0 == watchlist.getId()) {
 			watchlist.setId(idGenerator.incrementAndGet());
 		}
 		final File file = FileUtil.getFile(getPath());
-		Constant.objectMapper.writeValue(new FileOutputStream(file, true), watchlist);
+		Constant.csvMapper.writer(schema).writeValue(new FileOutputStream(file, true), watchlist);
 		FileUtil.getFile(getPath(watchlist.getId()));
 		return watchlist;
 	}
 
 	@Override
-	@CacheEvict(CACHE)
+	@CacheEvict(value = CACHE, key="#a0")
 	public Watchlist delete(Integer watchlistId) throws Exception {
 		load();
 		Files.deleteIfExists(Paths.get(getPath(watchlistId)));
 		final ValueWrapper wrapper = cache.get(watchlistId);
-		final Watchlist watchlist = null == wrapper ? null : (Watchlist)wrapper.get();
+		final Watchlist watchlist = null == wrapper ? null : (Watchlist) wrapper.get();
 		final List<Watchlist> watchlists = loadAll();
 		watchlists.remove(watchlist);
-		Constant.csvMapper.writer(schema).writeValues(new FileOutputStream(getPath(), false)).writeAll(watchlists).flush();
+		Constant.csvMapper.writer(schema).writeValues(new FileOutputStream(getPath(), false)).writeAll(watchlists)
+				.flush();
 		return watchlist;
 	}
 
