@@ -4,14 +4,20 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.stox.core.ui.StylesheetProvider;
 import com.stox.workbench.ui.view.Presenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
-public class WatchlistPresenterProvider implements PresenterProvider {
+public class WatchlistPresenterProvider implements PresenterProvider, StylesheetProvider {
 	
 	@Autowired
 	private BeanFactory beanFactory;
+	
+	@Override
+	public String[] getStylesheets() {
+		return new String[]{"styles/watchlist.css"};
+	}
 
 	@Override
 	public String getViewCode() {

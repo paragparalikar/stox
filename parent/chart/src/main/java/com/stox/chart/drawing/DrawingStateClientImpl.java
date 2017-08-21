@@ -3,6 +3,7 @@ package com.stox.chart.drawing;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Instrument;
 import com.stox.core.model.Response;
 
+@Lazy
 @Async
 @Component
 public class DrawingStateClientImpl implements DrawingStateClient {

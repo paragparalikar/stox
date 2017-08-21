@@ -1,12 +1,12 @@
 package com.stox.chart.drawing;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,6 +14,7 @@ import com.stox.core.model.Instrument;
 import com.stox.core.util.Constant;
 import com.stox.core.util.FileUtil;
 
+@Lazy
 @Component 
 public class JsonFileDrawingStateRepository implements DrawingStateRepository {
 	

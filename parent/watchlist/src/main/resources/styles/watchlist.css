@@ -1,0 +1,7 @@
+.watchlist-combobox-panel{
+	-fx-background-color:lighter;
+}
+.watchlist-combobox-panel .icon{
+	-fx-pref-height:2.5em;
+	-fx-pref-width:2.5em;
+}

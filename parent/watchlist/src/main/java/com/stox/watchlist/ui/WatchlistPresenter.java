@@ -3,6 +3,7 @@ package com.stox.watchlist.ui;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.stox.watchlist.model.WatchlistViewState;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
+import javafx.geometry.Side;
 import javafx.scene.layout.Pane;
 
 @Component
@@ -23,6 +25,16 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 	private ApplicationEventPublisher eventPublisher;
 
 	private final WatchlistView view = new WatchlistView();
+	
+	public WatchlistPresenter() {
+		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
+			if (value) {
+				view.getTitleBar().add(Side.BOTTOM, 0, view.getSearchTextField());
+			} else {
+				view.getTitleBar().remove(Side.BOTTOM, view.getSearchTextField());
+			}
+		});
+	}
 	
 	@Override
 	public WatchlistView getView() {
