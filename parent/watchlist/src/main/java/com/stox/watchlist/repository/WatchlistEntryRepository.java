@@ -9,9 +9,7 @@ public interface WatchlistEntryRepository {
 	List<WatchlistEntry> load(final Integer watchlistId) throws Exception;
 	
 	WatchlistEntry save(final WatchlistEntry entry) throws Exception;
-	
-	WatchlistEntry delete(final Integer entryId) throws Exception;
-	
-	void deleteByWatchlistId(final Integer watchlistId) throws Exception;
+
+	WatchlistEntry delete(Integer watchlistId, String entryId) throws Exception;
 
 }

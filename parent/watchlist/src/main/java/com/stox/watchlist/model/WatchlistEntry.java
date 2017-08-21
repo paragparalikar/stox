@@ -10,9 +10,9 @@ import com.stox.core.model.BarSpan;
 import lombok.Data;
 
 @Data
-public class WatchlistEntry implements Identifiable<Integer>, Comparable<WatchlistEntry>, HasName  {
+public class WatchlistEntry implements Identifiable<String>, Comparable<WatchlistEntry>, HasName  {
 
-	private Integer id;
+	private String id;
 	
 	private Integer watchlistId;
 	

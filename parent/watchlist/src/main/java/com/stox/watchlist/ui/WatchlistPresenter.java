@@ -3,11 +3,12 @@ package com.stox.watchlist.ui;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
+import com.stox.watchlist.client.WatchlistClient;
+import com.stox.watchlist.client.WatchlistEntryClient;
 import com.stox.watchlist.model.WatchlistViewState;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
@@ -20,6 +21,12 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 	
 	@Autowired
 	private TaskExecutor taskExecutor;
+	
+	@Autowired
+	private WatchlistClient watchlistClient;
+	
+	@Autowired
+	private WatchlistEntryClient watchlistEntryClient;
 	
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;

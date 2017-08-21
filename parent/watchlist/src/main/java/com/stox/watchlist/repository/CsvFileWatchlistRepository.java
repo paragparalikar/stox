@@ -24,6 +24,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.stox.core.util.Constant;
 import com.stox.core.util.FileUtil;
 import com.stox.watchlist.model.Watchlist;
+import com.stox.watchlist.util.WatchlistConstant;
 
 @Lazy
 @Component
@@ -38,16 +39,10 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 
 	private final AtomicInteger idGenerator = new AtomicInteger(0);
 
-	private final String path = Constant.PATH + "watchlist" + File.separator + "com.stox.watchlist.";
-
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(Watchlist.class).withHeader();
 
 	private String getPath() {
-		return path + "csv";
-	}
-
-	private String getPath(final Integer watchlistId) {
-		return path + String.valueOf(watchlistId) + ".csv";
+		return WatchlistConstant.PATH + "csv";
 	}
 
 	private synchronized void load() throws IOException {
@@ -83,8 +78,8 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 			watchlist.setId(idGenerator.incrementAndGet());
 		}
 		final File file = FileUtil.getFile(getPath());
-		Constant.csvMapper.writer(schema).writeValue(new FileOutputStream(file, true), watchlist);
-		FileUtil.getFile(getPath(watchlist.getId()));
+		Constant.csvMapper.writerFor(Watchlist.class).writeValue(new FileOutputStream(file, true), watchlist);
+		FileUtil.getFile(WatchlistRepositoryUtil.getWatchlistFilePath(watchlist.getId()));
 		return watchlist;
 	}
 
@@ -92,7 +87,7 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 	@CacheEvict(value = CACHE, key="#a0")
 	public Watchlist delete(Integer watchlistId) throws Exception {
 		load();
-		Files.deleteIfExists(Paths.get(getPath(watchlistId)));
+		Files.deleteIfExists(Paths.get(WatchlistRepositoryUtil.getWatchlistFilePath(watchlistId)));
 		final ValueWrapper wrapper = cache.get(watchlistId);
 		final Watchlist watchlist = null == wrapper ? null : (Watchlist) wrapper.get();
 		final List<Watchlist> watchlists = loadAll();

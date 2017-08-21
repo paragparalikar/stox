@@ -11,5 +11,5 @@ public interface WatchlistEntryClient {
 	
 	void save(final WatchlistEntry entry, final ResponseCallback<WatchlistEntry> callback);
 	
-	void delete(final Integer entryId, final ResponseCallback<WatchlistEntry> callback);
+	void delete(Integer watchlistId, String entryId, ResponseCallback<WatchlistEntry> callback);
 }
