@@ -27,6 +27,7 @@ import com.stox.watchlist.event.WatchlistEntryDeletedEvent;
 import com.stox.watchlist.model.Watchlist;
 import com.stox.watchlist.model.WatchlistEntry;
 import com.stox.watchlist.model.WatchlistViewState;
+import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
 import javafx.collections.FXCollections;
@@ -86,6 +87,9 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 		});
 		view.getWatchlistComboBox().getSelectionModel().selectedItemProperty().addListener((observable, old, watchlist) -> {
 			selectWatchlist(watchlist);
+		});
+		view.getEntryTableView().getSelectionModel().selectedItemProperty().addListener((observable, old, entry) -> {
+			selectWatchlistEntry(entry);
 		});
 		view.setDeleteConsumer(entry -> {
 			deleteWatchlistEntry(entry);
@@ -152,6 +156,12 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 					view.setMessage(new Message(message, MessageType.ERROR));
 				}
 			});
+		}
+	}
+	
+	private void selectWatchlistEntry(final WatchlistEntry entry) {
+		if(null != entry) {
+			publish(new State(entry.getInstrumentId(), entry.getBarSpan(), 0));
 		}
 	}
 	
