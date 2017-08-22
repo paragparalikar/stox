@@ -1,11 +1,13 @@
 package com.stox.chart.view;
 
 import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
@@ -27,11 +29,15 @@ import com.stox.core.model.Message;
 import com.stox.core.model.MessageType;
 import com.stox.core.model.Response;
 import com.stox.core.repository.InstrumentRepository;
+import com.stox.core.ui.TargetAwareMenuItemProvider;
 import com.stox.core.util.StringUtil;
 import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.SubscriberPresenter;
 
+import javafx.scene.control.ContextMenu;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 @Component
@@ -47,6 +53,9 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	private DrawingStateClient drawingStateClient;
 
 	private final DrawingFactory drawingFactory = new DrawingFactory();
+	
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -58,6 +67,20 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 		view.addEventHandler(BarRequestEvent.TYPE, event -> {
 			final Instrument instrument = instrumentRepository.getInstrument(event.getInstrumentId());
 			loadBars(instrument, event.getBarSpan(), event.getFrom(), event.getTo(), event.getCallback());
+		});
+		view.getSplitPane().addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			if(MouseButton.SECONDARY.equals(event.getButton())) {
+				final ContextMenu contextMenu = view.getContextMenu();
+				if(contextMenu.getItems().isEmpty()) {
+					final Collection<TargetAwareMenuItemProvider> providers = applicationContext.getBeansOfType(TargetAwareMenuItemProvider.class).values();
+					providers.forEach(provider -> {
+						if(provider.supports(view)) {
+							contextMenu.getItems().add(provider.build(view));
+						}
+					});
+				}
+				contextMenu.show(view.getScene().getWindow());
+			}
 		});
 	}
 

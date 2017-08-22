@@ -4,14 +4,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.chart.PrimaryChart;
@@ -19,13 +11,25 @@ import com.stox.chart.plot.VolumePlot;
 import com.stox.chart.unit.UnitType;
 import com.stox.chart.util.ChartConstant;
 import com.stox.chart.widget.Crosshair;
+import com.stox.core.intf.HasBarSpan;
+import com.stox.core.intf.HasInstrument;
 import com.stox.core.model.BarSpan;
+import com.stox.core.model.Instrument;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.workbench.ui.view.View;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "primaryChart", "charts", "volumePlot", "dateAxis", "content" })
-public class ChartView extends View {
+public class ChartView extends View implements HasInstrument, HasBarSpan {
 
 	private boolean semilog = false;
 	private BarSpan barSpan = BarSpan.D;
@@ -44,6 +48,7 @@ public class ChartView extends View {
 	private final DateAxis dateAxis;
 	private final BorderPane content;
 	private final Crosshair crosshair;
+	private final ContextMenu contextMenu;
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 
 	private MouseHandler mouseHandler;
@@ -57,6 +62,7 @@ public class ChartView extends View {
 		dateAxis = new DateAxis(this);
 		content = new BorderPane(splitPane, null, null, dateAxis, null);
 		crosshair = new Crosshair(this);
+		contextMenu = new ContextMenu();
 
 		UiUtil.classes(this, "chart-view");
 		setContent(content);
@@ -99,6 +105,11 @@ public class ChartView extends View {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Instrument getInstrument() {
+		return primaryChart.getPrimaryPricePlot().getInstrument();
 	}
 
 }

@@ -30,6 +30,9 @@ public class WatchlistEditorModal extends Modal {
 		this.watchlist = null == watchlist ? new Watchlist() : watchlist;
 		setContent(nameFormGroup);
 		setButtonGroup(buttonBox);
+		addStylesheets("styles/watchlist.css");
+		getStyleClass().add("primary");
+		getStyleClass().add("watchlist-editor-modal");
 		cancelButton.addEventHandler(ActionEvent.ACTION, event -> hide());
 		actionButton.addEventHandler(ActionEvent.ACTION, event -> {
 			if(nameFormGroup.validate()) {

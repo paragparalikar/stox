@@ -18,6 +18,7 @@ import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
 import com.stox.core.model.Response;
+import com.stox.core.ui.widget.modal.Notification;
 import com.stox.watchlist.client.WatchlistClient;
 import com.stox.watchlist.client.WatchlistEntryClient;
 import com.stox.watchlist.event.WatchlistCreatedEvent;
@@ -29,6 +30,7 @@ import com.stox.watchlist.model.WatchlistEntry;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
@@ -78,7 +80,15 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 		watchlistEntryClient.save(entry, new ResponseCallback<WatchlistEntry>() {
 			@Override
 			public void onSuccess(Response<WatchlistEntry> response) {
-
+				final StringBuilder stringBuilder = new StringBuilder("WatchlistEntry created with below details:");
+				stringBuilder.append("\nInstrument\t"+instrument.getName());
+				stringBuilder.append("\nTimeframe\t"+barSpan.getName());
+				stringBuilder.append("\nWatchlist\t"+watchlist.getName());
+				Notification.builder().style("success").graphic(new Label(stringBuilder.toString())).build().show();
+			}
+			@Override
+			public void onFailure(Response<WatchlistEntry> response, Throwable throwable) {
+				Notification.builder().style("danger").graphic(new Label(throwable.getMessage())).build().show();
 			}
 		});
 	}

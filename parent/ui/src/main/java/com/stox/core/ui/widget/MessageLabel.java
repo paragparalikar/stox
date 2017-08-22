@@ -18,6 +18,8 @@ public class MessageLabel extends Label {
 
 	private void setMessageType(final MessageType messageType) {
 		getStyleClass().removeAll("success", "warning", "info", "danger");
-		getStyleClass().add(messageType.getStyle());
+		if(null != messageType) {
+			getStyleClass().add(messageType.getStyle());
+		}
 	}
 }
