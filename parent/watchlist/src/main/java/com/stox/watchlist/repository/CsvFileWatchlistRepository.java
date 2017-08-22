@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -70,20 +71,37 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 	@Override
 	@CachePut(value = CACHE, key = "#a0.getId()")
 	public Watchlist save(Watchlist watchlist) throws Exception {
-		Predicate<Watchlist> duplicateNamePredicate = null;
-		final List<Watchlist> watchlists = loadAll();
 		if (null == watchlist.getId() || 0 == watchlist.getId()) {
-			duplicateNamePredicate = w -> w.getName().equalsIgnoreCase(watchlist.getName());
-			watchlist.setId(idGenerator.incrementAndGet());
+			create(watchlist);
 		}else {
-			duplicateNamePredicate = w -> w.getName().equalsIgnoreCase(watchlist.getName()) && !w.getId().equals(watchlist.getId());
+			update(watchlist);
 		}
-		if(watchlists.stream().filter(duplicateNamePredicate).findFirst().isPresent()) {
-			throw new WatchlistExistsException(watchlist);
-		}
-		write(watchlist);
-		FileUtil.getFile(WatchlistRepositoryUtil.getWatchlistFilePath(watchlist.getId()));
 		return watchlist;
+	}
+
+	private void create(final Watchlist watchlist) throws Exception {
+		final List<Watchlist> watchlists = loadAll();
+		final Predicate<Watchlist> duplicateNamePredicate = w -> w.getName().equalsIgnoreCase(watchlist.getName());
+		if (watchlists.stream().filter(duplicateNamePredicate).findFirst().isPresent()) {
+			throw new WatchlistExistsException(watchlist);
+		} else {
+			watchlist.setId(idGenerator.incrementAndGet());
+			append(watchlist);
+			watchlists.add(watchlist);
+			FileUtil.getFile(WatchlistRepositoryUtil.getWatchlistFilePath(watchlist.getId()));
+		}
+	}
+
+	private void update(final Watchlist watchlist) throws Exception {
+		final List<Watchlist> watchlists = loadAll();
+		final Predicate<Watchlist> duplicateNamePredicate = w -> w.getName().equalsIgnoreCase(watchlist.getName())
+				&& !w.getId().equals(watchlist.getId());
+		if (watchlists.stream().filter(duplicateNamePredicate).findFirst().isPresent()) {
+			throw new WatchlistExistsException(watchlist);
+		} else {
+			watchlists.stream().filter(w -> w.getId().equals(watchlist.getId())).findFirst().ifPresent(w -> w.copy(watchlist));
+			writeAll(watchlists);
+		}
 	}
 
 	@Override
@@ -98,19 +116,20 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 		writeAll(watchlists);
 		return watchlist;
 	}
-	
+
 	private String toString(final Watchlist watchlist) {
 		return watchlist.getId() + "," + watchlist.getName();
 	}
 
-	private void write(final Watchlist watchlist) throws Exception {
+	private void append(final Watchlist watchlist) throws Exception {
 		final File file = FileUtil.getFile(getPath());
-		Files.write(file.toPath(), Arrays.asList(new String[] {toString(watchlist)}), StandardOpenOption.APPEND);
+		Files.write(file.toPath(), Arrays.asList(new String[] { toString(watchlist) }), StandardOpenOption.APPEND);
 	}
 
 	private void writeAll(final List<Watchlist> watchlists) throws Exception {
 		final File file = FileUtil.getFile(getPath());
-		final List<String> lines = watchlists.stream().map(watchlist -> toString(watchlist)).collect(Collectors.toList());
+		final List<String> lines = watchlists.stream().map(watchlist -> toString(watchlist))
+				.collect(Collectors.toList());
 		Files.write(file.toPath(), lines, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
