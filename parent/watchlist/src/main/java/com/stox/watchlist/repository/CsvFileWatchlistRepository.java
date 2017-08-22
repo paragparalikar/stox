@@ -1,7 +1,6 @@
 package com.stox.watchlist.repository;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -9,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.util.FileUtil;
 import com.stox.watchlist.model.Watchlist;
+import com.stox.watchlist.model.WatchlistExistsException;
 import com.stox.watchlist.util.WatchlistConstant;
 
 @Lazy
@@ -69,9 +70,16 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 	@Override
 	@CachePut(value = CACHE, key = "#a0.getId()")
 	public Watchlist save(Watchlist watchlist) throws Exception {
-		load();
+		Predicate<Watchlist> duplicateNamePredicate = null;
+		final List<Watchlist> watchlists = loadAll();
 		if (null == watchlist.getId() || 0 == watchlist.getId()) {
+			duplicateNamePredicate = w -> w.getName().equalsIgnoreCase(watchlist.getName());
 			watchlist.setId(idGenerator.incrementAndGet());
+		}else {
+			duplicateNamePredicate = w -> w.getName().equalsIgnoreCase(watchlist.getName()) && !w.getId().equals(watchlist.getId());
+		}
+		if(watchlists.stream().filter(duplicateNamePredicate).findFirst().isPresent()) {
+			throw new WatchlistExistsException(watchlist);
 		}
 		write(watchlist);
 		FileUtil.getFile(WatchlistRepositoryUtil.getWatchlistFilePath(watchlist.getId()));
