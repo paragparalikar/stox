@@ -44,7 +44,9 @@ public class WatchlistEditorModal extends Modal {
 				persistModel();
 			}
 		});
-
+		nameTextField.setOnAction(event -> {
+			actionButton.fire();
+		});
 		updateView();
 	}
 	

@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.intf.HasBarSpan;
@@ -60,14 +59,14 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 		watchlistClient.loadAll(new ResponseCallback<List<Watchlist>>() {
 			@Override
 			public void onSuccess(final Response<List<Watchlist>> response) {
-				Platform.runLater(() -> {
-					getItems()
-							.setAll(response.getPayload().stream().sorted(new HasNameComaparator<>()).map(watchlist -> {
-								final MenuItem item = new MenuItem(watchlist.getName());
-								item.addEventHandler(ActionEvent.ACTION, event -> addToWatchlist(watchlist));
-								return item;
-							}).collect(Collectors.toList()));
-				});
+				final List<MenuItem> items = response.getPayload().stream().sorted(new HasNameComaparator<>())
+						.map(watchlist -> {
+							final MenuItem item = new MenuItem(watchlist.getName());
+							item.setUserData(watchlist);
+							item.addEventHandler(ActionEvent.ACTION, event -> addToWatchlist(watchlist));
+							return item;
+						}).collect(Collectors.toList());
+				getItems().setAll(items);
 			}
 		});
 	}
@@ -75,7 +74,7 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 	private void addToWatchlist(final Watchlist watchlist) {
 		final Instrument instrument = entryProvider.getInstrument();
 		final BarSpan barSpan = entryProvider.getBarSpan();
-		if(null != instrument && null != barSpan) {
+		if (null != instrument && null != barSpan) {
 			final WatchlistEntry entry = new WatchlistEntry();
 			entry.setWatchlistId(watchlist.getId());
 			entry.setInstrument(instrument);
@@ -85,11 +84,12 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 				@Override
 				public void onSuccess(Response<WatchlistEntry> response) {
 					final StringBuilder stringBuilder = new StringBuilder("WatchlistEntry created with below details:");
-					stringBuilder.append("\nInstrument\t"+instrument.getName());
-					stringBuilder.append("\nTimeframe\t"+barSpan.getName());
-					stringBuilder.append("\nWatchlist\t\t"+watchlist.getName());
+					stringBuilder.append("\nInstrument\t" + instrument.getName());
+					stringBuilder.append("\nTimeframe\t" + barSpan.getName());
+					stringBuilder.append("\nWatchlist\t\t" + watchlist.getName());
 					Notification.builder().style("success").graphic(new Label(stringBuilder.toString())).build().show();
 				}
+
 				@Override
 				public void onFailure(Response<WatchlistEntry> response, Throwable throwable) {
 					Notification.builder().style("danger").graphic(new Label(throwable.getMessage())).build().show();
@@ -99,24 +99,22 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 	}
 
 	public void onWatchlistCreated(final WatchlistCreatedEvent event) {
-		Platform.runLater(() -> {
-			final Watchlist watchlist = event.getWatchlist();
-			final MenuItem item = new MenuItem(watchlist.getName());
-			item.addEventHandler(ActionEvent.ACTION, e -> addToWatchlist(watchlist));
-			getItems().add(item);
-			FXCollections.sort(getItems(), new Comparator<MenuItem>() {
-				@Override
-				public int compare(MenuItem o1, MenuItem o2) {
-					return Objects.compare((Watchlist) o1.getUserData(), (Watchlist) o2.getUserData(), new HasNameComaparator<>());
-				}
-			});
+		final Watchlist watchlist = event.getWatchlist();
+		final MenuItem item = new MenuItem(watchlist.getName());
+		item.setUserData(watchlist);
+		item.addEventHandler(ActionEvent.ACTION, e -> addToWatchlist(watchlist));
+		getItems().add(item);
+		FXCollections.sort(getItems(), new Comparator<MenuItem>() {
+			@Override
+			public int compare(MenuItem o1, MenuItem o2) {
+				return Objects.compare((Watchlist) o1.getUserData(), (Watchlist) o2.getUserData(),
+						new HasNameComaparator<>());
+			}
 		});
 	}
 
 	public void onWatchlistDeleted(final WatchlistDeletedEvent event) {
-		Platform.runLater(() -> {
-			getItems().removeIf(item -> ((Watchlist) item.getUserData()).getId().equals(event.getWatchlist().getId()));
-		});
+		getItems().removeIf(item -> ((Watchlist) item.getUserData()).getId().equals(event.getWatchlist().getId()));
 	}
 
 	public void onWatchlistEdited(final WatchlistEditedEvent event) {

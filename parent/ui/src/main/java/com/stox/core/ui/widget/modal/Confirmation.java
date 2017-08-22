@@ -17,6 +17,9 @@ public class Confirmation extends Modal {
 	public Confirmation(final String title, final String message) {
 		setContent(messageLabel);
 		setButtonGroup(buttonBox);
+		setTitle(title);
+		getStyleClass().add("confirmation");
+		messageLabel.setText(message);
 		cancelButton.addEventHandler(ActionEvent.ACTION, event -> hide());
 	}
 	

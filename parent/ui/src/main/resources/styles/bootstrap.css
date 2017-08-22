@@ -1,97 +1,105 @@
-.button, .menu-button, .combo-box, .choice-box, .text-field{
-	-fx-border-width:1px;
-	-fx-border-radius:5px;
-	-fx-background-radius:5px;
-	-fx-border-insets:0;
-	-fx-background-insets:0;
+.button, .menu-button, .combo-box, .choice-box, .text-field {
+	-fx-border-width: 1px;
+	-fx-border-radius: 5px;
+	-fx-background-radius: 5px;
+	-fx-border-insets: 0;
+	-fx-background-insets: 0;
 }
-.text-field{
-	-fx-pref-height:2em;
+
+.text-field {
+	-fx-pref-height: 2em;
 }
-.list-view, .list-view:focused, .list-view:selected, , .text-field:focused{
-	-fx-border-width:0;
-	-fx-background-insets:0;
+
+.list-view, .list-view:focused, .list-view:selected, , .text-field:focused
+	{
+	-fx-border-width: 0;
+	-fx-background-insets: 0;
 }
-.indexed-cell{
-	-fx-pref-height:2.4em;
-	-fx-border-width:0 0 0.5px 0;
+
+.indexed-cell {
+	-fx-pref-height: 2.4em;
+	-fx-border-width: 0 0 0.5px 0;
 }
-.button{
-	-fx-padding:0.5em 1em;
+
+.button {
+	-fx-padding: 0.5em 1em;
 }
+
 .context-menu {
 	-fx-border-radius: 5;
 	-fx-background-radius: 5;
 	-fx-border-color: lighter;
 }
 
-.progress-bar > .track {
+.progress-bar>.track {
 	-fx-pref-height: 10;
 	-fx-background-radius: 3;
 	-fx-effect: innershadow(gaussian, light, 4, 0, 0, 1);
 	-fx-background-color: lighter;
 }
-.progress-bar > .bar {
+
+.progress-bar>.bar {
 	-fx-background-insets: 0;
 	-fx-background-color: background-primary;
 }
-.progress-bar.success > .bar {
+
+.progress-bar.success>.bar {
 	-fx-background-color: background-success;
 }
 
-.progress-bar.info > .bar {
+.progress-bar.info>.bar {
 	-fx-background-color: background-info;
 }
 
-.progress-bar.warning > .bar {
+.progress-bar.warning>.bar {
 	-fx-background-color: background-warning;
 }
 
-.progress-bar.danger > .bar {
+.progress-bar.danger>.bar {
 	-fx-background-color: background-danger;
 }
-
 
 .scroll-bar:vertical {
 	-fx-pref-width: 10;
 }
+
 .scroll-bar:horizontal {
 	-fx-pref-height: 10;
 }
-.scroll-bar,
-.scroll-bar .track,
-.scroll-bar .track-background{
+
+.scroll-bar, .scroll-bar .track, .scroll-bar .track-background {
 	-fx-background-color: transparent;
-	-fx-border-color:transparent;
+	-fx-border-color: transparent;
 	-fx-background-insets: 0;
 }
-.scroll-bar .decrement-button, .scroll-bar .increment-button{
+
+.scroll-bar .decrement-button, .scroll-bar .increment-button {
 	-fx-background-color: transparent;
 }
-.scroll-bar:vertical .increment-button .increment-arrow{
-    -fx-shape: "M 0 0 L 4 6 L 8 0 Z";
- 	-fx-padding: 0.25em;
+
+.scroll-bar:vertical .increment-button .increment-arrow {
+	-fx-shape: "M 0 0 L 4 6 L 8 0 Z";
+	-fx-padding: 0.25em;
 }
-.scroll-bar:vertical .decrement-button .decrement-arrow{
+
+.scroll-bar:vertical .decrement-button .decrement-arrow {
 	-fx-shape: "M 0 6 L 4 0 L 8 6 Z";
- 	-fx-padding: 0.25em;
+	-fx-padding: 0.25em;
 }
 
-.scroll-bar .decrement-arrow, .scroll-bar .increment-arrow,
-.scroll-bar .thumb{
-	-fx-background-color:light;
-	-fx-border-color:light;
+.scroll-bar .decrement-arrow, .scroll-bar .increment-arrow, .scroll-bar .thumb
+	{
+	-fx-background-color: light;
+	-fx-border-color: light;
 	-fx-background-insets: 0;
 }
-.scroll-bar .thumb{
-	-fx-border-radius:5;
-	-fx-background-radius:5;
+
+.scroll-bar .thumb {
+	-fx-border-radius: 5;
+	-fx-background-radius: 5;
 }
 
-
-
-
-.context-menu > * {
+.context-menu>* {
 	-fx-padding: 5 0 5 0;
 }
 
@@ -99,109 +107,131 @@
 	-fx-padding: 5 0 5 0;
 }
 
-.title{
-	-fx-border-radius:0;
+.title {
+	-fx-border-radius: 0;
 	-fx-padding: 0.5em;
 }
 
-
-.first{
-	-fx-border-radius:5 0 0 5;
-	-fx-background-radius:5 0 0 5;
-}
-.middle{
-	-fx-border-radius:0;
-	-fx-background-radius:0;
-}
-.last{
-	-fx-border-radius:0 5 5 0;
-	-fx-background-radius:0 5 5 0;
-}
-.top{
-	-fx-alignment:top-center;
-}
-.bottom{
-	-fx-alignment:bottom-center;
-}
-.center{
-	-fx-alignment:center;
-}
-.left{
-	-fx-alignment:center-left;
-}
-.right{
-	-fx-alignment:center-right;
+.first {
+	-fx-border-radius: 5 0 0 5;
+	-fx-background-radius: 5 0 0 5;
 }
 
-.form-group, .button-group{
-	-fx-padding:0.5em;
-	-fx-spacing:0.5em;	
+.middle {
+	-fx-border-radius: 0;
+	-fx-background-radius: 0;
 }
 
-
-.transparent{
-	-fx-background-color:transparent;
-}
-.container{
-	-fx-padding:0.5em;
+.last {
+	-fx-border-radius: 0 5 5 0;
+	-fx-background-radius: 0 5 5 0;
 }
 
+.top {
+	-fx-alignment: top-center;
+}
 
+.bottom {
+	-fx-alignment: bottom-center;
+}
 
+.center {
+	-fx-alignment: center;
+}
 
+.left {
+	-fx-alignment: center-left;
+}
 
+.right {
+	-fx-alignment: center-right;
+}
+
+.form-group, .button-group {
+	-fx-padding: 0.5em;
+	-fx-spacing: 0.5em;
+}
+
+.transparent {
+	-fx-background-color: transparent;
+}
+
+.container {
+	-fx-padding: 0.5em;
+}
 
 /*  default  */
-.button,.menu-button, .choice-box, .indexed-cell:even, .indexed-cell:odd{
-	-fx-text-fill:dark;
-	-fx-background-color:lightest;
-	-fx-border-color:lighter;
+.button, .menu-button, .choice-box, .indexed-cell:even, .indexed-cell:odd
+	{
+	-fx-text-fill: dark;
+	-fx-background-color: lightest;
+	-fx-border-color: lighter;
 }
 
-.button:hover,
-.menu-button:hover,  
-.choice-box:hover, 
-.indexed-cell:even:hover,
-.indexed-cell:odd:hover{
-	-fx-background-color:derive(lightest,-5%);
-	-fx-border-color:derive(lighter,-5%);
+.button:hover, .menu-button:hover, .choice-box:hover, .indexed-cell:even:hover,
+	.indexed-cell:odd:hover {
+	-fx-background-color: derive(lightest, -5%);
+	-fx-border-color: derive(lighter, -5%);
 }
 
-.button:selected, .button:focused,
-.menu-button:selected, .menu-button:focused,
-.choice-box:selected, .choice-box:focused,
-.indexed-cell:even:selected, .indexed-cell:even:focused, 
-.indexed-cell:odd:selected, .indexed-cell:odd:focused{
-	-fx-background-color:derive(lightest,-15%);
-	-fx-border-color:derive(lighter,-15%);
+.button:selected, .button:focused, .menu-button:selected, .menu-button:focused,
+	.choice-box:selected, .choice-box:focused, .indexed-cell:even:selected,
+	.indexed-cell:even:focused, .indexed-cell:odd:selected, .indexed-cell:odd:focused
+	{
+	-fx-background-color: derive(lightest, -15%);
+	-fx-border-color: derive(lighter, -15%);
 }
-
 
 /* primary */
 .primary.button, .primary.toggle-button, .primary.title, .primary.label,
-.primary.menu-button, .primary.menu-button > .label, .primary.menu-button > .context-menu{
-	-fx-background-color:background-primary;
-	-fx-border-color:background-primary;
-	-fx-text-fill:text-primary;
-}
-.primary.menu-button .arrow-button .arrow{
-	-fx-background-color:text-primary;
-	-fx-border-color:text-primary;
+	.primary.menu-button, .primary.menu-button>.label, .primary.menu-button>.context-menu
+	{
+	-fx-background-color: background-primary;
+	-fx-border-color: background-primary;
+	-fx-text-fill: text-primary;
 }
 
-.primary.button:hover, 
-.primary.toggle-button:hover,
-.primary.menu-button:hover, .primary.menu-button:hover > .label{
-	-fx-background-color:derive(background-primary, -15%);
-	-fx-border-color:derive(background-primary, -15%);
+.primary.menu-button .arrow-button .arrow {
+	-fx-background-color: text-primary;
+	-fx-border-color: text-primary;
 }
 
-.primary.button:selected, .primary.button:focused, 
- .primary.toggle-button:selected, .primary.toggle-button:focused,
- .primary.menu-button:selected, .primary.menu-button:selected > .label, .primary.menu-button:focused, .primary.menu-button:focused > .label{
-	-fx-background-color:derive(background-primary, -25%);
-	-fx-border-color:derive(background-primary, -25%);
+.primary.button:hover, .primary.toggle-button:hover, .primary.menu-button:hover,
+	.primary.menu-button:hover>.label {
+	-fx-background-color: derive(background-primary, -15%);
+	-fx-border-color: derive(background-primary, -15%);
 }
 
+.primary.button:selected, .primary.button:focused, .primary.toggle-button:selected,
+	.primary.toggle-button:focused, .primary.menu-button:selected, .primary.menu-button:selected>.label,
+	.primary.menu-button:focused, .primary.menu-button:focused>.label {
+	-fx-background-color: derive(background-primary, -25%);
+	-fx-border-color: derive(background-primary, -25%);
+}
 
+/* danger */
+.danger.button, .danger.toggle-button, .danger.title, .danger.label,
+	.danger.menu-button, .danger.menu-button>.label, .danger.menu-button>.context-menu
+	{
+	-fx-background-color: background-danger;
+	-fx-border-color: background-danger;
+	-fx-text-fill: text-danger;
+}
 
+.danger.menu-button .arrow-button .arrow {
+	-fx-background-color: text-danger;
+	-fx-border-color: text-danger;
+}
+
+.danger.button:hover, .danger.toggle-button:hover, .danger.menu-button:hover,
+	.danger.menu-button:hover>.label {
+	-fx-background-color: derive(background-danger, -15%);
+	-fx-border-color: derive(background-danger, -15%);
+}
+
+.danger.button:selected, .danger.button:focused, .danger.toggle-button:selected,
+	.danger.toggle-button:focused, .danger.menu-button:selected, .danger.menu-button:selected>.label,
+	.danger.menu-button:focused, .danger.menu-button:focused>.label {
+	-fx-background-color: derive(background-danger, -25%);
+	-fx-border-color: derive(background-danger, -25%);
+}

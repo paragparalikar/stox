@@ -14,6 +14,11 @@
 	-fx-background-color:lightest;
 }
 
+.confirmation{
+	-fx-pref-width:45em;
+	-fx-pref-height:15em;
+}
+
 
 .modal.primary .title,
 .modal.primary .title .button,
@@ -33,6 +38,25 @@
 	-fx-background-color:derive(background-primary, -15%);
 }
 
+
+
+.modal.danger .title,
+.modal.danger .title .button,
+.modal.danger .title .label{
+	-fx-background-color:background-danger;
+	-fx-text-fill:text-danger;
+	-fx-border-color:background-danger;
+}
+
+.modal.danger .title *.button:hover{
+	-fx-background-color:derive(background-danger, -5%);
+}
+
+.modal.danger .title *.button:pressed,
+.modal.danger .title *.button:selected,
+.modal.danger .title *.button:focused{
+	-fx-background-color:derive(background-danger, -15%);
+}
 
 
 .modal-lg{

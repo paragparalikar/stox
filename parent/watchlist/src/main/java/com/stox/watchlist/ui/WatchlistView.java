@@ -57,6 +57,7 @@ public class WatchlistView extends View {
 		createDeleteColumn();
 		createNameColumn();
 		createBarSpanColumn();
+		entryTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	}
 	
 	private void createDeleteColumn() {
@@ -90,7 +91,7 @@ public class WatchlistView extends View {
 				};
 			}
 		});
-		column.setPrefWidth(70);
+		column.setPrefWidth(10);
 		entryTableView.getColumns().add(column);
 	}
 	
@@ -106,7 +107,6 @@ public class WatchlistView extends View {
 				return null;
 			}
 		});
-		column.setPrefWidth(120);
 		entryTableView.getColumns().add(column);
 	}
 
@@ -122,6 +122,7 @@ public class WatchlistView extends View {
 				return null;
 			}
 		});
+		column.setPrefWidth(50);
 		entryTableView.getColumns().add(column);
 	}
 }

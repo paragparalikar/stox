@@ -116,12 +116,22 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 		if(null != watchlist && null != watchlist.getId()) {
 			final Confirmation confirmation = new Confirmation("Delete Watchlist",
 					"Are you sure you want to delete \"" + watchlist.getName() + "\"?");
+			confirmation.getStyleClass().add("danger");
+			confirmation.getActionButton().getStyleClass().add("danger");
 			confirmation.show();
 			confirmation.getActionButton().addEventHandler(ActionEvent.ACTION, e -> {
 				watchlistClient.delete(watchlist.getId(), new ResponseCallback<Watchlist>() {
 					@Override
 					public void onSuccess(Response<Watchlist> response) {
 						confirmation.hide();
+						if(!view.getWatchlistComboBox().getItems().isEmpty()) {
+							view.getWatchlistComboBox().getSelectionModel().select(0);
+						}
+					}
+					@Override
+					public void onFailure(Response<Watchlist> response, Throwable throwable) {
+						final String message = null == throwable || null == throwable.getMessage() ? "Failed to delete watchlist" : throwable.getMessage();
+						view.setMessage(new Message(message, MessageType.ERROR));
 					}
 				});
 			});
@@ -129,6 +139,7 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 	}
 	
 	private void selectWatchlist(final Watchlist watchlist) {
+		view.getEntryTableView().getItems().clear();
 		if(null != watchlist && null != watchlist.getId()) {
 			watchlistEntryClient.load(watchlist.getId(), new ResponseCallback<List<WatchlistEntry>>() {
 				@Override
@@ -163,6 +174,9 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 		final ObservableList<Watchlist> items = view.getWatchlistComboBox().getItems();
 		items.add(watchlist);
 		FXCollections.sort(items, new HasNameComaparator<>());
+		if(1 == items.size()) {
+			view.getWatchlistComboBox().getSelectionModel().select(0);
+		}
 	}
 
 	public void onWatchlistDeleted(final WatchlistDeletedEvent event) {
@@ -171,10 +185,12 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 	}
 
 	public void onWatchlistEdited(final WatchlistEditedEvent event) {
+		final Watchlist watchlist = event.getWatchlist();
 		view.getWatchlistComboBox().getItems()
-				.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
-		view.getWatchlistComboBox().getItems().add(event.getWatchlist());
+				.removeIf(w -> w.getId().equals(watchlist.getId()));
+		view.getWatchlistComboBox().getItems().add(watchlist);
 		FXCollections.sort(view.getWatchlistComboBox().getItems(), new HasNameComaparator<>());
+		view.getWatchlistComboBox().getSelectionModel().select(watchlist);
 	}
 
 	public void onWatchlistEntryCreated(final WatchlistEntryCreatedEvent event) {
