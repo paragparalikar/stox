@@ -75,7 +75,9 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 		final WatchlistEntry entry = new WatchlistEntry();
 		final Instrument instrument = entryProvider.getInstrument();
 		final BarSpan barSpan = entryProvider.getBarSpan();
+		entry.setWatchlistId(watchlist.getId());
 		entry.setInstrument(instrument);
+		entry.setInstrumentId(instrument.getId());
 		entry.setBarSpan(barSpan);
 		watchlistEntryClient.save(entry, new ResponseCallback<WatchlistEntry>() {
 			@Override

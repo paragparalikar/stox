@@ -82,6 +82,16 @@
 	-fx-text-fill:derive(background-warning, -40%);
 }
 
+.message-sm{
+	-fx-padding:0.3em;
+	-fx-background-radius:0.5em;
+	-fx-border-radius:0.5em;
+}
+.primary.message-sm, .success.message-sm, .danger.message-sm,
+.info.message-sm, .warning.message-sm{
+	-fx-background-color:transparent;
+}
+
 .notification{
 	-fx-padding:0.5em;
 	-fx-background-radius:0.5em;

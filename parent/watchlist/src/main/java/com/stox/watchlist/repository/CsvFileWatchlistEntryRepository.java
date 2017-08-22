@@ -6,10 +6,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.Constant;
 import com.stox.core.util.FileUtil;
 import com.stox.core.util.StringUtil;
@@ -21,14 +23,19 @@ import com.stox.watchlist.model.WatchlistEntryExistsException;
 public class CsvFileWatchlistEntryRepository implements WatchlistEntryRepository {
 	private static final String ALL = "all";
 	private static final String CACHE = "watchlists";
+	
+	@Autowired
+	private InstrumentRepository instrumentRepository;
 
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(WatchlistEntry.class).withHeader();
 
 	@Override
 	public List<WatchlistEntry> load(Integer watchlistId) throws Exception {
 		final File file = FileUtil.getFile(WatchlistRepositoryUtil.getWatchlistFilePath(watchlistId));
-		return Constant.csvMapper.reader(schema).forType(WatchlistEntry.class).<WatchlistEntry>readValues(file)
+		final List<WatchlistEntry> entries = Constant.csvMapper.reader(schema).forType(WatchlistEntry.class).<WatchlistEntry>readValues(file)
 				.readAll();
+		entries.forEach(entry -> entry.setInstrument(instrumentRepository.getInstrument(entry.getInstrumentId())));
+		return entries;
 	}
 
 	@Override

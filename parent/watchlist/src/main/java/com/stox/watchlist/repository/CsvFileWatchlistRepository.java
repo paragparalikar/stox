@@ -2,12 +2,12 @@ package com.stox.watchlist.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -19,9 +19,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.stox.core.util.Constant;
 import com.stox.core.util.FileUtil;
 import com.stox.watchlist.model.Watchlist;
 import com.stox.watchlist.util.WatchlistConstant;
@@ -39,19 +36,16 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 
 	private final AtomicInteger idGenerator = new AtomicInteger(0);
 
-	private final CsvSchema schema = Constant.csvMapper.schemaFor(Watchlist.class).withHeader();
-
 	private String getPath() {
 		return WatchlistConstant.PATH + "csv";
 	}
 
-	private synchronized void load() throws IOException {
+	private synchronized void load() throws Exception {
 		if (null == cache) {
 			cache = cacheManager.getCache(CACHE);
 			final File file = FileUtil.getFile(getPath());
 			if (0 < file.length()) {
-				final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Watchlist.class);
-				final List<Watchlist> watchlists = reader.<Watchlist>readValues(file).readAll();
+				final List<Watchlist> watchlists = readAll();
 				cache.put(ALL, watchlists);
 				watchlists.forEach(watchlist -> {
 					cache.put(watchlist.getId(), watchlist);
@@ -77,8 +71,7 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 		if (null == watchlist.getId() || 0 == watchlist.getId()) {
 			watchlist.setId(idGenerator.incrementAndGet());
 		}
-		final File file = FileUtil.getFile(getPath());
-		Constant.csvMapper.writerFor(Watchlist.class).writeValue(new FileOutputStream(file, true), watchlist);
+		write(watchlist);
 		FileUtil.getFile(WatchlistRepositoryUtil.getWatchlistFilePath(watchlist.getId()));
 		return watchlist;
 	}
@@ -92,9 +85,36 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 		final Watchlist watchlist = null == wrapper ? null : (Watchlist) wrapper.get();
 		final List<Watchlist> watchlists = loadAll();
 		watchlists.remove(watchlist);
-		Constant.csvMapper.writer(schema).writeValues(new FileOutputStream(getPath(), false)).writeAll(watchlists)
-				.flush();
+		writeAll(watchlists);
+		return watchlist;
+	}
+	
+	private void write(final Watchlist watchlist) throws Exception {
+		final File file = FileUtil.getFile(getPath());
+		try(final FileOutputStream fos = new FileOutputStream(file, true)){
+			fos.write((watchlist.getId()+","+watchlist.getName()+File.separator).getBytes());
+		}
+	}
+	
+	private void writeAll(final List<Watchlist> watchlists) throws Exception {
+		final File file = FileUtil.getFile(getPath());
+		try(final FileOutputStream fos = new FileOutputStream(file, false)){
+			for(final Watchlist watchlist : watchlists) {
+				fos.write((watchlist.getId()+","+watchlist.getName()+File.separator).getBytes());
+			}
+		}
+	}
+
+	private Watchlist parse(final String text) {
+		final String tokens[] = text.split(",");
+		final Watchlist watchlist = new Watchlist();
+		watchlist.setId(Integer.parseInt(tokens[0]));
+		watchlist.setName(tokens[1]);
 		return watchlist;
 	}
 
+	private List<Watchlist> readAll() throws Exception{
+		final File file = FileUtil.getFile(getPath());
+		return Files.readAllLines(file.toPath()).stream().map(text -> parse(text)).collect(Collectors.toList());
+	}
 }

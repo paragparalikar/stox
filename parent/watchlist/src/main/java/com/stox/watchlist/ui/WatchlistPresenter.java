@@ -56,6 +56,7 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 				view.getTitleBar().remove(Side.BOTTOM, view.getSearchTextField());
 			}
 		});
+		view.getWatchlistComboBox().setConverter(new WatchlistStringConverter());
 		view.getAddButton().addEventHandler(ActionEvent.ACTION, event -> {
 			final WatchlistEditorModal modal = new WatchlistEditorModal(null, watchlistClient);
 			modal.show();

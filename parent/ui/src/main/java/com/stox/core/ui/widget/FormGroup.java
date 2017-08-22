@@ -1,12 +1,13 @@
 package com.stox.core.ui.widget;
 
+import com.stox.core.model.Message;
+import com.stox.core.model.MessageType;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-
-import com.stox.core.model.Message;
-import com.stox.core.model.MessageType;
 
 public class FormGroup extends VBox {
 
@@ -18,7 +19,7 @@ public class FormGroup extends VBox {
 
 	private Node node;
 	private Validator validator;
-	private final MessageLabel messageLabel = new MessageLabel();
+	private final MessageLabel messageLabel = UiUtil.classes(UiUtil.fullWidth(new MessageLabel()),"message-sm");
 	private final ChangeListener<Boolean> focusChangeListener = new ChangeListener<Boolean>() {
 		@Override
 		public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
