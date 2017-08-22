@@ -3,11 +3,6 @@ package com.stox.navigator.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.geometry.Side;
-import javafx.scene.layout.Pane;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +18,13 @@ import com.stox.core.event.InstrumentsChangedEvent;
 import com.stox.core.model.Instrument;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.ui.filter.FilterPresenter;
-import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.PublisherPresenter;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.geometry.Side;
+import javafx.scene.layout.Pane;
 
 @Component
 @Scope("prototype")
@@ -33,9 +32,6 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
-
-	@Autowired
-	private DataClient dataClient;
 
 	@Autowired
 	private TaskExecutor taskExecutor;

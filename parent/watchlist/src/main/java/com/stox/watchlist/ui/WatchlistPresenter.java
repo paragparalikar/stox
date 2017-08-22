@@ -8,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.intf.HasName.HasNameComaparator;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Response;
 import com.stox.core.ui.widget.modal.Confirmation;
-import com.stox.core.util.Constant;
 import com.stox.watchlist.client.WatchlistClient;
 import com.stox.watchlist.client.WatchlistEntryClient;
 import com.stox.watchlist.event.WatchlistCreatedEvent;
@@ -28,9 +26,7 @@ import com.stox.watchlist.model.WatchlistEntry;
 import com.stox.watchlist.model.WatchlistViewState;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
@@ -100,16 +96,6 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 				});
 			}
 		});
-		view.getWatchlistComboBox().getItems().addListener((ListChangeListener<Watchlist>)(change) -> {
-			while(change.next()) {
-				System.out.println(change);
-				System.out.println(change.getList());
-				if(change.wasRemoved()) {
-					System.out.println(change.getRemoved());
-				}
-				System.out.println(Constant.LINEFEED);
-			}
-		});
 	}
 
 	@PostConstruct
@@ -117,54 +103,37 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 		watchlistClient.loadAll(new ResponseCallback<List<Watchlist>>() {
 			@Override
 			public void onSuccess(final Response<List<Watchlist>> response) {
-				Platform.runLater(() -> {
-					view.getWatchlistComboBox().getItems().setAll(response.getPayload());
-				});
+				view.getWatchlistComboBox().getItems().addAll(response.getPayload());
 			}
 		});
 	}
-
-	@EventListener
+	
 	public void onWatchlistCreated(final WatchlistCreatedEvent event) {
-		Platform.runLater(() -> {
-			final ObservableList<Watchlist> items = view.getWatchlistComboBox().getItems();
-			items.add(event.getWatchlist());
-			FXCollections.sort(items, new HasNameComaparator<>());
-			view.getWatchlistComboBox().setVisibleRowCount(items.size()+1);
-		});
+		final Watchlist watchlist = event.getWatchlist();
+		final ObservableList<Watchlist> items = view.getWatchlistComboBox().getItems();
+		items.add(watchlist);
+		FXCollections.sort(items, new HasNameComaparator<>());
 	}
 
-	@EventListener
 	public void onWatchlistDeleted(final WatchlistDeletedEvent event) {
-		Platform.runLater(() -> {
-			view.getWatchlistComboBox().getItems()
-					.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
-		});
+		view.getWatchlistComboBox().getItems()
+				.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
 	}
 
-	@EventListener
 	public void onWatchlistEdited(final WatchlistEditedEvent event) {
-		Platform.runLater(() -> {
-			view.getWatchlistComboBox().getItems()
-					.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
-			view.getWatchlistComboBox().getItems().add(event.getWatchlist());
-			FXCollections.sort(view.getWatchlistComboBox().getItems(), new HasNameComaparator<>());
-		});
+		view.getWatchlistComboBox().getItems()
+				.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
+		view.getWatchlistComboBox().getItems().add(event.getWatchlist());
+		FXCollections.sort(view.getWatchlistComboBox().getItems(), new HasNameComaparator<>());
 	}
 
-	@EventListener
 	public void onWatchlistEntryCreated(final WatchlistEntryCreatedEvent event) {
-		Platform.runLater(() -> {
-			view.getEntryTableView().getItems().add(event.getEntry());
-			FXCollections.sort(view.getEntryTableView().getItems(), new HasNameComaparator<>());
-		});
+		view.getEntryTableView().getItems().add(event.getEntry());
+		FXCollections.sort(view.getEntryTableView().getItems(), new HasNameComaparator<>());
 	}
 
-	@EventListener
 	public void onWatchlistEntryDeleted(final WatchlistEntryDeletedEvent event) {
-		Platform.runLater(() -> {
-			view.getEntryTableView().getItems().removeIf(entry -> entry.getId().equals(event.getEntry().getId()));
-		});
+		view.getEntryTableView().getItems().removeIf(entry -> entry.getId().equals(event.getEntry().getId()));
 	}
 
 	@Override

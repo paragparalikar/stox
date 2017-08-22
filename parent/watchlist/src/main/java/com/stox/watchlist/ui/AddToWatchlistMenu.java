@@ -98,7 +98,6 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 		}
 	}
 
-	@EventListener
 	public void onWatchlistCreated(final WatchlistCreatedEvent event) {
 		Platform.runLater(() -> {
 			final Watchlist watchlist = event.getWatchlist();
@@ -114,14 +113,12 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 		});
 	}
 
-	@EventListener
 	public void onWatchlistDeleted(final WatchlistDeletedEvent event) {
 		Platform.runLater(() -> {
 			getItems().removeIf(item -> ((Watchlist) item.getUserData()).getId().equals(event.getWatchlist().getId()));
 		});
 	}
 
-	@EventListener
 	public void onWatchlistEdited(final WatchlistEditedEvent event) {
 		for (final MenuItem item : getItems()) {
 			final Watchlist watchlist = (Watchlist) item.getUserData();

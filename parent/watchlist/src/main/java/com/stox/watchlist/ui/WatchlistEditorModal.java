@@ -40,7 +40,7 @@ public class WatchlistEditorModal extends Modal {
 		cancelButton.addEventHandler(ActionEvent.ACTION, event -> hide());
 		actionButton.addEventHandler(ActionEvent.ACTION, event -> {
 			if (nameFormGroup.validate()) {
-				populateModel();
+				updateModel();
 				persistModel();
 			}
 		});
@@ -48,7 +48,7 @@ public class WatchlistEditorModal extends Modal {
 		updateView();
 	}
 	
-	private void populateModel() {
+	private void updateModel() {
 		watchlist.setName(nameTextField.getText());
 	}
 	
@@ -69,6 +69,7 @@ public class WatchlistEditorModal extends Modal {
 	}
 
 	private void updateView() {
+		nameTextField.setText(watchlist.getName());
 		actionButton.setText(null == watchlist.getId() ? "Create" : "Update");
 		setTitle(null == watchlist.getId() ? "Create New Watchlist" : "Edit \"" + watchlist.getName() + "\"");
 	}
