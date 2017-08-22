@@ -10,7 +10,7 @@ public interface HasName {
 
 		@Override
 		public int compare(HasName o1, HasName o2) {
-			return o1 == o2 ? 0 : o1.getName().compareToIgnoreCase(o2.getName());
+			return o1 == o2 ? 0 : (null == o1.getName() ? -1 : o1.getName().compareToIgnoreCase(o2.getName()));
 		}
 
 	}

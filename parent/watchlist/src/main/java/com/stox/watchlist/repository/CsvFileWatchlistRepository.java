@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,7 +79,7 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 	}
 
 	@Override
-	@CacheEvict(value = CACHE, key="#a0")
+	@CacheEvict(value = CACHE, key = "#a0")
 	public Watchlist delete(Integer watchlistId) throws Exception {
 		load();
 		Files.deleteIfExists(Paths.get(WatchlistRepositoryUtil.getWatchlistFilePath(watchlistId)));
@@ -89,20 +91,19 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 		return watchlist;
 	}
 	
+	private String toString(final Watchlist watchlist) {
+		return watchlist.getId() + "," + watchlist.getName();
+	}
+
 	private void write(final Watchlist watchlist) throws Exception {
 		final File file = FileUtil.getFile(getPath());
-		try(final FileOutputStream fos = new FileOutputStream(file, true)){
-			fos.write((watchlist.getId()+","+watchlist.getName()+File.separator).getBytes());
-		}
+		Files.write(file.toPath(), Arrays.asList(new String[] {toString(watchlist)}), StandardOpenOption.APPEND);
 	}
-	
+
 	private void writeAll(final List<Watchlist> watchlists) throws Exception {
 		final File file = FileUtil.getFile(getPath());
-		try(final FileOutputStream fos = new FileOutputStream(file, false)){
-			for(final Watchlist watchlist : watchlists) {
-				fos.write((watchlist.getId()+","+watchlist.getName()+File.separator).getBytes());
-			}
-		}
+		final List<String> lines = watchlists.stream().map(watchlist -> toString(watchlist)).collect(Collectors.toList());
+		Files.write(file.toPath(), lines, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
 	private Watchlist parse(final String text) {
@@ -113,7 +114,7 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 		return watchlist;
 	}
 
-	private List<Watchlist> readAll() throws Exception{
+	private List<Watchlist> readAll() throws Exception {
 		final File file = FileUtil.getFile(getPath());
 		return Files.readAllLines(file.toPath()).stream().map(text -> parse(text)).collect(Collectors.toList());
 	}

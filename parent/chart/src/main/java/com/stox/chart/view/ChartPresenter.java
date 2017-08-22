@@ -79,7 +79,7 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 						}
 					});
 				}
-				contextMenu.show(view.getScene().getWindow());
+				contextMenu.show(view.getScene().getWindow(), event.getSceneX(), event.getScreenY());
 			}
 		});
 	}

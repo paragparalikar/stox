@@ -15,6 +15,7 @@ import com.stox.core.intf.HasName.HasNameComaparator;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Response;
 import com.stox.core.ui.widget.modal.Confirmation;
+import com.stox.core.util.Constant;
 import com.stox.watchlist.client.WatchlistClient;
 import com.stox.watchlist.client.WatchlistEntryClient;
 import com.stox.watchlist.event.WatchlistCreatedEvent;
@@ -29,8 +30,11 @@ import com.stox.workbench.ui.view.PublisherPresenter;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 
 @Component
@@ -56,7 +60,8 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 				view.getTitleBar().remove(Side.BOTTOM, view.getSearchTextField());
 			}
 		});
-		view.getWatchlistComboBox().setConverter(new WatchlistStringConverter());
+		final ComboBox<Watchlist> watchlistComboBox = view.getWatchlistComboBox();
+		watchlistComboBox.setConverter(new WatchlistStringConverter());
 		view.getAddButton().addEventHandler(ActionEvent.ACTION, event -> {
 			final WatchlistEditorModal modal = new WatchlistEditorModal(null, watchlistClient);
 			modal.show();
@@ -95,6 +100,16 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 				});
 			}
 		});
+		view.getWatchlistComboBox().getItems().addListener((ListChangeListener<Watchlist>)(change) -> {
+			while(change.next()) {
+				System.out.println(change);
+				System.out.println(change.getList());
+				if(change.wasRemoved()) {
+					System.out.println(change.getRemoved());
+				}
+				System.out.println(Constant.LINEFEED);
+			}
+		});
 	}
 
 	@PostConstruct
@@ -112,8 +127,10 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 	@EventListener
 	public void onWatchlistCreated(final WatchlistCreatedEvent event) {
 		Platform.runLater(() -> {
-			view.getWatchlistComboBox().getItems().add(event.getWatchlist());
-			FXCollections.sort(view.getWatchlistComboBox().getItems(), new HasNameComaparator<>());
+			final ObservableList<Watchlist> items = view.getWatchlistComboBox().getItems();
+			items.add(event.getWatchlist());
+			FXCollections.sort(items, new HasNameComaparator<>());
+			view.getWatchlistComboBox().setVisibleRowCount(items.size()+1);
 		});
 	}
 
@@ -142,7 +159,7 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 			FXCollections.sort(view.getEntryTableView().getItems(), new HasNameComaparator<>());
 		});
 	}
-	
+
 	@EventListener
 	public void onWatchlistEntryDeleted(final WatchlistEntryDeletedEvent event) {
 		Platform.runLater(() -> {

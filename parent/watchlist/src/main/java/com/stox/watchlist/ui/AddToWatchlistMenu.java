@@ -2,6 +2,7 @@ package com.stox.watchlist.ui;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -72,27 +73,29 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 	}
 
 	private void addToWatchlist(final Watchlist watchlist) {
-		final WatchlistEntry entry = new WatchlistEntry();
 		final Instrument instrument = entryProvider.getInstrument();
 		final BarSpan barSpan = entryProvider.getBarSpan();
-		entry.setWatchlistId(watchlist.getId());
-		entry.setInstrument(instrument);
-		entry.setInstrumentId(instrument.getId());
-		entry.setBarSpan(barSpan);
-		watchlistEntryClient.save(entry, new ResponseCallback<WatchlistEntry>() {
-			@Override
-			public void onSuccess(Response<WatchlistEntry> response) {
-				final StringBuilder stringBuilder = new StringBuilder("WatchlistEntry created with below details:");
-				stringBuilder.append("\nInstrument\t"+instrument.getName());
-				stringBuilder.append("\nTimeframe\t"+barSpan.getName());
-				stringBuilder.append("\nWatchlist\t"+watchlist.getName());
-				Notification.builder().style("success").graphic(new Label(stringBuilder.toString())).build().show();
-			}
-			@Override
-			public void onFailure(Response<WatchlistEntry> response, Throwable throwable) {
-				Notification.builder().style("danger").graphic(new Label(throwable.getMessage())).build().show();
-			}
-		});
+		if(null != instrument && null != barSpan) {
+			final WatchlistEntry entry = new WatchlistEntry();
+			entry.setWatchlistId(watchlist.getId());
+			entry.setInstrument(instrument);
+			entry.setInstrumentId(instrument.getId());
+			entry.setBarSpan(barSpan);
+			watchlistEntryClient.save(entry, new ResponseCallback<WatchlistEntry>() {
+				@Override
+				public void onSuccess(Response<WatchlistEntry> response) {
+					final StringBuilder stringBuilder = new StringBuilder("WatchlistEntry created with below details:");
+					stringBuilder.append("\nInstrument\t"+instrument.getName());
+					stringBuilder.append("\nTimeframe\t"+barSpan.getName());
+					stringBuilder.append("\nWatchlist\t\t"+watchlist.getName());
+					Notification.builder().style("success").graphic(new Label(stringBuilder.toString())).build().show();
+				}
+				@Override
+				public void onFailure(Response<WatchlistEntry> response, Throwable throwable) {
+					Notification.builder().style("danger").graphic(new Label(throwable.getMessage())).build().show();
+				}
+			});
+		}
 	}
 
 	@EventListener
@@ -105,8 +108,7 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 			FXCollections.sort(getItems(), new Comparator<MenuItem>() {
 				@Override
 				public int compare(MenuItem o1, MenuItem o2) {
-					return ((Watchlist) o1.getUserData()).getName()
-							.compareToIgnoreCase(((Watchlist) o2.getUserData()).getName());
+					return Objects.compare((Watchlist) o1.getUserData(), (Watchlist) o2.getUserData(), new HasNameComaparator<>());
 				}
 			});
 		});
