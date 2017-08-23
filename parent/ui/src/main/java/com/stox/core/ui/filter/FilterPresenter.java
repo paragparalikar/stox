@@ -83,6 +83,7 @@ public class FilterPresenter {
 		}
 	}
 
+	// TODO default selection should be handled after the state is set
 	private void doPopulateView() {
 		view.getExchangeChoiceBox().getItems().setAll(Exchange.values());
 		view.getExchangeChoiceBox().getSelectionModel().select(Exchange.NSE);

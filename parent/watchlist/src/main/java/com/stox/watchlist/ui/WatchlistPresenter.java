@@ -66,6 +66,7 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 				final List<Watchlist> watchlists = response.getPayload();
 				if(null != watchlists && !watchlists.isEmpty()) {
 					view.getWatchlistComboBox().getItems().addAll(watchlists);
+					// TODO default selection should be handled after the state is set
 					view.getWatchlistComboBox().getSelectionModel().select(0);
 				}
 			}

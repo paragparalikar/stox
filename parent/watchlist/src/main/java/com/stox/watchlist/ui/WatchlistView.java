@@ -54,10 +54,10 @@ public class WatchlistView extends View {
 	}
 	
 	private void createColumns() {
+		entryTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		createDeleteColumn();
 		createNameColumn();
 		createBarSpanColumn();
-		entryTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	}
 	
 	private void createDeleteColumn() {
@@ -91,7 +91,9 @@ public class WatchlistView extends View {
 				};
 			}
 		});
-		column.setPrefWidth(10);
+		column.setMinWidth(40);
+		column.setPrefWidth(40);
+		column.setMaxWidth(40);
 		entryTableView.getColumns().add(column);
 	}
 	
@@ -122,7 +124,9 @@ public class WatchlistView extends View {
 				return null;
 			}
 		});
-		column.setPrefWidth(50);
+		column.setMinWidth(100);
+		column.setPrefWidth(100);
+		column.setMaxWidth(100);
 		entryTableView.getColumns().add(column);
 	}
 }

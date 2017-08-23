@@ -161,22 +161,22 @@
 }
 
 /*  default  */
-.button, .menu-button, .choice-box, .indexed-cell:even, .indexed-cell:odd
+.button, .menu-button, .choice-box, .list-cell, .table-row-cell
 	{
 	-fx-text-fill: dark;
 	-fx-background-color: lightest;
 	-fx-border-color: lighter;
 }
 
-.button:hover, .menu-button:hover, .choice-box:hover, .indexed-cell:even:hover,
-	.indexed-cell:odd:hover {
+.button:hover, .menu-button:hover, .choice-box:hover, .list-cell:filled:hover,
+	.table-row-cell:filled:hover {
 	-fx-background-color: derive(lightest, -5%);
 	-fx-border-color: derive(lighter, -5%);
 }
 
 .button:selected, .button:focused, .menu-button:selected, .menu-button:focused,
-	.choice-box:selected, .choice-box:focused, .indexed-cell:even:selected,
-	.indexed-cell:even:focused, .indexed-cell:odd:selected, .indexed-cell:odd:focused
+	.choice-box:selected, .choice-box:focused, .list-cell:filled:selected,
+	.list-cell:filled:focused,.table-row-cell:filled:selected, .table-row-cell:filled:focused
 	{
 	-fx-background-color: derive(lightest, -15%);
 	-fx-border-color: derive(lighter, -15%);
