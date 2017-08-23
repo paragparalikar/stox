@@ -96,8 +96,8 @@
 	-fx-padding:0.5em;
 	-fx-background-radius:0.5em;
 	-fx-border-radius:0.5em;
-	-fx-pref-height:3em;
-	-fx-pref-width:30em;
+	-fx-min-height:3em;
+	-fx-min-width:30em;
 	
 	-fx-border-width:2px;
 	-fx-border-color:light;
