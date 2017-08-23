@@ -45,8 +45,8 @@ public class DataProviderManager {
 			callbacks.add(callback);
 			Platform.runLater(() -> {
 				final DataProviderSelectionModal modal = new DataProviderSelectionModal(dataProviders, dataProvider -> {
+					eventPublisher.publishEvent(new DataProviderChangedEvent(DataProviderManager.this, selectedDataProvider, dataProvider));
 					selectedDataProvider = dataProvider;
-					eventPublisher.publishEvent(new DataProviderChangedEvent(DataProviderManager.this, dataProvider));
 					selectionInProgress = false;
 					callbacks.forEach(c -> {
 						try {

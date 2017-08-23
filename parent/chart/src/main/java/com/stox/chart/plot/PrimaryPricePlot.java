@@ -1,9 +1,7 @@
 package com.stox.chart.plot;
 
+import java.util.Collections;
 import java.util.List;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import com.stox.chart.chart.PrimaryChart;
 import com.stox.chart.unit.CandlePriceUnit;
@@ -14,11 +12,18 @@ import com.stox.chart.unit.UnitType;
 import com.stox.chart.view.ChartView;
 import com.stox.chart.widget.PrimaryPricePlotInfoPanel;
 import com.stox.core.model.Bar;
+import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.data.tick.TickConsumer;
+import com.stox.data.tick.TickWrapper;
+
+import javafx.application.Platform;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "chart", "priceUnitType" })
-public class PrimaryPricePlot extends PricePlot {
+public class PrimaryPricePlot extends PricePlot implements TickConsumer {
 
 	private UnitType priceUnitType;
 	private final PrimaryChart chart;
@@ -107,6 +112,29 @@ public class PrimaryPricePlot extends PricePlot {
 		getChart().getChartView().getDateAxis().addTick(x, bar.getDate().getTime(), previousDate);
 		previousDate = bar.getDate().getTime();
 		super.layoutUnit(unit, x, width);
+	}
+
+	@Override
+	public void accept(final TickWrapper tickWrapper) {
+		final BarSpan barSpan = getBarSpan();
+		final Instrument instrument = getInstrument();
+		final List<Bar> models = getModels();
+		if (!models.isEmpty() && null != barSpan && null != instrument && null != tickWrapper
+				&& barSpan.equals(tickWrapper.getBarSpan()) && instrument.equals(tickWrapper.getInstrument())) {
+			Platform.runLater(() -> {
+				if (tickWrapper.mergeWith(models)) {
+					// At this point tick data is already added, thus invoke with empty list
+					addModels(0, Collections.emptyList());
+				}else {
+					update();
+				}
+			});
+		}
+	}
+
+	@Override
+	public BarSpan getBarSpan() {
+		return chart.getChartView().getBarSpan();
 	}
 
 }

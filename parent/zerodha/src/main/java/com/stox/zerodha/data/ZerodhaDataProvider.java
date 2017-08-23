@@ -14,6 +14,8 @@ import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.ui.widget.modal.Modal;
 import com.stox.data.DataProvider;
+import com.stox.data.tick.TickConsumer;
+import com.stox.data.tick.TickConsumerRegistry;
 import com.stox.zerodha.Zerodha;
 
 @Component
@@ -24,6 +26,22 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 
 	@Autowired
 	private BarRepository barRepository;
+	
+	private final TickConsumerRegistry tickConsumerRegistry = new TickConsumerRegistry();
+
+	@Override
+	public void register(TickConsumer consumer) {
+		synchronized (tickConsumerRegistry) {
+			tickConsumerRegistry.register(consumer);
+		}
+	}
+
+	@Override
+	public void unregister(TickConsumer consumer) {
+		synchronized (tickConsumerRegistry) {
+			tickConsumerRegistry.unregister(consumer);
+		}
+	}
 
 	@Override
 	public String getCode() {

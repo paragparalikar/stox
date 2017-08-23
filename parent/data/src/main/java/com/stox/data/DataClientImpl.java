@@ -5,10 +5,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -21,14 +19,16 @@ import com.stox.core.model.Instrument;
 import com.stox.core.model.Response;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.util.Constant;
+import com.stox.data.event.DataProviderChangedEvent;
+import com.stox.data.tick.TickConsumer;
+import com.stox.data.tick.TickConsumerRegistry;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Async
 @Component
-public class DataClientImpl implements DataClient {
-
-	@Autowired
-	private ApplicationEventPublisher eventPublisher;
+public class DataClientImpl implements DataClient{
 
 	@Autowired
 	private DataProviderManager dataProviderManager;
@@ -38,6 +38,38 @@ public class DataClientImpl implements DataClient {
 
 	@Autowired
 	private TaskExecutor taskExecutor;
+	
+	private final TickConsumerRegistry tickConsumerRegistry = new TickConsumerRegistry();
+	
+	@Override
+	public void register(TickConsumer consumer) {
+		tickConsumerRegistry.register(consumer);
+		dataProviderManager.execute(dataProvider -> {
+			dataProvider.register(consumer);
+			return null;
+		});
+	}
+	
+	@Override
+	public void unregister(TickConsumer consumer) {
+		tickConsumerRegistry.unregister(consumer);
+		dataProviderManager.execute(dataProvider -> {
+			dataProvider.unregister(consumer);
+			return null;
+		});
+	}
+	
+	@EventListener
+	public void onDataProviderChanged(final DataProviderChangedEvent event) {
+		final DataProvider oldDataProvider = event.getOldDataProvider();
+		if(null != oldDataProvider) {
+			tickConsumerRegistry.getTickConsumers().forEach(consumer -> oldDataProvider.unregister(consumer));
+		}
+		final DataProvider dataProvider = event.getDataProvider();
+		if(null != dataProvider) {
+			tickConsumerRegistry.getTickConsumers().forEach(consumer -> dataProvider.register(consumer));
+		}
+	}
 
 	@Override
 	public void loadBars(Instrument instrument, BarSpan barSpan, Date from, Date to, ResponseCallback<List<Bar>> callback) {

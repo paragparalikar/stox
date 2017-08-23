@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -82,6 +85,22 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 				contextMenu.show(view.getScene().getWindow(), event.getSceneX(), event.getScreenY());
 			}
 		});
+	}
+	
+	@PostConstruct
+	public void postConstruct() {
+		dataClient.register(view.getPrimaryChart().getPrimaryPricePlot());
+	}
+	
+	@PreDestroy
+	public void preDestroy() throws Throwable {
+		finalize();
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		dataClient.unregister(view.getPrimaryChart().getPrimaryPricePlot());
+		super.finalize();
 	}
 
 	@Async

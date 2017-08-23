@@ -59,7 +59,7 @@ public abstract class CsvDownloader<T> implements Downloader<T, String[]> {
 
 	protected InputStream inputStream() throws Exception {
 		final String url = getUrl();
-		log.info("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
+		log.debug("Downloading from " + url + "(linesToSkip=" + linesToSkip + ")");
 		return new URL(getUrl()).openStream();
 	}
 
