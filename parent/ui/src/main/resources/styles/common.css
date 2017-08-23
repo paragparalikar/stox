@@ -95,13 +95,16 @@
 /* message-pane */
 .message-pane{
 	-fx-padding:0.5em;
+	-fx-background-color:transparent;
+	-fx-border-color:transparent;
 }
 .message-pane .container{
+	-fx-padding: 0em;
 	-fx-border-radius:0.5em;
 	-fx-background-radius:0.5em;
 }
 .message-pane .container .label{
-	-fx-padding:0.5em 1em 0.5em 1em;
+	-fx-padding:0em 1em 0em 1em;
 }
 .message-pane.success .container, .message-pane.success .icon{
 	-fx-background-color:background-success;
