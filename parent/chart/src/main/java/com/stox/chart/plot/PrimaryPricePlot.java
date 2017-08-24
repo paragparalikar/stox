@@ -122,20 +122,11 @@ public class PrimaryPricePlot extends PricePlot implements TickConsumer {
 		if (!models.isEmpty() && null != barSpan && null != instrument && null != tickWrapper
 				&& barSpan.equals(tickWrapper.getBarSpan()) && instrument.equals(tickWrapper.getInstrument())) {
 			Platform.runLater(() -> {
-				final Bar bar = models.get(0);
-				
-				final double high = bar.getHigh();
-				final double low = bar.getLow();
-				final double close = bar.getClose();
-				final double volume = bar.getVolume();
-				
 				if (tickWrapper.mergeWith(models)) {
 					// At this point tick data is already added, thus invoke with empty list
 					addModels(0, Collections.emptyList());
 				}else {
-					if(high != bar.getHigh() || low != bar.getLow() || close != bar.getClose() || volume != bar.getVolume()) {
-						update();
-					}
+					update();
 				}
 			});
 		}
