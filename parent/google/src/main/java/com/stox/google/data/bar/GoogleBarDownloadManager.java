@@ -50,7 +50,7 @@ public class GoogleBarDownloadManager {
 	private BarLengthDownloadNotification notification;
 
 	private final AtomicInteger counter = new AtomicInteger(0);
-
+	
 	@PreDestroy
 	public void preDestroy() {
 		this.cancelled = true;
@@ -58,7 +58,7 @@ public class GoogleBarDownloadManager {
 
 	@EventListener({ ContextRefreshedEvent.class, InstrumentsChangedEvent.class })
 	public void downloadIfIdle() {
-		if (!busy) {
+		if (!busy && !environment.getProperty("com.stox.mode.development", Boolean.class, Boolean.FALSE)) {
 			busy = true;
 			taskExecutor.schedule(() -> {
 				try {

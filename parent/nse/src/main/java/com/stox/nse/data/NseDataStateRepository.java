@@ -1,18 +1,20 @@
 package com.stox.nse.data;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.springframework.stereotype.Component;
 
 import com.stox.core.util.Constant;
+import com.stox.core.util.FileUtil;
 
 @Component
 public class NseDataStateRepository {
 
 	private NseDataState dataState;
 
-	private File getDataStateFile() {
-		return new File(Constant.PATH + "com.stox.nse.data.state.json");
+	private File getDataStateFile() throws IOException {
+		return FileUtil.getFile(Constant.PATH + "nse" + File.separator + "com.stox.nse.data.state.json");
 	}
 
 	public NseDataState getDataState() {

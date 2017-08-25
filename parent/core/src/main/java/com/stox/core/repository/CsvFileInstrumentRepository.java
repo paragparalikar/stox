@@ -49,11 +49,13 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	private final CsvSchema schema = Constant.csvMapper.schemaFor(Instrument.class).withHeader();
 
 	private String getPath(final Exchange exchange) {
-		return Constant.PATH + "com.stox.instruments." + exchange.getId().toLowerCase() + ".csv";
+		return Constant.PATH + "instrument" + File.separator + "com.stox.instruments." + exchange.getId().toLowerCase()
+				+ ".csv";
 	}
 
 	private String getParentComponentMappingPath(final Exchange exchange) {
-		return Constant.PATH + "com.stox.instruments.mapping." + exchange.getId().toLowerCase() + ".json";
+		return Constant.PATH + "instrument" + File.separator + "com.stox.instruments.mapping."
+				+ exchange.getId().toLowerCase() + ".json";
 	}
 
 	@Autowired
@@ -72,14 +74,15 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 			cache.put(ALL, new ArrayList<Instrument>(100000));
 			for (final Exchange exchange : Exchange.values()) {
 				try {
-					final File file = new File(getPath(exchange));
+					final File file = FileUtil.getFile(getPath(exchange));
 					final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Instrument.class);
-					final List<Instrument> instruments = reader.<Instrument> readValues(file).readAll();
+					final List<Instrument> instruments = reader.<Instrument>readValues(file).readAll();
 					updateExchangeCache(exchange, instruments);
 				} catch (Exception e) {
 				}
 				try {
-					final Map<String, List<String>> parentComponentMapping = Constant.objectMapper.readValue(FileUtil.getFile(getParentComponentMappingPath(exchange)),
+					final Map<String, List<String>> parentComponentMapping = Constant.objectMapper.readValue(
+							FileUtil.getFile(getParentComponentMappingPath(exchange)),
 							new TypeReference<HashMap<String, List<String>>>() {
 							});
 					updateParentComponentMapping(parentComponentMapping);
@@ -130,7 +133,8 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	}
 
 	@Override
-	public Map<String, List<String>> saveParentComponentMapping(Exchange exchange, Map<String, List<String>> parentComponentMapping) {
+	public Map<String, List<String>> saveParentComponentMapping(Exchange exchange,
+			Map<String, List<String>> parentComponentMapping) {
 		try {
 			final String path = getParentComponentMappingPath(exchange);
 			Constant.objectMapper.writeValue(FileUtil.getFile(path), parentComponentMapping);
@@ -158,9 +162,10 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 			cache.put(instrument.getId(), instrument);
 			cache.put(instrument.getExchangeCode(), instrument);
 		});
-		instruments.stream().collect(Collectors.groupingBy(Instrument::getType, Collectors.toList())).forEach((t, i) -> {
-			cache.put(exchange.toString() + t.toString(), i);
-		});
+		instruments.stream().collect(Collectors.groupingBy(Instrument::getType, Collectors.toList()))
+				.forEach((t, i) -> {
+					cache.put(exchange.toString() + t.toString(), i);
+				});
 	}
 
 	@Override
