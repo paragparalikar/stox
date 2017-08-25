@@ -167,17 +167,17 @@ public class ExamplePresenter extends PublisherPresenter<ExampleView, ExampleVie
 		}
 	}
 
-	private void selectExample(final Example entry) {
-		if (null != entry) {
-			publish(new State(entry.getInstrumentId(), entry.getBarSpan(), 0));
+	private void selectExample(final Example example) {
+		if (null != example) {
+			publish(new State(example.getInstrumentId(), example.getBarSpan(), example.getDate().getTime()));
 		}
 	}
 
-	private void deleteExample(final Example entry) {
-		if (null != entry && StringUtil.hasText(entry.getId())) {
+	private void deleteExample(final Example example) {
+		if (null != example && StringUtil.hasText(example.getId())) {
 			final ExampleGroup exampleGroup = view.getExampleGroupComboBox().getValue();
 			if (null != exampleGroup) {
-				exampleClient.delete(exampleGroup.getId(), entry.getId(), new ResponseCallback<Example>() {
+				exampleClient.delete(exampleGroup.getId(), example.getId(), new ResponseCallback<Example>() {
 					@Override
 					public void onSuccess(Response<Example> response) {
 						// No op

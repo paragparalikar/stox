@@ -81,6 +81,7 @@ public class AddAsExampleMenu<T extends HasInstrument & HasBarSpan & HasDate> ex
 			example.setInstrument(instrument);
 			example.setInstrumentId(instrument.getId());
 			example.setBarSpan(barSpan);
+			example.setDate(exampleProvider.getDate());
 			exampleClient.save(example, new ResponseCallback<Example>() {
 				@Override
 				public void onSuccess(Response<Example> response) {
