@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 import com.stox.core.downloader.CsvDownloader;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
-import com.stox.core.model.Exchange;
 import com.stox.core.model.Instrument;
 import com.stox.core.util.DateUtil;
+import com.stox.google.data.util.GoogleUtil;
 
 public class GoogleBarDownloader extends CsvDownloader<Bar> {
 
@@ -45,7 +45,7 @@ public class GoogleBarDownloader extends CsvDownloader<Bar> {
 	public String getUrl() {
 		String url = super.getUrl();
 		url = url.replace("{symbol}", instrument.getSymbol());
-		url = url.replace("{exchange}", getGoogleExchangeCode(instrument.getExchange()));
+		url = url.replace("{exchange}", GoogleUtil.getGoogleExchangeCode(instrument.getExchange()));
 		url = url.replace("{intervalInSeconds}", String.valueOf(getSeconds(barSpan)));
 		url = url.replace("{period}", getPeriod(start));
 		return url;
@@ -72,17 +72,6 @@ public class GoogleBarDownloader extends CsvDownloader<Bar> {
 		bar.setVolume(Double.parseDouble(values[5]));
 		bar.setInstrumentId(instrument.getId());
 		return bar;
-	}
-
-	private String getGoogleExchangeCode(final Exchange exchange) {
-		switch (exchange) {
-		case BSE:
-			return "BOM";
-		case NSE:
-			return "NSE";
-		default:
-			return null;
-		}
 	}
 
 }

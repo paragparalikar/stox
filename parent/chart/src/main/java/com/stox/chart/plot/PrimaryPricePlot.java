@@ -1,6 +1,7 @@
 package com.stox.chart.plot;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.stox.chart.chart.PrimaryChart;
@@ -14,10 +15,9 @@ import com.stox.chart.widget.PrimaryPricePlotInfoPanel;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.core.model.Tick;
 import com.stox.data.tick.TickConsumer;
-import com.stox.data.tick.TickWrapper;
 
-import javafx.application.Platform;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -115,26 +115,35 @@ public class PrimaryPricePlot extends PricePlot implements TickConsumer {
 	}
 
 	@Override
-	public void accept(final TickWrapper tickWrapper) {
-		final BarSpan barSpan = getBarSpan();
+	public void accept(final Tick tick) {
+		final List<Bar> bars = getModels();
 		final Instrument instrument = getInstrument();
-		final List<Bar> models = getModels();
-		if (!models.isEmpty() && null != barSpan && null != instrument && null != tickWrapper
-				&& barSpan.equals(tickWrapper.getBarSpan()) && instrument.equals(tickWrapper.getInstrument())) {
-			Platform.runLater(() -> {
-				if (tickWrapper.mergeWith(models)) {
-					// At this point tick data is already added, thus invoke with empty list
-					addModels(0, Collections.emptyList());
+		final BarSpan barSpan = chart.getChartView().getBarSpan();
+		if(null != instrument && !bars.isEmpty() && null != barSpan && instrument.equals(tick.getInstrument())) {
+			final Bar bar = bars.get(0);
+			final Date barDate = bar.getDate();
+			final Date tickDate = tick.getLastTradeDate();
+			if(!tickDate.before(barDate)) {
+				final double lastTradingPrice = tick.getLastTradePrice();
+				if(tickDate.getTime() >= barSpan.next(barDate.getTime())) {
+					final Bar nextBar = new Bar();
+					nextBar.setOpen(lastTradingPrice);
+					nextBar.setHigh(lastTradingPrice);
+					nextBar.setLow(lastTradingPrice);
+					nextBar.setClose(lastTradingPrice);
+					nextBar.setPreviousClose(bar.getClose());
+					nextBar.setVolume(tick.getLastTradeSize());
+					nextBar.setDate(tick.getLastTradeDate());
+					nextBar.setInstrumentId(bar.getInstrumentId());
+					addModels(0, Arrays.asList(new Bar[] {nextBar}));
 				}else {
+					bar.setHigh(Math.max(bar.getHigh(), lastTradingPrice));
+					bar.setLow(Math.min(bar.getLow(), lastTradingPrice));
+					bar.setClose(lastTradingPrice);
+					bar.setVolume(bar.getVolume() + tick.getLastTradeSize());
 					update();
 				}
-			});
+			}
 		}
 	}
-
-	@Override
-	public BarSpan getBarSpan() {
-		return chart.getChartView().getBarSpan();
-	}
-
 }

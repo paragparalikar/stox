@@ -27,6 +27,10 @@ public class DataProviderManager {
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
+	
+	public DataProvider getSelectedDataProvider() {
+		return selectedDataProvider;
+	}
 
 	@EventListener(ContextRefreshedEvent.class)
 	public void onContextRefreshed(final ContextRefreshedEvent event) {

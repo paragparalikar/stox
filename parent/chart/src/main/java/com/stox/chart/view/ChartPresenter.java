@@ -98,6 +98,15 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	}
 	
 	@Override
+	public void stop(){
+		super.stop();
+		try {
+			finalize();
+		} catch (Throwable e) {
+		}
+	}
+	
+	@Override
 	protected void finalize() throws Throwable {
 		dataClient.unregister(view.getPrimaryChart().getPrimaryPricePlot());
 		super.finalize();

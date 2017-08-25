@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
@@ -68,6 +70,14 @@ public class DataClientImpl implements DataClient{
 		final DataProvider dataProvider = event.getDataProvider();
 		if(null != dataProvider) {
 			tickConsumerRegistry.getTickConsumers().forEach(consumer -> dataProvider.register(consumer));
+		}
+	}
+	
+	@PreDestroy
+	public void preDestroy() {
+		final DataProvider dataProvider = dataProviderManager.getSelectedDataProvider();
+		if(null != dataProvider) {
+			tickConsumerRegistry.getTickConsumers().forEach(consumer -> dataProvider.unregister(consumer));
 		}
 	}
 

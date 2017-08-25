@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 
@@ -28,6 +30,7 @@ public class Constant {
 		Constant.currencyFormat.setMinimumFractionDigits(0);
 
 		Constant.objectMapper.enableDefaultTyping();
+		Constant.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	}
 
 }

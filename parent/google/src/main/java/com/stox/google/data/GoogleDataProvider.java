@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PreDestroy;
 
@@ -21,19 +23,21 @@ import com.stox.data.DataProvider;
 import com.stox.data.tick.TickConsumer;
 import com.stox.data.tick.TickConsumerRegistry;
 import com.stox.google.data.bar.GoogleBarDownloader;
+import com.stox.google.data.tick.GoogleTick;
+import com.stox.google.data.tick.GoogleTickDownloader;
 
 @Component
 public class GoogleDataProvider implements DataProvider {
 
 	@Autowired
 	private Environment environment;
-	
+
 	private boolean cancelled;
-	
+
 	private final TickConsumerRegistry tickConsumerRegistry = new TickConsumerRegistry();
-	
-	private final Map<TickConsumer, GoogleTickWrapper> tickCache = new WeakHashMap<>();
-	
+
+	private final Map<TickConsumer, GoogleTick> tickCache = new WeakHashMap<>();
+
 	@PreDestroy
 	public void preDestroy() {
 		cancelled = true;
@@ -53,32 +57,29 @@ public class GoogleDataProvider implements DataProvider {
 		}
 	}
 
-	@Scheduled(fixedDelay = 60000)
+	@Scheduled(fixedDelay = 1000)
 	public void poll() {
-		if(!cancelled) {
-			tickConsumerRegistry.getTickConsumers().parallelStream().forEach(consumer -> {
-				try {
-					if(!cancelled && null != consumer) {
-						final BarSpan barSpan = consumer.getBarSpan();
-						final Instrument instrument = consumer.getInstrument();
-						if(null != barSpan && null != instrument) {
-							final Date to = new Date();
-							final Date from = new Date(barSpan.previous(to.getTime()));
-							final List<Bar> bars = getBars(instrument, barSpan, from, to);
-							if(null != bars && !bars.isEmpty()) {
-								final GoogleTickWrapper previousTick = tickCache.get(consumer);
-								final GoogleTickWrapper tick = new GoogleTickWrapper(bars.get(0), barSpan, instrument);
-								if(null == previousTick || !previousTick.equals(tick)) {
-									tickCache.put(consumer, tick);
-									consumer.accept(tick);
-								}
+		if (!cancelled) {
+			try {
+				final GoogleTickDownloader tickDownloader = new GoogleTickDownloader(
+						environment.getProperty("com.stox.google.data.download.url.tick"),
+						tickConsumerRegistry.getTickConsumers().stream().map(TickConsumer::getInstrument).collect(Collectors.toList()));
+				final Map<String, GoogleTick> result = tickDownloader.download();
+				tickConsumerRegistry.getTickConsumers().parallelStream().forEach(tickConsumer -> {
+					if(null != tickConsumer) {
+						final Instrument instrument = tickConsumer.getInstrument();
+						if(null != instrument) {
+							final GoogleTick googleTick = result.get(instrument.getExchangeCode());
+							if (null != googleTick && !googleTick.equals(tickCache.get(tickConsumer))) {
+								tickCache.put(tickConsumer, googleTick);
+								tickConsumer.accept(googleTick);
 							}
 						}
 					}
-				}catch(final Exception exception) {
-					exception.printStackTrace();
-				}
-			});
+				});
+			} catch (final Exception exception) {
+				exception.printStackTrace();
+			}
 		}
 	}
 
