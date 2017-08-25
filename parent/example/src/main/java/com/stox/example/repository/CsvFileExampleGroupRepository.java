@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -142,6 +143,6 @@ public class CsvFileExampleGroupRepository implements ExampleGroupRepository {
 
 	private List<ExampleGroup> readAll() throws Exception {
 		final File file = FileUtil.getFile(getPath());
-		return Files.readAllLines(file.toPath()).stream().map(text -> parse(text)).collect(Collectors.toList());
+		return new ArrayList<>(Files.readAllLines(file.toPath()).stream().map(text -> parse(text)).collect(Collectors.toList()));
 	}
 }

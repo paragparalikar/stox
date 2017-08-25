@@ -4,9 +4,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -143,6 +143,6 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 
 	private List<Watchlist> readAll() throws Exception {
 		final File file = FileUtil.getFile(getPath());
-		return Files.readAllLines(file.toPath()).stream().map(text -> parse(text)).collect(Collectors.toList());
+		return new ArrayList<>(Files.readAllLines(file.toPath()).stream().map(text -> parse(text)).collect(Collectors.toList()));
 	}
 }
