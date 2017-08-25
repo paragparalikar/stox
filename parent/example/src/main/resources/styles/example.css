@@ -1,0 +1,11 @@
+.example-group-combobox-panel{
+	-fx-background-color:lighter;
+}
+.example-group-combobox-panel .icon{
+	-fx-pref-height:2.5em;
+	-fx-pref-width:2.5em;
+}
+.example-group-editor-modal{
+	-fx-pref-width:45em;
+	-fx-pref-height:18em;
+}

@@ -38,6 +38,7 @@ import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.SubscriberPresenter;
 
+import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -73,6 +74,11 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 		});
 		view.getSplitPane().addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
 			if(MouseButton.SECONDARY.equals(event.getButton())) {
+				
+				final Point2D point = new Point2D(event.getScreenX(), event.getScreenY());
+				final Point2D dateAxisPoint = view.getDateAxis().screenToLocal(point);
+				view.setDate(new Date(view.getDateAxis().getValueForDisplay(dateAxisPoint.getX())));
+				
 				final ContextMenu contextMenu = view.getContextMenu();
 				if(contextMenu.getItems().isEmpty()) {
 					final Collection<TargetAwareMenuItemProvider> providers = applicationContext.getBeansOfType(TargetAwareMenuItemProvider.class).values();

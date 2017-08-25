@@ -12,6 +12,7 @@ import com.stox.chart.unit.UnitType;
 import com.stox.chart.util.ChartConstant;
 import com.stox.chart.widget.Crosshair;
 import com.stox.core.intf.HasBarSpan;
+import com.stox.core.intf.HasDate;
 import com.stox.core.intf.HasInstrument;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
@@ -29,13 +30,14 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "primaryChart", "charts", "volumePlot", "dateAxis", "content" })
-public class ChartView extends View implements HasInstrument, HasBarSpan {
+public class ChartView extends View implements HasInstrument, HasBarSpan, HasDate {
 
 	private boolean semilog = false;
 	private BarSpan barSpan = BarSpan.D;
 	private UnitType unitType = UnitType.CANDLE;
 	private Date to;
 	private Date from;
+	private Date date;
 
 	/* configurable properties, these should go into a different object */
 	private Color upBarColor = Color.GREEN;

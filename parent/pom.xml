@@ -79,6 +79,7 @@
 		<module>nse</module>
 		<module>google</module>
 		<module>watchlist</module>
+		<module>example</module>
 	</modules>
 
 
