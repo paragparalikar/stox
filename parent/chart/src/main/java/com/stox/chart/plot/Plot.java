@@ -2,17 +2,6 @@ package com.stox.chart.plot;
 
 import java.util.stream.IntStream;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.unit.AreaPlotNode;
@@ -26,6 +15,19 @@ import com.stox.chart.unit.UnitType;
 import com.stox.chart.widget.PlotInfoPanel;
 import com.stox.core.intf.HasName;
 import com.stox.core.intf.Range;
+
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "chart", "units", "models" })
@@ -51,19 +53,29 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 			}
 		});
 		models.addListener((ListChangeListener<M>) (change) -> {
-			lastMinIndex = Integer.MIN_VALUE;
-			lastMaxIndex = Integer.MAX_VALUE;
-			while (change.next()) {
-				if (change.wasRemoved()) {
-					clearUnits();
-				}
-				if (change.wasAdded()) {
-					createUnits(change.getFrom(), change.getTo());
-				}
+			if(Platform.isFxApplicationThread()) {
+				onModelsChanged(change);
+			}else {
+				Platform.runLater(() -> {
+					onModelsChanged(change);
+				});
 			}
 		});
 	}
-
+	
+	protected void onModelsChanged(final Change<? extends M> change) {
+		lastMinIndex = Integer.MIN_VALUE;
+		lastMaxIndex = Integer.MAX_VALUE;
+		while (change.next()) {
+			if (change.wasRemoved()) {
+				clearUnits();
+			}
+			if (change.wasAdded()) {
+				createUnits(change.getFrom(), change.getTo());
+			}
+		}
+	}
+	
 	protected PlotInfoPanel<M> createPlotInfoPanel() {
 		return new PlotInfoPanel<M>(this);
 	}

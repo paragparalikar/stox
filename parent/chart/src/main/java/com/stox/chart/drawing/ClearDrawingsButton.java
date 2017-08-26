@@ -24,6 +24,7 @@ public class ClearDrawingsButton extends Button implements EventHandler<ActionEv
 	public void handle(ActionEvent event) {
 		final ChartView chartView = chartingButtonBox.getChartView();
 		if (null != chartView) {
+			chartView.getPrimaryChart().getDrawings().clear();
 			for (final Chart chart : chartView.getCharts()) {
 				chart.getDrawings().clear();
 			}
