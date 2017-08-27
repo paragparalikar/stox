@@ -1,44 +1,43 @@
 package com.stox.zerodha;
 
-import java.net.CookieManager;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-
+import com.stox.core.client.HasLogin;
 import com.stox.core.intf.Callback;
+import com.stox.zerodha.model.ZerodhaSession;
+import com.stox.zerodha.ui.ZerodhaLoginModal;
 
-public class Zerodha {
+import javafx.application.Platform;
 
-	private static Map<String, List<String>> cookies;
+public class Zerodha implements HasLogin {
 
-	public Map<String, List<String>> getCookies() {
-		return cookies;
+	private static ZerodhaSession session;
+
+	@Override
+	public void login(final Callback<Void, Void> callback) throws Throwable {
+		if (Platform.isFxApplicationThread()) {
+			doLogin(callback);
+		} else {
+			Platform.runLater(() -> {
+				try {
+					doLogin(callback);
+				} catch (Throwable e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			});
+		}
 	}
 
-	public WebView createLoginView(final Callback<Void, Void> callback) {
-		final WebView webView = new WebView();
-		final WebEngine engine = webView.getEngine();
-		engine.locationProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String location) {
-				if (location.contains("dashboard")) {
-					try {
-						cookies = CookieManager.getDefault().get(URI.create(location), new HashMap<>());
-						callback.call(null);
-					} catch (Throwable e) {
-						e.printStackTrace();
-					}
-				}
-			}
+	private void doLogin(final Callback<Void, Void> callback) throws Throwable {
+		final ZerodhaLoginModal zerodhaLoginModel = new ZerodhaLoginModal(session ->  {
+			Zerodha.session = session;
+			callback.call(null);
 		});
-		engine.load("https://kite.zerodha.com");
-		return webView;
+		zerodhaLoginModel.show();
+	}
+
+	@Override
+	public boolean isLoggedIn() {
+		return null != session;
 	}
 
 }

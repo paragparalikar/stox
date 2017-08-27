@@ -3,6 +3,7 @@ package com.stox.zerodha.util;
 import com.stox.core.model.Exchange;
 import com.stox.core.model.InstrumentType;
 import com.stox.zerodha.ZerodhaConstant;
+import com.stox.zerodha.model.ZerodhaExchange;
 
 public class ZerodhaUtil {
 
@@ -20,17 +21,17 @@ public class ZerodhaUtil {
 		return null;
 	}
 
-	public static Exchange toExchange(final String exchange) {
+	public static Exchange toExchange(final ZerodhaExchange exchange) {
 		switch (exchange) {
-		case ZerodhaConstant.BFO:
-		case ZerodhaConstant.BSE:
+		case BFO:
+		case BSE:
 			return Exchange.BSE;
-		case ZerodhaConstant.NFO:
-		case ZerodhaConstant.NSE:
+		case NFO:
+		case NSE:
 			return Exchange.NSE;
-		case ZerodhaConstant.CDS:
+		case CDS:
 			return Exchange.CDS;
-		case ZerodhaConstant.MCX:
+		case MCX:
 			return Exchange.MCX;
 		}
 		return null;

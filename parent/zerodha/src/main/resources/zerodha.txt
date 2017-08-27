@@ -1,0 +1,56 @@
+Need to store the request coockies as well
+
+
+
+wss://websocket.kite.trade/?api_key=kitefront&user_id=RP3497&public_token=5dd72e23d27e9e9eacef3caab9f1d01a
+Request :
+Sec-WebSocket-Extensions:permessage-deflate; client_max_window_bits
+Sec-WebSocket-Key:uFCkUUGQ2BGNzWX30dONog==
+Sec-WebSocket-Version:13
+Upgrade:websocket
+Response :
+Sec-WebSocket-Accept:td7FMDz2nsVMinCOlzFHB6urQJo=
+Upgrade:websocket
+
+
+GET https://kitecharts.zerodha.com/api/chart/424961/60minute?public_token=4c3e833295fbd6ae437b0c971fea32f8&user_id=RP3497&api_key=kitefront&access_token=NN58kWGb4anGkRUi9aQwyX9rtl9CKnDs&from=2017-02-28&to=2017-08-27&ciqrandom=1503802104674
+
+https://kitecharts.zerodha.com/api/chart/{zinstrumentId}/{zbarspan}?public_token={publicToken}&user_id={userId}&api_key={apiKey}&access_token={accessToken}
+
+GET https://kite.zerodha.com/dashboard/?login=true
+Response Cookie:session=9d6a5c08-cfce-4876-8e33-061f702a0961
+<script>var API_KEY = "kitefront",
+				PUBLIC_TOKEN = "4c3e833295fbd6ae437b0c971fea32f8",
+				USER_ID = "RP3497",
+				URL_ROOT = "https://kite.zerodha.com",
+				URL_TICKER = "wss://websocket.kite.trade",
+				URL_CHART = "https://kitecharts.zerodha.com/api/chart",
+				USER_NAME = "PARAG KIRAN PARALIKAR",
+				VERSION = "2.9.6",
+				MOCK = "",
+				SMALLCASE_WIDGET_URL = "https://www.smallcase.com/stock-hover/?timestamp=1503800138000&hash=b0a24c0043dce43cce0510510fcc96eb427282b541f57c29373dacac24895a3a&broker=kite";</script>
+
+https://kitecharts.zerodha.com/api/chart
+
+
+GET https://kite.zerodha.com/api/session
+Request session=9d6a5c08-cfce-4876-8e33-061f702a0961
+Response Set-Cookie:session=9d6a5c08-cfce-4876-8e33-061f702a0961; HttpOnly; Path=/
+{"status": 200, "message": "success", "data": {"product": ["CO", "MIS", "NRML", "CNC"], "order_type": ["MARKET", "LIMIT", "SL", "SL-M"], "exchange": ["MCX", "NFO", "NSE", "CDS", "BFO", "BSE"], "access_token": "diji7kz2fvzpixpdpsm2s9ulbs5f9zcb", "password_reset": false, "transaction_password": 0, "user_type": "investor", "broker": "ZERODHA", "client_id": "RP3497", "public_token": "5dd72e23d27e9e9eacef3caab9f1d01a", "branch": "BANGALORE", "member_id": "ZERODHA", "request_token": "0tfrvwt14b45q05n2itd7j1ay5nv7nys", "user_name": "PARAG KIRAN PARALIKAR", "email": "parag.paralikar@gmail.com", "login_time": "2017-08-26 11:41:30"}}
+
+
+GET https://kite.zerodha.com/api/alerts?index=0
+{"status": 200, "message": "success", "data": []}
+
+
+GET https://kite.zerodha.com/api/positions
+{"status":"success","data":{"net":[],"day":[]}}
+
+GET ttps://kite.zerodha.com/api/holdings
+{"status":"success","data":[{"tradingsymbol":"ASSAMCO","exchange":"NSE","instrument_token":63489,"isin":"INE442A01024","product":"CNC","price":0,"quantity":8457,"t1_quantity":0,"realised_quantity":8457,"collateral_quantity":0,"collateral_type":"","average_price":7.85,"last_price":4.6,"close_price":4.6,"pnl":-27485.25,"day_change":0,"day_change_percentage":0},{"tradingsymbol":"RKDL","exchange":"NSE","instrument_token":5363201,"isin":"INE722J01012","product":"CNC","price":0,"quantity":11101,"t1_quantity":0,"realised_quantity":11101,"collateral_quantity":0,"collateral_type":"","average_price":11.3419016304837,"last_price":9.05,"close_price":9.05,"pnl":-25442.399999999554,"day_change":0,"day_change_percentage":0}]}
+
+GET https://kite.zerodha.com/api/margins
+{"data":{"commodity":{"available":{"adhoc_margin":0,"cash":0,"collateral":0,"intraday_payin":0},"enabled":true,"net":0,"utilised":{"debits":0,"exposure":0,"holding_sales":0,"m2m_realised":0,"m2m_unrealised":0,"option_premium":0,"payout":0,"span":0,"turnover":0}},"equity":{"available":{"adhoc_margin":0,"cash":463676.723,"collateral":0,"intraday_payin":0},"enabled":true,"net":463676.723,"utilised":{"debits":0,"exposure":0,"holding_sales":0,"m2m_realised":0,"m2m_unrealised":0,"option_premium":0,"payout":0,"span":0,"turnover":0}}},"message":"success","status":200}
+
+GET https://kite.zerodha.com/api/orders
+{"status":"success","data":[]}

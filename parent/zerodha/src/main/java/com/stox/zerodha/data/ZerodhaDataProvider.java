@@ -6,13 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.stox.core.intf.Callback;
+import com.stox.core.client.Secured;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
 import com.stox.core.repository.BarRepository;
 import com.stox.core.repository.InstrumentRepository;
-import com.stox.core.ui.widget.modal.Modal;
 import com.stox.data.DataProvider;
 import com.stox.data.tick.TickConsumer;
 import com.stox.data.tick.TickConsumerRegistry;
@@ -53,24 +52,7 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 		return "Zerodha";
 	}
 
-	@Override
-	public void login(final Callback<Void, Void> callback) throws Throwable {
-		final Modal modal = new Modal();
-		modal.addStylesheets("styles/zerodha.css");
-		modal.getStyleClass().add("zerodha-login-modal");
-		modal.setTitle("Login to Zerodha"); // TODO I18N here
-		modal.setContent(createLoginView(p -> {
-			modal.hide();
-			callback.call(null);
-			return null;
-		}));
-		modal.show();
-	}
-
-	@Override
-	public boolean isLoggedIn() {
-		return null != getCookies();
-	}
+	
 
 	/*
 	 * private void loadInstruments() throws Exception { if (null == instruments || instruments.isEmpty()) { if
@@ -88,7 +70,7 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 	 * instruments; }
 	 */
 
-	// @Secured
+	@Secured
 	@Override
 	public List<Bar> getBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to) {
 		return barRepository.find(instrument.getId(), barSpan, from, to);

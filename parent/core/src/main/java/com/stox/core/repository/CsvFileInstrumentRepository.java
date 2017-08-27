@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,9 @@ import com.stox.core.model.InstrumentType;
 import com.stox.core.util.Constant;
 import com.stox.core.util.FileUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 @SuppressWarnings("unchecked")
 public class CsvFileInstrumentRepository implements InstrumentRepository {
@@ -148,9 +152,11 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	private void updateParentComponentMapping(final Map<String, List<String>> parentComponentMapping) {
 		parentComponentMapping.keySet().forEach(key -> {
 			final Instrument parent = getInstrument(key);
-			Optional.ofNullable(parentComponentMapping.get(key)).ifPresent(ids -> {
-				cache.put(parent, ids.stream().map(id -> getInstrument(id)).collect(Collectors.toList()));
-			});
+			if(null != parent) {
+				Optional.ofNullable(parentComponentMapping.get(key)).ifPresent(ids -> {
+					cache.put(parent, ids.stream().map(id -> getInstrument(id)).collect(Collectors.toList()));
+				});
+			}
 		});
 	}
 
@@ -159,10 +165,14 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 		allInstruments.addAll(instruments);
 		cache.put(exchange, instruments);
 		instruments.forEach(instrument -> {
-			cache.put(instrument.getId(), instrument);
-			cache.put(instrument.getExchangeCode(), instrument);
+			if(null != instrument.getId() && null != instrument.getExchangeCode()) {
+				cache.put(instrument.getId(), instrument);
+				cache.put(instrument.getExchangeCode(), instrument);
+			}else {
+				log.debug("Invalid instrument : "+instrument);
+			}
 		});
-		instruments.stream().collect(Collectors.groupingBy(Instrument::getType, Collectors.toList()))
+		instruments.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Instrument::getType, Collectors.toList()))
 				.forEach((t, i) -> {
 					cache.put(exchange.toString() + t.toString(), i);
 				});

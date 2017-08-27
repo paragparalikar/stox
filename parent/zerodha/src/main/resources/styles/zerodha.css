@@ -1,5 +1,6 @@
 .zerodha-login-modal{
-	-fx-pref-height:20em;
+	-fx-pref-height:40em;
+	-fx-pref-width:25em;
 }
 .zerodha-instrument-filter{
 	-fx-pref-height:16em;

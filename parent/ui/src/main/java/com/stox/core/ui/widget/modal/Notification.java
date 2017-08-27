@@ -43,6 +43,10 @@ public class Notification {
 			Platform.runLater(() -> doShow());
 		}
 	}
+	
+	public void setPrefWidth(double prefWidth) {
+		container.setPrefWidth(prefWidth);
+	}
 
 	private void doShow() {
 		UiUtil.classes(container, style);

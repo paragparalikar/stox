@@ -23,6 +23,7 @@ public class BarLengthDownloadNotification {
 	private final Notification notification = Notification.builder().graphic(container).build();
 
 	public void show() {
+		notification.setPrefWidth(400);
 		notification.show();
 	}
 

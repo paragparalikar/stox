@@ -1,5 +1,6 @@
 package com.stox.nse.data.bar;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +50,8 @@ public class NseLegthBarDownloadManager {
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
-	private final LineRepository repository = new LineRepository("com.stox.data.download.bar.legth.nse.csv");
+	private final LineRepository repository = new LineRepository(
+			"nse" + File.separator + "com.stox.data.download.bar.legth.nse.csv");
 
 	private boolean cancel;
 
@@ -76,7 +78,8 @@ public class NseLegthBarDownloadManager {
 		final NseDataState state = dataStateRepository.getDataState();
 		final Date lastInstrumentDownloadDate = state.getLastInstrumentDownloadDate();
 		final Boolean barLengthDownloadCompleted = state.getBarLengthDownloadCompleted();
-		return null != lastInstrumentDownloadDate && (null == barLengthDownloadCompleted || !barLengthDownloadCompleted);
+		return null != lastInstrumentDownloadDate
+				&& (null == barLengthDownloadCompleted || !barLengthDownloadCompleted);
 	}
 
 	public void download() {
@@ -84,7 +87,8 @@ public class NseLegthBarDownloadManager {
 		final List<String> downloadedInstrumentIds = repository.findAll();
 		final List<Instrument> allInstruments = instrumentRepository.getInstruments(Exchange.NSE);
 		allInstruments.removeIf(instrument -> {
-			return downloadedInstrumentIds.contains(instrument.getId()) || null != barRepository.getLastTradingDate(instrument.getId(), BarSpan.D);
+			return downloadedInstrumentIds.contains(instrument.getId())
+					|| null != barRepository.getLastTradingDate(instrument.getId(), BarSpan.D);
 		});
 		final AtomicInteger count = new AtomicInteger(downloadedInstrumentIds.size());
 		final BarLengthDownloadNotification notification = new BarLengthDownloadNotification();
@@ -99,18 +103,18 @@ public class NseLegthBarDownloadManager {
 		}
 
 		allInstruments.stream().parallel().forEach(instrument -> {
-			try {
-				if (!cancel && StringUtil.hasText(instrument.getExchangeCode())) {
+			if (!cancel && StringUtil.hasText(instrument.getExchangeCode())) {
+				try {
 					final NseBarLengthDownloader downloader = new NseBarLengthDownloader(url, instrument);
 					final List<Bar> bars = downloader.download();
 					barRepository.save(bars, instrument.getId(), BarSpan.D);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					repository.append(instrument.getId());
+					notification.setInstrument(instrument);
+					notification.setProgress(((double) count.incrementAndGet()) / ((double) allInstruments.size()));
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				repository.append(instrument.getId());
-				notification.setInstrument(instrument);
-				notification.setProgress(((double) count.incrementAndGet()) / ((double) allInstruments.size()));
 			}
 		});
 

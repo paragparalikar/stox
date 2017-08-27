@@ -133,7 +133,9 @@ public class UiUtil {
 	}
 
 	public static <T extends Node> T classes(final T node, String... classes) {
-		node.getStyleClass().addAll(classes);
+		if(null != node && null != classes) {
+			node.getStyleClass().addAll(classes);
+		}
 		return node;
 	}
 

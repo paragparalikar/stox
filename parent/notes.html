@@ -1,5 +1,9 @@
 Technical Debt
 Remove callback
+Remove Consumer<Tick> and accept from TickConsumer, make it onTick
+Remove method for "DelayedResponseCallback" from DataClientImpl, make below changes
+	DataPersistenceAdvice - "after" advice for data provider
+	CachedDataAdvice - "around" advice for data provider
 
 Bugs
 View message is too big
