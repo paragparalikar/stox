@@ -16,6 +16,8 @@ public interface BarRepository {
 	void save(final Bar bar, final String instrumentId, final BarSpan barSpan);
 
 	Date getLastTradingDate(final String instrumentId, final BarSpan barSpan);
+	
+	Date getFirstTradingDate(final String instrumentId, final BarSpan barSpan);
 
 	public void drop(final Instrument instrument, final BarSpan barSpan) throws Exception;
 

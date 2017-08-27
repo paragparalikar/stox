@@ -36,6 +36,20 @@ public class BinaryFileBarRepository implements BarRepository {
 			return null;
 		}
 	}
+	
+	@Override
+	public Date getFirstTradingDate(final String instrumentId, final BarSpan barSpan) {
+		final String path = getPath(instrumentId, BarSpan.M.equals(barSpan) || BarSpan.W.equals(barSpan) ? BarSpan.D : barSpan).intern();
+		synchronized (path) {
+			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
+				if (file.length() >= Bar.BYTES) {
+					return new Date(file.readLong());
+				}
+			} catch (Exception ignored) {
+			}
+			return null;
+		}
+	}
 
 	@Override
 	public List<Bar> find(String instrumentId, BarSpan barSpan, Date from, Date to) {

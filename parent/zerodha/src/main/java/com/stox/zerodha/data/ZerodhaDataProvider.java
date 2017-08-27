@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -100,14 +101,24 @@ public class ZerodhaDataProvider extends Zerodha implements DataProvider {
 					+ "/" + stringValue(barSpan) + "?public_token=" + session.getPublicToken() + "&user_id="
 					+ session.getUser().getClientId() + "&api_key=kitefront&access_token=" + session.getAccessToken()
 					+ "&from=" + DATEFORMAT.format(from) + "&to=" + DATEFORMAT.format(to);
-			final HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
+			final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestProperty("upgrade-insecure-requests", "1");
-			connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 UBrowser/7.0.6.1021 Safari/537.36");
-			final ZerodhaResponse<BarData> response = Constant.objectMapper.readValue(connection.getInputStream(), new TypeReference<ZerodhaResponse<BarData>>() {});
-			return response.getData().getBars();
+			connection.setRequestProperty("user-agent",
+					"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 UBrowser/7.0.6.1021 Safari/537.36");
+			final ZerodhaResponse<BarData> response = Constant.objectMapper.readValue(connection.getInputStream(),
+					new TypeReference<ZerodhaResponse<BarData>>() {
+					});
+			return trim(response.getData().getBars(), from, to);
 		}
 		throw new InstrumentNotFoundException();
+	}
+
+	private List<Bar> trim(final List<Bar> bars, final Date from, final Date to) {
+		return bars.stream()
+				.filter(bar -> (bar.getDate().after(from) || bar.getDate().equals(from))
+						&& (bar.getDate().before(to) || bar.getDate().equals(to)))
+				.sorted().collect(Collectors.toList());
 	}
 
 	private String stringValue(final BarSpan barSpan) {

@@ -23,7 +23,6 @@ import com.stox.chart.drawing.DrawingStateClient;
 import com.stox.chart.event.BarRequestEvent;
 import com.stox.chart.plot.PrimaryPricePlot;
 import com.stox.chart.util.ChartUtil;
-import com.stox.core.intf.DelayedResponseCallback;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
@@ -176,18 +175,10 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 	private void loadBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to,
 			final ResponseCallback<List<Bar>> callback) {
 		view.showSpinner(true);
-		dataClient.loadBars(instrument, barSpan, from, to, new DelayedResponseCallback<List<Bar>>() {
+		dataClient.loadBars(instrument, barSpan, from, to, new ResponseCallback<List<Bar>>() {
 			@Override
 			public void onSuccess(Response<List<Bar>> response) {
 				callback.onSuccess(response);
-			}
-
-			@Override
-			public void onDelayedSuccess(Response<List<Bar>> response) {
-				if (callback instanceof DelayedResponseCallback) {
-					final DelayedResponseCallback<List<Bar>> delayedCallback = (DelayedResponseCallback<List<Bar>>) callback;
-					delayedCallback.onDelayedSuccess(response);
-				}
 			}
 
 			@Override
