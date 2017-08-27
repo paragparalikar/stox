@@ -44,7 +44,6 @@ public class BarData {
 			});
 			Collections.sort(bars);
 		}
-		
 		return bars;
 	}
 	
