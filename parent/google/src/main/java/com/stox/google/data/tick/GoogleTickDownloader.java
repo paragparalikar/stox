@@ -30,10 +30,10 @@ public class GoogleTickDownloader {
 	public Map<String, GoogleTick> download() {
 		final Map<String, GoogleTick> result = new HashMap<>();
 		final Map<Exchange, List<Instrument>> map = instruments.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Instrument::getExchange));
-		final Map<String, Instrument> codeMapping = instruments.stream().filter(Objects::nonNull).collect(Collectors.toMap(Instrument::getExchangeCode, Function.identity()));
+		final Map<String, Instrument> codeMapping = instruments.stream().filter(Objects::nonNull).collect(Collectors.toMap(Instrument::getSymbol, Function.identity()));
 		map.keySet().parallelStream().forEach(exchange -> {
 			final String query = GoogleUtil.getGoogleExchangeCode(exchange) + ":"
-					+ map.get(exchange).stream().map(Instrument::getExchangeCode).collect(Collectors.joining(","));
+					+ map.get(exchange).stream().map(Instrument::getSymbol).collect(Collectors.joining(","));
 			try {
 				final String data = StringUtil.toString(new URL(url + query).openStream());
 				final GoogleTick[] ticks = Constant.objectMapper.readValue(data.substring(3),

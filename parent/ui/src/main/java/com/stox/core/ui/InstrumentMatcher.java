@@ -13,7 +13,7 @@ public class InstrumentMatcher implements Callback<Instrument> {
 		if (null != instrument) {
 			result = StringUtil.hasText(instrument.getName()) && instrument.getName().toLowerCase().contains(text);
 			if (!result) {
-				result = StringUtil.hasText(instrument.getExchangeCode()) && instrument.getExchangeCode().toLowerCase().contains(text);
+				result = StringUtil.hasText(instrument.getSymbol()) && instrument.getSymbol().toLowerCase().contains(text);
 				if (!result) {
 					result = StringUtil.hasText(instrument.getIsin()) && instrument.getIsin().toLowerCase().contains(text);
 					if (!result) {

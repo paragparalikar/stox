@@ -68,7 +68,7 @@ public class GoogleDataProvider implements DataProvider {
 					if(null != tickConsumer) {
 						final Instrument instrument = tickConsumer.getInstrument();
 						if(null != instrument) {
-							final GoogleTick googleTick = result.get(instrument.getExchangeCode());
+							final GoogleTick googleTick = result.get(instrument.getSymbol());
 							if (null != googleTick && !googleTick.equals(tickCache.get(tickConsumer))) {
 								tickCache.put(tickConsumer, googleTick);
 								tickConsumer.accept(googleTick);
@@ -83,7 +83,7 @@ public class GoogleDataProvider implements DataProvider {
 	}
 
 	@Override
-	public void login(Callback<Void, Void> callback) throws Throwable {
+	public void login(Callback<Void, Object> callback) throws Throwable {
 		callback.call(null);
 	}
 

@@ -37,7 +37,7 @@ public class ChartView extends View implements HasInstrument, HasBarSpan, HasDat
 	private UnitType unitType = UnitType.CANDLE;
 	private Date to;
 	private Date from;
-	private Date date;
+	private Date date; // bar date at which right mouse click happened
 
 	/* configurable properties, these should go into a different object */
 	private Color upBarColor = Color.GREEN;

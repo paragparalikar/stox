@@ -32,6 +32,7 @@ public class Constant {
 		Constant.objectMapper.enableDefaultTyping();
 		Constant.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		Constant.objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		Constant.csvMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 	}
 
 }

@@ -17,7 +17,7 @@ public interface InstrumentRepository {
 
 	Instrument getInstrument(final String id);
 
-	Instrument findByExchangeCode(final String exchangeCode);
+	Instrument findBySymbol(final String exchangeCode);
 
 	List<Instrument> save(final Exchange exchange, final List<Instrument> instruments);
 

@@ -20,7 +20,6 @@ public class CorporateBondDownloader extends ZipExcelDownloader<Instrument> {
 		instrument.setType(InstrumentType.CORPORATE_BOND);
 		instrument.setIsin(row.getCell(1).getStringCellValue());
 		instrument.setSymbol(row.getCell(2).getStringCellValue());
-		instrument.setExchangeCode(instrument.getSymbol());
 		instrument.setName(row.getCell(3).getStringCellValue());
 		instrument.setExpiry(row.getCell(5).getDateCellValue());
 		return instrument;

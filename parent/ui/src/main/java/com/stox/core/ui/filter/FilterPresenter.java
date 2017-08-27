@@ -124,14 +124,18 @@ public class FilterPresenter {
 
 	private void addIndexFilter() {
 		final Exchange exchange = view.getExchangeChoiceBox().getValue();
-		final List<Instrument> indexes = instrumentRepository.getInstruments(exchange, InstrumentType.INDEX);
-		final Instrument dummyInstrument = createDummyInstrument();
-		indexes.add(0, dummyInstrument);
-		view.getIndexChoiceBox().getItems().setAll(indexes);
-		if (!view.getChildren().contains(view.getIndexFormGroup())) {
-			view.getChildren().add(view.getIndexFormGroup());
+		if(null != exchange) {
+			final List<Instrument> indexes = instrumentRepository.getInstruments(exchange, InstrumentType.INDEX);
+			if(null != indexes && !indexes.isEmpty()) {
+				final Instrument dummyInstrument = createDummyInstrument();
+				indexes.add(0, dummyInstrument);
+				view.getIndexChoiceBox().getItems().setAll(indexes);
+				if (!view.getChildren().contains(view.getIndexFormGroup())) {
+					view.getChildren().add(view.getIndexFormGroup());
+				}
+				view.getIndexChoiceBox().getSelectionModel().select(dummyInstrument);
+			}
 		}
-		view.getIndexChoiceBox().getSelectionModel().select(dummyInstrument);
 	}
 
 	private Instrument createDummyInstrument() {

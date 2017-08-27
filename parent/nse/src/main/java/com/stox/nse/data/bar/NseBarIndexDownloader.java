@@ -21,7 +21,7 @@ public class NseBarIndexDownloader extends CsvDownloader<Bar> {
 	@Override
 	public Bar parse(String[] tokens) throws Exception {
 		final Bar bar = new Bar();
-		final Instrument instrument = instrumentRepository.findByExchangeCode(tokens[0]);
+		final Instrument instrument = instrumentRepository.findBySymbol(tokens[0]);
 		bar.setInstrumentId(instrument.getId());
 		bar.setDate(DATEFORMAT.parse(tokens[1]));
 		bar.setOpen(Double.parseDouble(tokens[2]));

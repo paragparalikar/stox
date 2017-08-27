@@ -78,19 +78,26 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 			cache.put(ALL, new ArrayList<Instrument>(100000));
 			for (final Exchange exchange : Exchange.values()) {
 				try {
-					final File file = FileUtil.getFile(getPath(exchange));
-					final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Instrument.class);
-					final List<Instrument> instruments = reader.<Instrument>readValues(file).readAll();
-					updateExchangeCache(exchange, instruments);
+					final File file = new File(getPath(exchange));
+					if(file.exists()) {
+						final ObjectReader reader = Constant.csvMapper.reader(schema).forType(Instrument.class);
+						final List<Instrument> instruments = reader.<Instrument>readValues(file).readAll();
+						updateExchangeCache(exchange, instruments);
+					}
 				} catch (Exception e) {
+					log.error("Could not load instruments for "+exchange.getName(), e);
 				}
 				try {
-					final Map<String, List<String>> parentComponentMapping = Constant.objectMapper.readValue(
-							FileUtil.getFile(getParentComponentMappingPath(exchange)),
-							new TypeReference<HashMap<String, List<String>>>() {
-							});
-					updateParentComponentMapping(parentComponentMapping);
+					final File mappingFile = new File(getParentComponentMappingPath(exchange));
+					if(mappingFile.exists()) {
+						final Map<String, List<String>> parentComponentMapping = Constant.objectMapper.readValue(
+								mappingFile,
+								new TypeReference<HashMap<String, List<String>>>() {
+								});
+						updateParentComponentMapping(parentComponentMapping);
+					}
 				} catch (Exception e) {
+					log.error("Could not load parent-component mapping for "+exchange.getName(), e);
 				}
 			}
 		}
@@ -106,9 +113,9 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 
 	@Override
 	@Cacheable(CACHE)
-	public Instrument findByExchangeCode(String exchangeCode) {
+	public Instrument findBySymbol(String symbol) {
 		populateCache();
-		final ValueWrapper wrapper = cache.get(exchangeCode);
+		final ValueWrapper wrapper = cache.get(symbol);
 		return null == wrapper ? null : (Instrument) wrapper.get();
 	}
 
@@ -165,9 +172,9 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 		allInstruments.addAll(instruments);
 		cache.put(exchange, instruments);
 		instruments.forEach(instrument -> {
-			if(null != instrument.getId() && null != instrument.getExchangeCode()) {
+			if(null != instrument.getId() && null != instrument.getSymbol()) {
 				cache.put(instrument.getId(), instrument);
-				cache.put(instrument.getExchangeCode(), instrument);
+				cache.put(instrument.getSymbol(), instrument);
 			}else {
 				log.debug("Invalid instrument : "+instrument);
 			}
@@ -189,7 +196,7 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 	@Override
 	public List<Instrument> save(final Exchange exchange, final List<Instrument> instruments) {
 		try {
-			Constant.csvMapper.writer(schema).writeValues(new File(getPath(exchange))).writeAll(instruments).flush();
+			Constant.csvMapper.writer(schema).writeValues(FileUtil.getFile(getPath(exchange))).writeAll(instruments).flush();
 			updateExchangeCache(exchange, instruments);
 			eventPublisher.publishEvent(new InstrumentsChangedEvent(this, getAllInstruments()));
 			return instruments;
@@ -197,5 +204,5 @@ public class CsvFileInstrumentRepository implements InstrumentRepository {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 }

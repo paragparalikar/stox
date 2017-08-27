@@ -12,7 +12,7 @@ public class Zerodha implements HasLogin {
 	private static ZerodhaSession session;
 
 	@Override
-	public void login(final Callback<Void, Void> callback) throws Throwable {
+	public void login(final Callback<Void, Object> callback) throws Throwable {
 		if (Platform.isFxApplicationThread()) {
 			doLogin(callback);
 		} else {
@@ -27,7 +27,7 @@ public class Zerodha implements HasLogin {
 		}
 	}
 
-	private void doLogin(final Callback<Void, Void> callback) throws Throwable {
+	private void doLogin(final Callback<Void, Object> callback) throws Throwable {
 		final ZerodhaLoginModal zerodhaLoginModel = new ZerodhaLoginModal(session ->  {
 			Zerodha.session = session;
 			callback.call(null);
@@ -38,6 +38,10 @@ public class Zerodha implements HasLogin {
 	@Override
 	public boolean isLoggedIn() {
 		return null != session;
+	}
+	
+	protected ZerodhaSession getSession() {
+		return Zerodha.session;
 	}
 
 }

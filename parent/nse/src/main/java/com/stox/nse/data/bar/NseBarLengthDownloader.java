@@ -48,7 +48,7 @@ public class NseBarLengthDownloader extends CsvDownloader<Bar> {
 				"https://www.nseindia.com/ChartApp/install/charts/mainpageall1.jsp?Segment=CD", "gzip, deflate, br", "en-US,en;q=0.8", null);
 		connection.setConnectTimeout(30000);
 		connection.getOutputStream().write(
-				HttpUtil.body("Instrument", "FUTSTK", "CDSymbol", instrument.getExchangeCode().toUpperCase(), "Segment", InstrumentType.INDEX.equals(instrument.getType()) ? "OI"
+				HttpUtil.body("Instrument", "FUTSTK", "CDSymbol", instrument.getSymbol().toUpperCase(), "Segment", InstrumentType.INDEX.equals(instrument.getType()) ? "OI"
 						: "CM", "Series", "EQ", "PeriodType", "1", "Periodicity", "1", "ct0", "g1|1|1", "ct1", "g2|2|1", "ctcount", "2"));
 		final GZIPInputStream inStream = new GZIPInputStream(connection.getInputStream());
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream(102400);

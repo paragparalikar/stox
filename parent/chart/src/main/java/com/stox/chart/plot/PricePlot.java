@@ -88,60 +88,70 @@ public class PricePlot extends Plot<Bar> {
 		if (null != instrument && StringUtil.hasText(instrument.getId())) {
 			final ChartView chartView = getChart().getChartView();
 			final Date to = chartView.getTo();
-			final Date from = chartView.getFrom();
 			final BarSpan barSpan = chartView.getBarSpan();
+			final Date from = ChartUtil.getFrom(to, barSpan);
 			getModels().clear();
-			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new DelayedResponseCallback<List<Bar>>() {
+			chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to,
+					new DelayedResponseCallback<List<Bar>>() {
 
-				/**
-				 * Need to keep instrument and the barspan used for making the request. After some delay when the delayedResponse is received these details might have changed Thus
-				 * equality has to be checked for conditions at request and response
-				 */
-				private final BarSpan requestBarSpan = barSpan;
-				private final Instrument requestInstrument = instrument;
+						/**
+						 * Need to keep instrument and the barspan used for making the request. After
+						 * some delay when the delayedResponse is received these details might have
+						 * changed Thus equality has to be checked for conditions at request and
+						 * response
+						 */
+						private final BarSpan requestBarSpan = barSpan;
+						private final Instrument requestInstrument = instrument;
 
-				@Override
-				public void onSuccess(Response<List<Bar>> response) {
-					addData(from, barSpan, response.getPayload());
-				}
+						@Override
+						public void onSuccess(Response<List<Bar>> response) {
+							addData(from, barSpan, response.getPayload());
+						}
 
-				@Override
-				public void onDelayedSuccess(Response<List<Bar>> response) {
-					if (requestBarSpan.equals(chartView.getBarSpan()) && requestInstrument.equals(instrument)) {
-						Platform.runLater(() -> {
+						@Override
+						public void onDelayedSuccess(Response<List<Bar>> response) {
 							if (requestBarSpan.equals(chartView.getBarSpan()) && requestInstrument.equals(instrument)) {
-								final List<Bar> bars = response.getPayload();
-								if (null != bars && !bars.isEmpty()) {
-									merge(getModels(), bars, requestBarSpan);
-									addModels(0, bars);
-								}
+								Platform.runLater(() -> {
+									if (requestBarSpan.equals(chartView.getBarSpan())
+											&& requestInstrument.equals(instrument)) {
+										final List<Bar> bars = response.getPayload();
+										final List<Bar> existingBars = getModels();
+										if (null != bars && !bars.isEmpty()) {
+											if(!existingBars.isEmpty()) {
+												merge(getModels(), bars, requestBarSpan);
+											}
+											addModels(0, bars);
+										}
+									}
+								});
 							}
-						});
-					}
-				}
+						}
 
-				@Override
-				public void onFailure(Response<List<Bar>> response, Throwable throwable) {
-					dataAvailable = false;
-				}
-			}));
+						@Override
+						public void onFailure(Response<List<Bar>> response, Throwable throwable) {
+							dataAvailable = false;
+						}
+					}));
 		}
 	}
 
 	private void merge(final List<Bar> existingBars, final List<Bar> newBars, final BarSpan barSpan) {
-		final Bar first = existingBars.get(0);
-		final long nextDate = barSpan.next(first.getDate().getTime());
-		final Iterator<Bar> iterator = newBars.iterator();
-		while (iterator.hasNext()) {
-			final Bar bar = iterator.next();
-			if (bar.getDate().getTime() <= nextDate) {
-				for (final Bar model : existingBars) {
-					if (barSpan.next(model.getDate().getTime()) >= bar.getDate().getTime() && model.getDate().getTime() <= bar.getDate().getTime()) {
-						model.copy(bar);
-						break;
+		if (!existingBars.isEmpty()) {
+			final Bar first = existingBars.get(0);
+			final long nextDate = barSpan.next(first.getDate().getTime());
+			final Iterator<Bar> iterator = newBars.iterator();
+			while (iterator.hasNext()) {
+				final Bar bar = iterator.next();
+				if (bar.getDate().getTime() <= nextDate) {
+					for (final Bar model : existingBars) {
+						if (barSpan.next(model.getDate().getTime()) >= bar.getDate().getTime()
+								&& model.getDate().getTime() <= bar.getDate().getTime()) {
+							model.copy(bar);
+							break;
+						}
 					}
+					iterator.remove();
 				}
-				iterator.remove();
 			}
 		}
 	}
@@ -156,21 +166,22 @@ public class PricePlot extends Plot<Bar> {
 				final Date to = oldestBar.getDate();
 				final BarSpan barSpan = chartView.getBarSpan();
 				final Date from = ChartUtil.getFrom(to, barSpan);
-				chartView.fireEvent(new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
+				chartView.fireEvent(
+						new BarRequestEvent(instrument.getId(), barSpan, from, to, new ResponseCallback<List<Bar>>() {
 
-					@Override
-					public void onSuccess(Response<List<Bar>> response) {
-						locked = false;
-						addData(from, barSpan, response.getPayload());
-					}
+							@Override
+							public void onSuccess(Response<List<Bar>> response) {
+								locked = false;
+								addData(from, barSpan, response.getPayload());
+							}
 
-					@Override
-					public void onFailure(Response<List<Bar>> response, Throwable throwable) {
-						locked = false;
-						dataAvailable = false;
-					}
+							@Override
+							public void onFailure(Response<List<Bar>> response, Throwable throwable) {
+								locked = false;
+								dataAvailable = false;
+							}
 
-				}));
+						}));
 			} else {
 				update();
 			}

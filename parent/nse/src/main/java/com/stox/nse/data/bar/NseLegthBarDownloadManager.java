@@ -103,7 +103,7 @@ public class NseLegthBarDownloadManager {
 		}
 
 		allInstruments.stream().parallel().forEach(instrument -> {
-			if (!cancel && StringUtil.hasText(instrument.getExchangeCode())) {
+			if (!cancel && StringUtil.hasText(instrument.getSymbol())) {
 				try {
 					final NseBarLengthDownloader downloader = new NseBarLengthDownloader(url, instrument);
 					final List<Bar> bars = downloader.download();

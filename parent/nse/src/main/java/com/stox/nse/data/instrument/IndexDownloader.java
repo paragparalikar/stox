@@ -20,8 +20,7 @@ public class IndexDownloader extends CsvDownloader<Instrument> {
 		instrument.setExchange(Exchange.NSE);
 		instrument.setType(InstrumentType.INDEX);
 		instrument.setIsin(StringUtil.trim(tokens[0]));
-		instrument.setExchangeCode(StringUtil.trim(tokens[1]));
-		instrument.setSymbol(StringUtil.trim(instrument.getExchangeCode()));
+		instrument.setSymbol(StringUtil.trim(tokens[1]));
 		instrument.setName(StringUtil.trim(tokens[2]));
 		return instrument;
 	}

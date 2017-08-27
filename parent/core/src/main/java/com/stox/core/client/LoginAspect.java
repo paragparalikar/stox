@@ -10,19 +10,20 @@ import org.springframework.stereotype.Component;
 public class LoginAspect {
 
 	@Around("target(com.stox.core.client.HasLogin) && execution(@com.stox.core.client.Secured * *(..))")
-	public void advice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+	public Object advice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		final HasLogin hasLogin = (HasLogin) proceedingJoinPoint.getTarget();
 		if (hasLogin.isLoggedIn()) {
-			proceedingJoinPoint.proceed();
+			return proceedingJoinPoint.proceed();
 		} else {
 			hasLogin.login(v -> {
 				try {
-					proceedingJoinPoint.proceed();
+					return proceedingJoinPoint.proceed();
 				} catch (Throwable e) {
 					throw new RuntimeException(e);
 				}
-				return null;
 			});
+			
+			return null; // TODO bug No data will ever be returned at the login time
 		}
 	}
 }

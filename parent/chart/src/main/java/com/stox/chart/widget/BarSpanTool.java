@@ -1,6 +1,7 @@
 package com.stox.chart.widget;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import javafx.scene.Node;
 import javafx.scene.control.Toggle;
@@ -11,6 +12,7 @@ import javafx.scene.layout.HBox;
 
 import org.springframework.stereotype.Component;
 
+import com.stox.chart.util.ChartUtil;
 import com.stox.chart.view.ChartView;
 import com.stox.core.model.BarSpan;
 import com.stox.core.ui.util.UiUtil;
@@ -35,6 +37,9 @@ public class BarSpanTool extends ChartingTool {
 			if (null != chartView) {
 				final BarSpan barSpan = (BarSpan) toggle.getUserData();
 				chartView.setBarSpan(barSpan);
+				final Date to = null == chartView.getTo() ? new Date() : chartView.getTo();
+				final Date from = ChartUtil.getFrom(to, barSpan);
+				chartView.setFrom(from);
 				chartView.getPrimaryChart().getPrimaryPricePlot().load();
 			}
 		});

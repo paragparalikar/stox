@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Wither;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stox.core.intf.Identifiable;
 import com.stox.core.intf.Nameable;
 import com.stox.core.util.StringUtil;
@@ -15,8 +16,6 @@ import com.stox.core.util.StringUtil;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Instrument implements Identifiable<String>, Nameable {
-
-	private String exchangeCode;
 
 	@Wither
 	private String symbol;
@@ -27,6 +26,7 @@ public class Instrument implements Identifiable<String>, Nameable {
 
 	private String name;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date expiry;
 
 	private Double strike;

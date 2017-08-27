@@ -19,7 +19,6 @@ public class MutualFundDownloader extends ZipExcelDownloader<Instrument> {
 		instrument.setExchange(Exchange.NSE);
 		instrument.setType(InstrumentType.MUTUAL_FUND);
 		instrument.setSymbol(row.getCell(1).getStringCellValue());
-		instrument.setExchangeCode(instrument.getSymbol());
 		instrument.setIsin(row.getCell(2).getStringCellValue());
 		instrument.setName(row.getCell(3).getStringCellValue());
 		return instrument;
