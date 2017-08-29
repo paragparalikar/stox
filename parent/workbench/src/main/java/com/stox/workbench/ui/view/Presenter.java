@@ -4,8 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import javafx.scene.input.MouseEvent;
-
 import org.springframework.context.ApplicationEvent;
 
 import com.stox.core.intf.HasLifecycle;
@@ -20,15 +18,22 @@ import com.stox.workbench.ui.view.event.ViewSelectedEvent;
 import com.stox.workbench.ui.view.helper.ViewPersistanceHelper;
 import com.stox.workbench.ui.view.helper.ViewPositionHelper;
 
+import javafx.scene.input.MouseEvent;
+
 public abstract class Presenter<V extends View, S extends ViewState> implements HasLifecycle, Persistable {
 
 	private boolean selected;
-	private CloseDecorator closeDecorator;
-	private RelocationDecorator relocateDecorator;
-	private MaximizeDecorator maximizeDecorator;
-	private ResizeDecorator resizeDecorator;
-	private ViewPositionHelper positionHelper;
-	private ViewPersistanceHelper persistanceHelper;
+	private CloseDecorator closeDecorator = new CloseDecorator();
+	private RelocationDecorator relocateDecorator  = new RelocationDecorator(this);
+	private MaximizeDecorator maximizeDecorator = new MaximizeDecorator(this);
+	private ResizeDecorator resizeDecorator = new ResizeDecorator(this);
+	private ViewPositionHelper positionHelper = new ViewPositionHelper(this);
+	private ViewPersistanceHelper persistanceHelper = new ViewPersistanceHelper(this);
+	
+	public Presenter() {
+		
+		
+	}
 
 	public abstract V getView();
 
@@ -37,7 +42,7 @@ public abstract class Presenter<V extends View, S extends ViewState> implements 
 	public abstract void setDefaultPosition();
 
 	public abstract void publish(final ApplicationEvent event);
-
+	
 	public void setViewSate(final S viewState) {
 		setPosition(viewState.getX(), viewState.getY(), viewState.getWidth(), viewState.getHeight());
 	}
@@ -57,21 +62,11 @@ public abstract class Presenter<V extends View, S extends ViewState> implements 
 
 	@Override
 	public void start() {
-		closeDecorator = new CloseDecorator();
 		closeDecorator.setHasLifecycle(this);
 		closeDecorator.setTitleBar(getView().getTitleBar());
-
-		relocateDecorator = new RelocationDecorator(this);
 		relocateDecorator.bindMovableNode();
-
-		maximizeDecorator = new MaximizeDecorator(this);
 		maximizeDecorator.bindNode();
-
-		resizeDecorator = new ResizeDecorator(this);
 		resizeDecorator.bind();
-
-		positionHelper = new ViewPositionHelper(this);
-		persistanceHelper = new ViewPersistanceHelper(this);
 
 		getView().addEventFilter(MouseEvent.MOUSE_PRESSED, event -> setSelected(true));
 	}

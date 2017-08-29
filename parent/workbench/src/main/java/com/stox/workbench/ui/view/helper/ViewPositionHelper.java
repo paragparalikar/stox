@@ -10,13 +10,14 @@ import com.stox.workbench.ui.view.View;
 
 public class ViewPositionHelper {
 
-	private final View view;
+	private final Presenter<?, ?> presenter;
 
 	public ViewPositionHelper(final Presenter<?, ?> presenter) {
-		this.view = presenter.getView();
+		this.presenter = presenter;
 	}
 
 	public void position() {
+		final View view = presenter.getView();
 		if (view.getParent() instanceof SnapToGridPane) {
 			final SnapToGridPane pane = (SnapToGridPane) view.getParent();
 			setBounds(pane.end());
@@ -24,6 +25,7 @@ public class ViewPositionHelper {
 	}
 
 	public void setBounds(final Bounds bounds) {
+		final View view = presenter.getView();
 		if (0 < bounds.getWidth() && 0 < bounds.getHeight()) {
 			view.setLayoutX(bounds.getMinX());
 			view.setLayoutY(bounds.getMinY());
@@ -35,6 +37,7 @@ public class ViewPositionHelper {
 	}
 
 	public void setPosition(double x, double y, double width, double height) {
+		final View view = presenter.getView();
 		final Pane pane = (Pane) view.getParent();
 		if (null != pane && pane instanceof SnapToGridPane) {
 			final SnapToGridPane snapToGridPane = (SnapToGridPane) pane;
@@ -53,6 +56,7 @@ public class ViewPositionHelper {
 	}
 
 	public void updateGrid() {
+		final View view = presenter.getView();
 		if (view.getParent() instanceof SnapToGridPane) {
 			SnapToGridPane pane = (SnapToGridPane) view.getParent();
 			pane.update(view.getBoundsInParent());

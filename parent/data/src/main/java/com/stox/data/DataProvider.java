@@ -3,7 +3,7 @@ package com.stox.data;
 import java.util.Date;
 import java.util.List;
 
-import com.stox.core.client.HasLogin;
+import com.stox.core.intf.HasLogin;
 import com.stox.core.intf.HasName;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;

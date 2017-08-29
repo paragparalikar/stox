@@ -96,8 +96,11 @@ public class NavigatorPresenter extends PublisherPresenter<NavigatorView, Naviga
 	@Async
 	@Override
 	public void start() {
-		view.showSpinner(true);
-		super.start();
+		Platform.runLater(() -> {
+			view.showSpinner(true);
+			super.start();
+		});
+		
 		final List<Instrument> instruments = instrumentRepository.getAllInstruments();
 		allInstruments.clear();
 		allInstruments.addAll(instruments);

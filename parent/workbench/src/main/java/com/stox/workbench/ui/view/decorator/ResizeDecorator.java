@@ -10,11 +10,9 @@ import com.stox.workbench.ui.view.View;
 
 public class ResizeDecorator implements EventHandler<MouseEvent> {
 
-	private final View view;
 	private final Presenter<?, ?> presenter;
 
 	public ResizeDecorator(final Presenter<?, ?> presenter) {
-		this.view = presenter.getView();
 		this.presenter = presenter;
 	}
 
@@ -25,6 +23,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 		}
 		final double x = event.getX();
 		final double y = event.getY();
+		final View view = presenter.getView();
 		final EventType<? extends MouseEvent> type = event.getEventType();
 		if (View.NONE == view.getMode() || View.RESIZE == view.getMode()) {
 			if (type.equals(MouseEvent.MOUSE_MOVED) || type.equals(MouseEvent.MOUSE_ENTERED) || type.equals(MouseEvent.MOUSE_EXITED)) {
@@ -47,6 +46,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 
 	protected void setCursor(final double x, final double y) {
 		final Cursor cursor;
+		final View view = presenter.getView();
 		final double maxX = view.getBoundsInLocal().getMaxX();
 		final double maxY = view.getBoundsInLocal().getMaxY();
 
@@ -73,6 +73,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	protected void resizeView(double x, double y) {
+		final View view = presenter.getView();
 		final double minWidth = view.getWidth() > view.getMinWidth() ? view.getMinWidth() : 2 * View.BORDER;
 		final double maxWidth = view.getParent().getLayoutBounds().getWidth();
 		final double minHeight = view.getHeight() > view.getMinHeight() ? view.getMinHeight() : 2 * View.BORDER;
@@ -104,6 +105,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	protected void resizeWest(double minWidth, double maxWidth, double x) {
+		final View view = presenter.getView();
 		double w = view.getWidth() - x;
 		if (w >= minWidth && w <= maxWidth) {
 			view.setMinWidth(w);
@@ -113,6 +115,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	protected void resizeNorth(double minHeight, double maxHeight, double y) {
+		final View view = presenter.getView();
 		double h = view.getHeight() - y;
 		if (h >= minHeight && h <= maxHeight) {
 			view.setMinHeight(h);
@@ -122,6 +125,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	protected void resizeEast(double minWidth, double maxWidth, double x) {
+		final View view = presenter.getView();
 		if (x >= minWidth && x <= maxWidth) {
 			view.setMaxWidth(x);
 			view.setMinWidth(x);
@@ -129,6 +133,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	protected void resizeSouth(double minHeight, double maxHeight, double y) {
+		final View view = presenter.getView();
 		if (y >= minHeight && y <= maxHeight) {
 			view.setMinHeight(y);
 			view.setMaxHeight(y);
@@ -136,6 +141,7 @@ public class ResizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	public void bind() {
+		final View view = presenter.getView();
 		view.addEventFilter(MouseEvent.MOUSE_ENTERED, this);
 		view.addEventFilter(MouseEvent.MOUSE_MOVED, this);
 		view.addEventFilter(MouseEvent.MOUSE_EXITED, this);

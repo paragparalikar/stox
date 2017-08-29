@@ -187,7 +187,8 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 					view.setMessage(
 							new Message("No data available for \"" + instrument.getName() + "\"", MessageType.ERROR));
 				} else {
-					view.setMessage(new Message(throwable.getMessage(), MessageType.ERROR));
+					final String message = throwable.getMessage();
+					view.setMessage(new Message(null == message ? throwable.getClass().getName() : message, MessageType.ERROR));
 				}
 				callback.onFailure(response, throwable);
 			}

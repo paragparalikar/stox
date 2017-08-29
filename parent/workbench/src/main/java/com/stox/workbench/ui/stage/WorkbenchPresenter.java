@@ -42,9 +42,11 @@ import com.stox.workbench.ui.widget.Tool;
 public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	static {
-		final String[] fonts = { "awesome/fontawesome-webfont.ttf", "open-sans/OpenSans-Bold.ttf", "open-sans/OpenSans-BoldItalic.ttf", "open-sans/OpenSans-ExtraBold.ttf",
-				"open-sans/OpenSans-ExtraBoldItalic.ttf", "open-sans/OpenSans-Italic.ttf", "open-sans/OpenSans-Light.ttf", "open-sans/OpenSans-LightItalic.ttf",
-				"open-sans/OpenSans-Regular.ttf", "open-sans/OpenSans-SemiBold.ttf", "open-sans/OpenSans-SemiBoldItalic.ttf" };
+		final String[] fonts = { "awesome/fontawesome-webfont.ttf", "open-sans/OpenSans-Bold.ttf",
+				"open-sans/OpenSans-BoldItalic.ttf", "open-sans/OpenSans-ExtraBold.ttf",
+				"open-sans/OpenSans-ExtraBoldItalic.ttf", "open-sans/OpenSans-Italic.ttf",
+				"open-sans/OpenSans-Light.ttf", "open-sans/OpenSans-LightItalic.ttf", "open-sans/OpenSans-Regular.ttf",
+				"open-sans/OpenSans-SemiBold.ttf", "open-sans/OpenSans-SemiBoldItalic.ttf" };
 		for (final String font : fonts) {
 			Font.loadFont(Workbench.class.getClassLoader().getResource("fonts/" + font).toExternalForm(), 14);
 		}
@@ -80,7 +82,8 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	@Override
 	public String[] getStylesheets() {
-		return new String[] { "styles/color-sceme.css", "styles/bootstrap.css", "styles/common.css", "styles/controlsfx.css", "styles/workbench.css" };
+		return new String[] { "styles/color-sceme.css", "styles/bootstrap.css", "styles/common.css",
+				"styles/controlsfx.css", "styles/workbench.css" };
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
@@ -88,13 +91,18 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 		if (!workbench.isShowing()) {
 			setSize();
 			final ApplicationContext context = event.getApplicationContext();
-			final Collection<PresenterProvider> presenterProviders = context.getBeansOfType(PresenterProvider.class).values();
-			presenterProviders.forEach(presenterProvider -> workbench.getTitleBar().getApplicationsMenu().getItems().add(new ApplicationMenuItem(this, presenterProvider)));
-			final Collection<StylesheetProvider> stylesheetProviders = context.getBeansOfType(StylesheetProvider.class).values();
-			stylesheetProviders.forEach(stylesheetProvider -> workbench.getScene().getStylesheets().addAll(stylesheetProvider.getStylesheets()));
+			final Collection<PresenterProvider> presenterProviders = context.getBeansOfType(PresenterProvider.class)
+					.values();
+			presenterProviders.forEach(presenterProvider -> workbench.getTitleBar().getApplicationsMenu().getItems()
+					.add(new ApplicationMenuItem(this, presenterProvider)));
+			final Collection<StylesheetProvider> stylesheetProviders = context.getBeansOfType(StylesheetProvider.class)
+					.values();
+			stylesheetProviders.forEach(stylesheetProvider -> workbench.getScene().getStylesheets()
+					.addAll(stylesheetProvider.getStylesheets()));
 			final Collection<Tool> toolBoxes = context.getBeansOfType(Tool.class).values();
 			toolBoxes.forEach(toolBox -> toolBox.setPresenters(presenters));
-			workbench.getToolBar().getItems().addAll(toolBoxes.stream().map(Tool::getNode).collect(Collectors.toList()));
+			workbench.getToolBar().getItems()
+					.addAll(toolBoxes.stream().map(Tool::getNode).collect(Collectors.toList()));
 			workbench.show();
 			loadState(presenterProviders);
 		}
@@ -102,7 +110,8 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	@EventListener(ViewSelectedEvent.class)
 	public void onViewSelected(final ViewSelectedEvent event) {
-		presenters.stream().filter(presenter -> presenter != event.getPresenter()).forEach(presenter -> presenter.setSelected(false));
+		presenters.stream().filter(presenter -> presenter != event.getPresenter())
+				.forEach(presenter -> presenter.setSelected(false));
 	}
 
 	@Override
@@ -117,20 +126,20 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 		final WorkbenchState workbenchState = new WorkbenchState();
 		presenters.forEach(presenter -> workbenchState.getViewStates().add(presenter.getViewState()));
 		Arrays.asList(Link.values()).forEach(link -> workbenchState.getLinkStates().put(link, link.getState()));
-		workbenchClient.save(workbenchState, new ToastCallback<Void, Void>((state) -> {
-			return null;
+		workbenchClient.save(workbenchState, new ToastCallback<Void>(state -> {
 		}));
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void loadState(final Collection<PresenterProvider> providers) {
-		workbenchClient.load(new ToastCallback<WorkbenchState, Void>((state) -> {
-			state.getViewStates().forEach(
-					viewState -> providers.stream().filter(provider -> provider.getViewCode().equals(viewState.getCode())).findFirst().ifPresent(provider -> {
-						final Presenter presenter = provider.create();
-						add(presenter, viewState);
-					}));
-			return null;
+		workbenchClient.load(new ToastCallback<WorkbenchState>(state -> {
+			state.getViewStates()
+					.forEach(viewState -> providers.stream()
+							.filter(provider -> provider.getViewCode().equals(viewState.getCode())).findFirst()
+							.ifPresent(provider -> {
+								final Presenter presenter = provider.create();
+								add(presenter, viewState);
+							}));
 		}));
 	}
 
@@ -152,7 +161,8 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 	@EventListener(RemoveViewRequestEvent.class)
 	public void onRemoveViewRequest(final RemoveViewRequestEvent event) {
 		workbench.getContentPane().getChildren().remove(event.getView());
-		presenters.stream().filter(presenter -> presenter.getView() == event.getView()).findFirst().ifPresent(presenter -> presenters.remove(presenter));
+		presenters.stream().filter(presenter -> presenter.getView() == event.getView()).findFirst()
+				.ifPresent(presenter -> presenters.remove(presenter));
 	}
 
 	private Rectangle2D getVisualRectangle() {
@@ -177,7 +187,8 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 			}
 		} else {
 			maximized = true;
-			backupBounds = new Rectangle2D(workbench.getX(), workbench.getY(), workbench.getWidth(), workbench.getHeight());
+			backupBounds = new Rectangle2D(workbench.getX(), workbench.getY(), workbench.getWidth(),
+					workbench.getHeight());
 			final Rectangle2D parentBounds = getVisualRectangle();
 			workbench.setX(parentBounds.getMinX());
 			workbench.setY(parentBounds.getMinY());

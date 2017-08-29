@@ -14,7 +14,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.stox.core.intf.Callback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
@@ -83,8 +82,8 @@ public class GoogleDataProvider implements DataProvider {
 	}
 
 	@Override
-	public void login(Callback<Void, Object> callback) throws Throwable {
-		callback.call(null);
+	public void login(final Runnable runnable) throws Throwable {
+		runnable.run();
 	}
 
 	@Override

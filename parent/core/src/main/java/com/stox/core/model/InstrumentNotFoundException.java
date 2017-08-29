@@ -1,4 +1,4 @@
-package com.stox.zerodha.model;
+package com.stox.core.model;
 
 public class InstrumentNotFoundException extends RuntimeException{
 

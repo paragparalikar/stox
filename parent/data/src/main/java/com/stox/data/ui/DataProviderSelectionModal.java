@@ -1,6 +1,13 @@
 package com.stox.data.ui;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+
+import com.stox.core.ui.HasNameStringConverter;
+import com.stox.core.ui.util.UiUtil;
+import com.stox.core.ui.widget.FormGroup;
+import com.stox.core.ui.widget.modal.Modal;
+import com.stox.data.DataProvider;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -8,13 +15,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import com.stox.core.intf.Callback;
-import com.stox.core.ui.HasNameStringConverter;
-import com.stox.core.ui.util.UiUtil;
-import com.stox.core.ui.widget.FormGroup;
-import com.stox.core.ui.widget.modal.Modal;
-import com.stox.data.DataProvider;
 
 public class DataProviderSelectionModal extends Modal {
 
@@ -25,7 +25,7 @@ public class DataProviderSelectionModal extends Modal {
 	private final HBox buttonGroup = UiUtil.classes(new HBox(cancelButton, selectButton), "button-group", "right");
 	private final VBox content = UiUtil.fullArea(UiUtil.classes(new VBox(formGroup, buttonGroup), ""));
 
-	public DataProviderSelectionModal(final Collection<DataProvider> dataProviders, final Callback<DataProvider, Void> callback) {
+	public DataProviderSelectionModal(final Collection<DataProvider> dataProviders, final Consumer<DataProvider> consumer) {
 		choiceBox.getItems().addAll(dataProviders);
 		choiceBox.setConverter(new HasNameStringConverter<>());
 		choiceBox.getSelectionModel().select(0);
@@ -39,7 +39,7 @@ public class DataProviderSelectionModal extends Modal {
 		});
 		selectButton.addEventHandler(ActionEvent.ACTION, event -> {
 			hide();
-			callback.call(choiceBox.getValue());
+			consumer.accept(choiceBox.getValue());
 		});
 	}
 }

@@ -7,6 +7,7 @@ import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Bar;
 import com.stox.core.model.BarSpan;
 import com.stox.core.model.Instrument;
+import com.stox.data.event.DataProviderChangedEvent;
 import com.stox.data.tick.TickConsumer;
 
 public interface DataClient {
@@ -14,6 +15,8 @@ public interface DataClient {
 	void register(final TickConsumer consumer);
 	
 	void unregister(final TickConsumer consumer);
+	
+	public void onDataProviderChanged(final DataProviderChangedEvent event);
 
 	void loadBars(final Instrument instrument, final BarSpan barSpan, final Date from, final Date to, final ResponseCallback<List<Bar>> callback);
 

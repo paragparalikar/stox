@@ -1,28 +1,30 @@
 package com.stox.core.ui;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.stox.core.intf.Callback;
 import com.stox.core.intf.ResponseCallback;
 import com.stox.core.model.Message;
 import com.stox.core.model.MessageType;
 import com.stox.core.model.Response;
 
-public class ToastCallback<T, R> implements ResponseCallback<T> {
+public class ToastCallback<T> implements ResponseCallback<T> {
 	private static final Log log = LogFactory.getLog(ToastCallback.class);
 
-	private final Callback<T, R> callback;
+	private final Consumer<T> callback;
 
-	public ToastCallback(final Callback<T, R> callback) {
+	public ToastCallback(final Consumer<T> callback) {
 		this.callback = callback;
 	}
 
 	@Override
 	public void onSuccess(Response<T> response) {
-		callback.call(response.getPayload());
+		if(null != callback) {
+			callback.accept(response.getPayload());
+		}
 	}
 
 	@Override

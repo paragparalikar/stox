@@ -12,12 +12,12 @@ import com.stox.workbench.ui.view.View;
 
 public class MaximizeDecorator implements EventHandler<MouseEvent> {
 
-	private final View view;
 	private boolean maximized = false;
 	private Rectangle2D backupBounds = null;
+	private final Presenter<?, ?> presenter;
 
 	public MaximizeDecorator(final Presenter<?, ?> presenter) {
-		this.view = presenter.getView();
+		this.presenter = presenter;
 	}
 
 	@Override
@@ -34,6 +34,7 @@ public class MaximizeDecorator implements EventHandler<MouseEvent> {
 
 	protected void maximize() {
 		maximized = true;
+		final View view = presenter.getView();
 		backupBounds = new Rectangle2D(view.getLayoutX(), view.getLayoutY(), view.getWidth(), view.getHeight());
 		final Bounds parentBounds = view.getParent().getBoundsInLocal();
 		view.setLayoutX(parentBounds.getMinX());
@@ -44,6 +45,7 @@ public class MaximizeDecorator implements EventHandler<MouseEvent> {
 
 	protected void restore() {
 		maximized = false;
+		final View view = presenter.getView();
 		view.setLayoutX(backupBounds.getMinX());
 		view.setLayoutY(backupBounds.getMinY());
 		view.setMinWidth(backupBounds.getWidth());
@@ -51,11 +53,13 @@ public class MaximizeDecorator implements EventHandler<MouseEvent> {
 	}
 
 	public void bindNode() {
+		final View view = presenter.getView();
 		final Node node = view.getTitleBar().getMovableNode();
 		node.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 	}
 
 	public void unbindNode() {
+		final View view = presenter.getView();
 		final Node node = view.getTitleBar().getMovableNode();
 		node.removeEventHandler(MouseEvent.MOUSE_CLICKED, this);
 	}

@@ -33,7 +33,6 @@ public class DataClientImpl implements DataClient {
 		tickConsumerRegistry.register(consumer);
 		dataProviderManager.execute(dataProvider -> {
 			dataProvider.register(consumer);
-			return null;
 		});
 	}
 
@@ -42,7 +41,6 @@ public class DataClientImpl implements DataClient {
 		tickConsumerRegistry.unregister(consumer);
 		dataProviderManager.execute(dataProvider -> {
 			dataProvider.unregister(consumer);
-			return null;
 		});
 	}
 
@@ -66,6 +64,7 @@ public class DataClientImpl implements DataClient {
 		}
 	}
 
+	@Async
 	@Override
 	public void loadBars(Instrument instrument, BarSpan barSpan, Date from, Date to,
 			ResponseCallback<List<Bar>> callback) {
@@ -77,7 +76,6 @@ public class DataClientImpl implements DataClient {
 			} finally {
 				callback.onDone();
 			}
-			return null;
 		});
 	}
 

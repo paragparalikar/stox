@@ -13,18 +13,17 @@ public class RelocationDecorator implements EventHandler<MouseEvent> {
 
 	private double offsetX;
 	private double offsetY;
-	private final View view;
 	private final Presenter<?, ?> presenter;
 
 	public RelocationDecorator(final Presenter<?, ?> presenter) {
 		this.presenter = presenter;
-		this.view = presenter.getView();
 	}
 
 	@Override
 	public void handle(MouseEvent event) {
 		final double x = event.getX();
 		final double y = event.getY();
+		final View view = presenter.getView();
 		final EventType<? extends MouseEvent> type = event.getEventType();
 		if (!event.isConsumed()) {
 			if (MouseEvent.MOUSE_PRESSED.equals(type)) {
@@ -44,6 +43,7 @@ public class RelocationDecorator implements EventHandler<MouseEvent> {
 	}
 
 	protected void relocateView(double x, double y, double offsetX, double offsetY) {
+		final View view = presenter.getView();
 		final Bounds bounds = view.getParent().getBoundsInLocal();
 		final double newX = view.getLayoutX() + x - offsetX;
 		if (newX >= bounds.getMinX() && newX + view.getWidth() <= bounds.getMaxX()) {
@@ -57,6 +57,7 @@ public class RelocationDecorator implements EventHandler<MouseEvent> {
 	}
 
 	public void bindMovableNode() {
+		final View view = presenter.getView();
 		final Node node = view.getTitleBar().getMovableNode();
 		node.addEventHandler(MouseEvent.MOUSE_PRESSED, this);
 		node.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
@@ -64,6 +65,7 @@ public class RelocationDecorator implements EventHandler<MouseEvent> {
 	}
 
 	public void unbindMovableNode() {
+		final View view = presenter.getView();
 		final Node node = view.getTitleBar().getMovableNode();
 		node.removeEventHandler(MouseEvent.MOUSE_PRESSED, this);
 		node.removeEventHandler(MouseEvent.MOUSE_DRAGGED, this);

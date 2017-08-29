@@ -3,8 +3,7 @@ package com.stox.data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import javafx.application.Platform;
+import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,10 +11,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.stox.core.intf.Callback;
 import com.stox.core.intf.HasName.HasNameComaparator;
 import com.stox.data.event.DataProviderChangedEvent;
 import com.stox.data.ui.DataProviderSelectionModal;
+
+import javafx.application.Platform;
 
 @Component
 public class DataProviderManager {
@@ -23,7 +23,7 @@ public class DataProviderManager {
 	private volatile boolean selectionInProgress = false;
 	private List<DataProvider> dataProviders;
 	private DataProvider selectedDataProvider;
-	private final List<Callback<DataProvider, Void>> callbacks = new LinkedList<>();
+	private final List<Consumer<DataProvider>> callbacks = new LinkedList<>();
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -39,7 +39,7 @@ public class DataProviderManager {
 		dataProviders.sort(new HasNameComaparator<>());
 	}
 
-	public void execute(final Callback<DataProvider, Void> callback) {
+	public void execute(final Consumer<DataProvider> callback) {
 		if (selectionInProgress) {
 			callbacks.add(callback);
 			return;
@@ -54,20 +54,19 @@ public class DataProviderManager {
 					selectionInProgress = false;
 					callbacks.forEach(c -> {
 						try {
-							c.call(dataProvider);
+							c.accept(dataProvider);
 						} catch (Exception e) {
 							e.printStackTrace();
 						} finally {
 							callbacks.remove(c);
 						}
 					});
-					return null;
 				});
 				modal.getStyleClass().add("primary");
 				modal.show();
 			});
 		} else {
-			callback.call(selectedDataProvider);
+			callback.accept(selectedDataProvider);
 		}
 	}
 
