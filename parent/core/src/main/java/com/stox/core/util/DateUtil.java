@@ -2,6 +2,10 @@ package com.stox.core.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.stox.core.model.Bar;
 
 @SuppressWarnings("deprecation")
 public class DateUtil {
@@ -65,6 +69,13 @@ public class DateUtil {
 			date.setTime(DateUtil.calendar.getTimeInMillis());
 			return date;
 		}
+	}
+	
+	public static List<Bar> trim(final List<Bar> bars, final Date from, final Date to) {
+		return bars.stream()
+				.filter(bar -> (bar.getDate().after(from) || bar.getDate().equals(from))
+						&& (bar.getDate().before(to) || bar.getDate().equals(to)))
+				.sorted().collect(Collectors.toList());
 	}
 
 }

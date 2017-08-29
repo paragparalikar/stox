@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.intf.HasName.HasNameComaparator;
@@ -25,6 +26,9 @@ public class DataProviderManager {
 	private DataProvider selectedDataProvider;
 	private final List<Consumer<DataProvider>> callbacks = new LinkedList<>();
 
+	@Autowired
+	private TaskExecutor taskExecutor;
+	
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 	
@@ -49,16 +53,17 @@ public class DataProviderManager {
 			callbacks.add(callback);
 			Platform.runLater(() -> {
 				final DataProviderSelectionModal modal = new DataProviderSelectionModal(dataProviders, dataProvider -> {
-					eventPublisher.publishEvent(new DataProviderChangedEvent(DataProviderManager.this, selectedDataProvider, dataProvider));
-					selectedDataProvider = dataProvider;
-					selectionInProgress = false;
-					callbacks.forEach(c -> {
-						try {
-							c.accept(dataProvider);
-						} catch (Exception e) {
-							e.printStackTrace();
-						} finally {
-							callbacks.remove(c);
+					taskExecutor.execute(() -> {
+						if(dataProvider.isLoggedIn()) {
+							select(dataProvider);
+						}else {
+							try {
+								dataProvider.login(() -> {
+									select(dataProvider);
+								});
+							} catch (Throwable e) {
+								e.printStackTrace();
+							}
 						}
 					});
 				});
@@ -68,6 +73,20 @@ public class DataProviderManager {
 		} else {
 			callback.accept(selectedDataProvider);
 		}
+	}
+	
+	protected void select(final DataProvider dataProvider) {
+		eventPublisher.publishEvent(new DataProviderChangedEvent(DataProviderManager.this, selectedDataProvider, dataProvider));
+		selectedDataProvider = dataProvider;
+		selectionInProgress = false;
+		callbacks.removeIf(callback -> {
+			try {
+				callback.accept(dataProvider);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+			return true;
+		});
 	}
 
 }
