@@ -37,6 +37,7 @@ import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.SubscriberPresenter;
 
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
@@ -183,14 +184,16 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 
 			@Override
 			public void onFailure(Response<List<Bar>> response, Throwable throwable) {
-				if (throwable instanceof FileNotFoundException) {
-					view.setMessage(
-							new Message("No data available for \"" + instrument.getName() + "\"", MessageType.ERROR));
-				} else {
-					final String message = throwable.getMessage();
-					view.setMessage(new Message(null == message ? throwable.getClass().getName() : message, MessageType.ERROR));
-				}
-				callback.onFailure(response, throwable);
+				Platform.runLater(() -> {
+					if (throwable instanceof FileNotFoundException) {
+						view.setMessage(
+								new Message("No data available for \"" + instrument.getName() + "\"", MessageType.ERROR));
+					} else {
+						final String message = throwable.getMessage();
+						view.setMessage(new Message(null == message ? throwable.getClass().getName() : message, MessageType.ERROR));
+					}
+					callback.onFailure(response, throwable);
+				});
 			}
 
 			@Override

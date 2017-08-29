@@ -54,6 +54,7 @@ public class BinaryFileBarRepository implements BarRepository {
 	@Override
 	public List<Bar> find(String instrumentId, BarSpan barSpan, Date from, Date to) {
 		BarSpan requstedBarSpan = null;
+		final List<Bar> bars = new ArrayList<>();
 		if(BarSpan.W.equals(barSpan) || BarSpan.M.equals(barSpan)) {
 			requstedBarSpan = barSpan;
 			barSpan = BarSpan.D;
@@ -61,7 +62,7 @@ public class BinaryFileBarRepository implements BarRepository {
 		final String path = getPath(instrumentId, barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
-				final List<Bar> bars = new ArrayList<>();
+				
 				file.seek(file.length());
 				while (file.getFilePointer() >= Bar.BYTES) {
 					file.seek(file.getFilePointer() - Bar.BYTES);
@@ -70,7 +71,7 @@ public class BinaryFileBarRepository implements BarRepository {
 						bars.add(bar); // One extra bar, to make things easier for loadExtra in PricePlot
 						break;
 					}
-					if (bar.getDate().before(to)) {
+					if (bar.getDate().before(to) || bar.getDate().equals(to)) {
 						bars.add(bar);
 					}
 					if (file.getFilePointer() >= Bar.BYTES * 2) {
@@ -85,7 +86,7 @@ public class BinaryFileBarRepository implements BarRepository {
 					return bars;
 				}
 			} catch (final FileNotFoundException fileNotFoundException) {
-				return Collections.emptyList();
+				return bars;
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
