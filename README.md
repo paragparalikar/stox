@@ -18,4 +18,10 @@
 <li>Visitor</li><br>
 <li>Strategy</li>
 <li>Decorator</li>
+<li>More Design Patterns...</li>
 </ul>
+
+
+
+<br><br>
+<b>Screenshots:</b>
