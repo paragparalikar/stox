@@ -12,6 +12,10 @@
 
 <b>Design Patterns Used:</b>
 <ul>
+<li>Builder</li>
 <li>Factory</li>
-<li>Singleton</li>
+<li>Singleton</li><br>
+<li>Visitor</li><br>
+<li>Strategy</li>
+<li>Decorator</li>
 </ul>
