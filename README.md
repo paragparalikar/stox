@@ -1,3 +1,6 @@
+<p>A JavaFX UI driven by Spring boot for highly complex interactive stock charts which utilise free data sources.</p>
+<p>This is a highly moduler and loosely coupled application with layered architecture, each vertical slice of which can work fully independently. The code is written using several of design patterns and good coding practices and in SPI style.</p>
+
 <b>Technology Stack:</b><br><br>
 
 <b>Build tool:</b> Maven<br>
