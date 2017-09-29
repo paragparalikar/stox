@@ -1,5 +1,6 @@
 package com.stox.data;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class DefaultDataProvider implements DataProvider {
 
 	@Override
 	public List<Bar> getBars(Instrument instrument, BarSpan barSpan, Date from, Date to) throws Exception {
-		return barRepository.find(instrument.getId(), barSpan, from, to);
+		return Collections.emptyList();
 	}
 
 }
