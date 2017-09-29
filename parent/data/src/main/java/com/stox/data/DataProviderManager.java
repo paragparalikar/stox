@@ -28,7 +28,7 @@ public class DataProviderManager {
 
 	@Autowired
 	private TaskExecutor taskExecutor;
-	
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 	
