@@ -1,7 +1,6 @@
 package com.stox.chart.drawing;
 
 import com.stox.chart.chart.Chart;
-import com.stox.chart.drawing.HorizontalLine.State;
 import com.stox.chart.view.ChartView;
 import com.stox.chart.view.MouseHandler;
 import com.stox.chart.widget.ChartingTool;
@@ -19,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.util.Callback;
-import lombok.Data;
 
 public class HorizontalLineToggleButton extends ToggleButton implements ChangeListener<Boolean>, Callback<HorizontalLine, Void> {
 
@@ -108,13 +106,20 @@ class HorizontalLineMouseHandler implements MouseHandler {
 
 }
 
-class HorizontalLine extends Drawing<State> {
+class HorizontalLine extends Drawing<HorizontalLine.State> {
 	public static final String CODE = "hline";
 	
-	@Data
 	public static class State implements Drawing.State<State>{
 		
 		private double value;
+
+		public double getValue() {
+			return value;
+		}
+		
+		public void setValue(double value) {
+			this.value = value;
+		}
 		
 		@Override
 		public String getCode() {

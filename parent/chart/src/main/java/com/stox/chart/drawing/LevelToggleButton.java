@@ -1,7 +1,6 @@
 package com.stox.chart.drawing;
 
 import com.stox.chart.chart.Chart;
-import com.stox.chart.drawing.Level.State;
 import com.stox.chart.view.ChartView;
 import com.stox.chart.view.MouseHandler;
 import com.stox.chart.widget.ChartingTool;
@@ -19,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
-import lombok.Value;
 
 public class LevelToggleButton extends ToggleButton implements ChangeListener<Boolean>, Callback<Level, Void> {
 
@@ -65,19 +63,31 @@ public class LevelToggleButton extends ToggleButton implements ChangeListener<Bo
 
 }
 
-class Level extends Drawing<State> {
+class Level extends Drawing<Level.State> {
 	public static final String CODE = "level";
 	
-	@Value
 	public static class State implements Drawing.State<State>{
 		
 		private ControlPoint.State oneState;
 		
 		private ControlPoint.State twoState;	
 		
+		public State(final ControlPoint.State oneState, final ControlPoint.State twoState) {
+			this.oneState = oneState;
+			this.twoState = twoState;
+		}
+		
 		@Override
 		public String getCode() {
 			return CODE;
+		}
+		
+		public ControlPoint.State getOneState() {
+			return oneState;
+		}
+		
+		public ControlPoint.State getTwoState() {
+			return twoState;
 		}
 		
 		@Override

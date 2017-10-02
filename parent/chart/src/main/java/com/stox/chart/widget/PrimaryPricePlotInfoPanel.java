@@ -48,4 +48,11 @@ public class PrimaryPricePlotInfoPanel extends PricePlotInfoPanel implements Eve
 		plotInfoPane.setModel(null == unit ? null : unit.getModel());
 	}
 
+	public void clear() {
+		primaryPricePlot.getPlotInfoPane().setModel(null);
+		primaryPricePlot.getChart().getPricePlots().forEach(plot -> plot.getPlotInfoPane().setModel(null));
+		primaryPricePlot.getChart().getChartView().getCharts()
+				.forEach(chart -> chart.getPlots().forEach(plot -> plot.getPlotInfoPane().setModel(null)));
+	}
+
 }

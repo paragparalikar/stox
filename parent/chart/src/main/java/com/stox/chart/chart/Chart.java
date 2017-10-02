@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -42,13 +43,12 @@ public class Chart extends BorderPane {
 		chartInfoPane.setPickOnBounds(false);
 		setRight(valueAxis);
 		drawings.addListener((ListChangeListener<Drawing<?>>) (change) -> {
-			while (change.next()) {
-				if (change.wasRemoved()) {
-					glassPane.getChildren().removeAll(change.getRemoved());
-				}
-				if (change.wasAdded()) {
-					glassPane.getChildren().addAll(change.getAddedSubList());
-				}
+			if (Platform.isFxApplicationThread()) {
+				handleDrawingsChanged(change);
+			} else {
+				Platform.runLater(() -> {
+					handleDrawingsChanged(change);
+				});
 			}
 		});
 		plots.addListener((ListChangeListener<Plot<?>>) (change) -> {
@@ -70,6 +70,17 @@ public class Chart extends BorderPane {
 				}
 			}
 		});
+	}
+
+	private void handleDrawingsChanged(ListChangeListener.Change<? extends Drawing<?>> change) {
+		while (change.next()) {
+			if (change.wasRemoved()) {
+				glassPane.getChildren().removeAll(change.getRemoved());
+			}
+			if (change.wasAdded()) {
+				glassPane.getChildren().addAll(change.getAddedSubList());
+			}
+		}
 	}
 
 	public void setDirty() {

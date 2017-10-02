@@ -2,7 +2,6 @@ package com.stox.chart.drawing;
 
 import com.stox.chart.axis.DateAxis;
 import com.stox.chart.chart.Chart;
-import com.stox.chart.drawing.VerticalLine.State;
 import com.stox.chart.view.ChartView;
 import com.stox.chart.view.MouseHandler;
 import com.stox.chart.widget.ChartingTool;
@@ -109,7 +108,7 @@ class VerticalLineMouseHandler implements MouseHandler {
 
 }
 
-class VerticalLine extends Drawing<State> {
+class VerticalLine extends Drawing<VerticalLine.State> {
 	public static final String CODE = "vline";
 	
 	@Data

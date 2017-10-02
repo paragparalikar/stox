@@ -1,6 +1,7 @@
 package com.stox.chart.view;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -148,11 +149,12 @@ public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewStat
 					@SuppressWarnings({ "unchecked", "rawtypes" })
 					public void onSuccess(final Response<List<Drawing.State<?>>> response) {
 						if (null != response.getPayload()) {
-							final List<Drawing<?>> drawings = response.getPayload().stream().map(state -> {
+							final List<Drawing<?>> drawings = new ArrayList<>(response.getPayload().size());
+							response.getPayload().forEach(state -> {
 								final Drawing drawing = drawingFactory.create(state.getCode(), view.getPrimaryChart());
 								drawing.getState().copy(state);
-								return drawing;
-							}).collect(Collectors.toList());
+								drawings.add(drawing);
+							});
 							view.getPrimaryChart().getDrawings().addAll(drawings);
 							view.getPrimaryChart().setDirty();
 						}

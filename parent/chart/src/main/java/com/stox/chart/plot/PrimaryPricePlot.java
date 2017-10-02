@@ -62,6 +62,7 @@ public class PrimaryPricePlot extends PricePlot implements TickConsumer {
 
 	@Override
 	public void setInstrument(Instrument instrument) {
+		primaryPricePlotInfoPanel.clear();
 		chart.getChartView().clearMessages();
 		chart.getChartView().getDateAxis().reset();
 		chart.getChartView().getTitleBar().setTitleText(instrument.getName());

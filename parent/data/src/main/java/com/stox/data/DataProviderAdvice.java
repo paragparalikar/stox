@@ -48,12 +48,13 @@ public class DataProviderAdvice {
 			return DateUtil.trim(bars, from, to);
 		} else {
 			final Date start = bars.get(bars.size() - 1).getDate();
+			final long previous = barSpan.previous(start.getTime());
 			final Date end = bars.get(0).getDate();
 			final long next = barSpan.next(end.getTime());
-			if (start.getTime() <= from.getTime() &&  next > to.getTime()) {
+			if (previous <= from.getTime() &&  next > to.getTime()) {
 				log.debug("All data available locally for " + instrument.getId());
 				return bars;
-			} else if (start.getTime() > from.getTime() && next <= to.getTime()) {
+			} else if (previous > from.getTime() && next <= to.getTime()) {
 				log.debug("Only inclusive subset of data available locally, start : " + start + ", end : " + end);
 				bars.clear();
 				bars.addAll((List<Bar>) proceedingJoinPoint.proceed());
@@ -61,7 +62,7 @@ public class DataProviderAdvice {
 					barRepository.save(bars, instrument.getId(), barSpan);
 				});
 				return DateUtil.trim(bars, from, to);
-			} else if (start.getTime() <= from.getTime() && next <= to.getTime()) {
+			} else if (previous <= from.getTime() && next <= to.getTime()) {
 				log.debug(
 						"Fetch latest data, start : " + start + ", from : " + from + ", end : " + end + ", to : " + to);
 				final List<Bar> downloadedBars = (List<Bar>) proceedingJoinPoint
@@ -74,7 +75,7 @@ public class DataProviderAdvice {
 																		// bars with date = end; this will
 																		// cause duplicate bars
 				return bars;
-			} else if (start.getTime() > from.getTime() && next >= to.getTime()) {
+			} else if (previous > from.getTime() && next >= to.getTime()) {
 				log.debug("Fetch historic data, from : "+from+", start : "+start+", to : "+to+", end : "+end);
 				final List<Bar> downloadedBars = (List<Bar>) proceedingJoinPoint
 						.proceed(new Object[] { instrument, barSpan, from, start });
