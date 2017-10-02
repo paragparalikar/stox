@@ -26,7 +26,7 @@ public class DefaultDataProvider implements DataProvider {
 
 	@Override
 	public String getName() {
-		return "Default";
+		return "None";
 	}
 
 	@Override

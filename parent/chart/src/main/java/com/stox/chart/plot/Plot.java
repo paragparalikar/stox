@@ -146,11 +146,11 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 		final int lowerBoundIndex = dateAxis.getLowerBoundIndex();
 		final int upperBoundIndex = dateAxis.getUpperBoundIndex();
 		for (int index = lowerBoundIndex; index >= upperBoundIndex; index--) {
-			if (index >= 0 && index < units.size()) {
-				final Unit<M> unit = units.get(index);
-				if (null != unit) {
-					min = Math.min(min, unit.getModel().getLow());
-					max = Math.max(max, unit.getModel().getHigh());
+			if (index >= 0 && index < models.size()) {
+				final M model = models.get(index);
+				if (null != model) {
+					min = Math.min(min, model.getLow());
+					max = Math.max(max, model.getHigh());
 				}
 			}
 		}
