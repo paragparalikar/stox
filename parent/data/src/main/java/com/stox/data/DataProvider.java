@@ -13,6 +13,8 @@ import com.stox.data.tick.TickConsumer;
 public interface DataProvider extends HasLogin, HasName {
 
 	String getCode();
+	
+	boolean isLocal();
 
 	void register(final TickConsumer consumer);
 

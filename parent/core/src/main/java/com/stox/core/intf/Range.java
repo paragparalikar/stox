@@ -10,15 +10,21 @@ public interface Range {
 
 	public static class DoubleRange implements Range {
 
-		private final double value;
+		private final double low, value, high;
 
 		public DoubleRange(final double value) {
+			this(value, value, value);
+		}
+		
+		public DoubleRange(final double low, final double value, final double high) {
+			this.low = low;
 			this.value = value;
+			this.high = high;
 		}
 
 		@Override
 		public double getHigh() {
-			return value;
+			return high;
 		}
 
 		@Override
@@ -28,7 +34,7 @@ public interface Range {
 
 		@Override
 		public double getLow() {
-			return value;
+			return low;
 		}
 
 	}

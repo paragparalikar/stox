@@ -63,10 +63,10 @@ public class Chart extends BorderPane {
 					});
 				}
 				if (change.wasRemoved()) {
-					area.getChildren().removeAll(change.getRemoved());
 					change.getRemoved().forEach(plot -> {
 						chartInfoPane.getChildren().remove(plot.getPlotInfoPane());
 					});
+					area.getChildren().removeAll(change.getRemoved());
 				}
 			}
 		});

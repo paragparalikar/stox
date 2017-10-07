@@ -40,6 +40,11 @@ public class GoogleDataProvider implements DataProvider {
 	public void preDestroy() {
 		cancelled = true;
 	}
+	
+	@Override
+	public boolean isLocal() {
+		return false;
+	}
 
 	@Override
 	public void register(TickConsumer consumer) {

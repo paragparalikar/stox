@@ -80,6 +80,8 @@
 		<module>google</module>
 		<module>watchlist</module>
 		<module>example</module>
+		<module>indicator</module>
+		<module>chart-indicator</module>
 	</modules>
 
 

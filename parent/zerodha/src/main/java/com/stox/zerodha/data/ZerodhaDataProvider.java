@@ -50,6 +50,11 @@ public class ZerodhaDataProvider implements DataProvider {
 	private final TickConsumerRegistry tickConsumerRegistry = new TickConsumerRegistry();
 
 	@Override
+	public boolean isLocal() {
+		return false;
+	}
+	
+	@Override
 	public void register(TickConsumer consumer) {
 		synchronized (tickConsumerRegistry) {
 			tickConsumerRegistry.register(consumer);

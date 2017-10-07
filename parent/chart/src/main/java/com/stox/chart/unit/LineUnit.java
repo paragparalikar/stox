@@ -16,7 +16,9 @@ public class LineUnit<M extends Range> extends Unit<M> {
 		if (getIndex() < plot.getModels().size() - 1) {
 			final M current = getModel();
 			final M previous = plot.getModels().get(getIndex() + 1);
-			plotNode.getPoints().addAll(x, getDisplayPosition(previous.getValue()), x + width, getDisplayPosition(current.getValue()));
+			if(null != current && null != previous) {
+				plotNode.getPoints().addAll(x, getDisplayPosition(previous.getValue()), x + width, getDisplayPosition(current.getValue()));
+			}
 		}
 	}
 

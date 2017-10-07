@@ -2,10 +2,10 @@ package com.stox.core.model;
 
 import java.util.Date;
 
-import lombok.Data;
-
 import com.stox.core.intf.Range;
 import com.stox.core.util.StringUtil;
+
+import lombok.Data;
 
 @Data
 public class Bar implements Range, Comparable<Bar> {
@@ -42,6 +42,10 @@ public class Bar implements Range, Comparable<Bar> {
 	@Override
 	public double getValue() {
 		return getClose();
+	}
+
+	public double getValue(final BarValueType barValueType) {
+		return barValueType.getValue(this);
 	}
 
 	@Override

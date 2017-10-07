@@ -184,7 +184,7 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 	}
 
 	@Override
-	protected final void layoutChildren() {
+	protected void layoutChildren() {
 		if (dirty) {
 			dirty = false;
 			final DateAxis dateAxis = chart.getChartView().getDateAxis();

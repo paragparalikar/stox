@@ -32,6 +32,12 @@ public class DataProviderAdvice {
 	@SuppressWarnings("unchecked")
 	@Around("target(com.stox.data.DataProvider) && execution(* getBars(..))")
 	public Object getBars(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+		final DataProvider dataProvider = (DataProvider)proceedingJoinPoint.getTarget();
+		
+		if(dataProvider.isLocal()) {
+			return proceedingJoinPoint.proceed();
+		}
+		
 		final Object[] args = proceedingJoinPoint.getArgs();
 		final Instrument instrument = (Instrument) args[0];
 		final BarSpan barSpan = (BarSpan) args[1];
