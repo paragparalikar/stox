@@ -30,6 +30,7 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		final List<Bar> bars = getChart().getChartView().getPrimaryChart().getPrimaryPricePlot().getModels();
 		final List<M> models = chartIndicator.compute(config, bars);
 		getModels().setAll(models);
+		update();
 	}
 
 	@Override

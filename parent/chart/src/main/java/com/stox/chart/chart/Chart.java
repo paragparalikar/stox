@@ -4,6 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.stox.chart.axis.ValueAxis;
+import com.stox.chart.drawing.Drawing;
+import com.stox.chart.plot.Plot;
+import com.stox.chart.view.ChartView;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -14,12 +20,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import com.stox.chart.axis.ValueAxis;
-import com.stox.chart.drawing.Drawing;
-import com.stox.chart.plot.Plot;
-import com.stox.chart.view.ChartView;
-import com.stox.core.ui.util.UiUtil;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "chartView", "plots" })
@@ -53,6 +53,12 @@ public class Chart extends BorderPane {
 		});
 		plots.addListener((ListChangeListener<Plot<?>>) (change) -> {
 			while (change.next()) {
+				if (change.wasRemoved()) {
+					change.getRemoved().forEach(plot -> {
+						chartInfoPane.getChildren().remove(plot.getPlotInfoPane());
+					});
+					area.getChildren().removeAll(change.getRemoved());  // Children: duplicate children added: parent
+				}
 				if (change.wasAdded() && Collections.disjoint(getChildren(), change.getAddedSubList())) {
 					final List<? extends Plot<?>> addedPlots = change.getAddedSubList();
 					area.getChildren().addAll(addedPlots);
@@ -61,12 +67,6 @@ public class Chart extends BorderPane {
 						plot.setColor(chartView.getPlotColors().get(index));
 						chartInfoPane.getChildren().add(plot.getPlotInfoPane());
 					});
-				}
-				if (change.wasRemoved()) {
-					change.getRemoved().forEach(plot -> {
-						chartInfoPane.getChildren().remove(plot.getPlotInfoPane());
-					});
-					area.getChildren().removeAll(change.getRemoved());
 				}
 			}
 		});

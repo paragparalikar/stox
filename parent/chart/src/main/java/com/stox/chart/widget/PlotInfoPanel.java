@@ -1,15 +1,16 @@
 package com.stox.chart.widget;
 
-import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-
+import com.stox.chart.chart.Chart;
 import com.stox.chart.plot.Plot;
 import com.stox.core.intf.Range;
 import com.stox.core.ui.util.Icon;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.util.Constant;
+
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 
 public class PlotInfoPanel<M extends Range> extends HBox {
 
@@ -23,9 +24,7 @@ public class PlotInfoPanel<M extends Range> extends HBox {
 		this.plot = plot;
 		UiUtil.classes(this, "plot-info-pane");
 		getChildren().addAll(removeButton, nameLabel, valueLabel);
-		removeButton.addEventHandler(ActionEvent.ACTION, event -> {
-			removePlot();
-		});
+		removeButton.addEventHandler(ActionEvent.ACTION, event -> removePlot());
 	}
 
 	public Plot<M> getPlot() {
@@ -33,7 +32,8 @@ public class PlotInfoPanel<M extends Range> extends HBox {
 	}
 
 	protected void removePlot() {
-		plot.getChart().getPlots().remove(plot);
+		final Chart chart = plot.getChart();
+		chart.getPlots().remove(plot);
 	}
 
 	public void setName(final String name) {
