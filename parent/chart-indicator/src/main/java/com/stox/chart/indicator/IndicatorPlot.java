@@ -19,6 +19,11 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		this.chartIndicator = chartIndicator;
 		config = chartIndicator.buildDefaultConfig();
 		getPlotInfoPane().setName(getName());
+		final Style style = chartIndicator.getStyle();
+		
+		if(null != style && null != style.getNode()) {
+			getChildren().add(style.getNode());
+		}
 	}
 	
 	public Object getConfig() {
@@ -46,6 +51,15 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 	@Override
 	protected PlotInfoPanel<M> createPlotInfoPanel() {
 		return new IndicatorPlotInfoPanel<>(this);
+	}
+	
+	@Override
+	protected void postLayout() {
+		super.postLayout();
+		final Style style = chartIndicator.getStyle();
+		if(null != style) {
+			style.apply(this);
+		}
 	}
 	
 }

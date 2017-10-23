@@ -11,4 +11,6 @@ public interface ChartIndicator<T, V extends Range> extends Indicator<T,V>{
 	
 	UnitType getUnitType(T config);
 	
+	Style getStyle();
+	
 }

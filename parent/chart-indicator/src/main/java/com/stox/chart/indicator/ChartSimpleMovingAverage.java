@@ -23,5 +23,10 @@ public class ChartSimpleMovingAverage extends SimpleMovingAverage implements Cha
 	public UnitType getUnitType(Config config) {
 		return UnitType.LINE;
 	}
+	
+	@Override
+	public Style getStyle() {
+		return null;
+	}
 
 }
