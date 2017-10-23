@@ -72,6 +72,7 @@ public class IndicatorModal extends Modal {
 			final IndicatorPlot plot = new IndicatorPlot(chart, indicator);
 			chart.getPlots().add(plot);
 			chartView.getCharts().add(chart);
+			chart.setDirty();
 			plot.load();
 			break;
 		case PRICE:

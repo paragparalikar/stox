@@ -82,6 +82,8 @@
 		<module>example</module>
 		<module>indicator</module>
 		<module>chart-indicator</module>
+		<module>screen</module>
+		<module>chart-screen</module>
 	</modules>
 
 
