@@ -6,6 +6,12 @@ import java.io.InputStream;
 
 public class StringUtil {
 
+	public static String splitCamelCase(String s) {
+		s = s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+		 return s.substring(0, 1).toUpperCase() + s.substring(1); 
+	}
+
 	public static String trim(final String text) {
 		return null == text ? null : text.trim();
 	}

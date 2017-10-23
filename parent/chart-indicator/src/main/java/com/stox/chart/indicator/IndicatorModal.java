@@ -16,6 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 public class IndicatorModal extends Modal {
 
 	private final ChartView chartView;
@@ -23,6 +24,7 @@ public class IndicatorModal extends Modal {
 
 	public IndicatorModal(final ChartView chartView) {
 		this.chartView = chartView;
+		getStyleClass().add("primary");
 		setTitle("Indicators");
 		setContent(listView);
 		listView.setCellFactory(new Callback<ListView<ChartIndicator>, ListCell<ChartIndicator>>() {
@@ -31,8 +33,8 @@ public class IndicatorModal extends Modal {
 				return new ListCell<ChartIndicator>() {
 					ChartIndicator item;
 					final Label label = new Label();
-					final Button addButton = UiUtil.classes(new Button(Icon.PLUS), "icon");
-					final HBox container = new HBox(label, addButton);
+					final Button addButton = UiUtil.classes(new Button(Icon.PLUS), "icon", "primary");
+					final HBox container = new HBox(label, UiUtil.spacer(), addButton);
 
 					{
 						addButton.addEventHandler(ActionEvent.ACTION, event -> {

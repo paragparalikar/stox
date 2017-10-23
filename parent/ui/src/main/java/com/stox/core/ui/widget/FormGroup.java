@@ -92,5 +92,9 @@ public class FormGroup extends VBox {
 			}
 		}
 	}
+	
+	public Node getNode() {
+		return node;
+	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.stox.chart.chart.Chart;
 import com.stox.chart.plot.Plot;
 import com.stox.chart.unit.UnitType;
+import com.stox.chart.widget.PlotInfoPanel;
 import com.stox.core.intf.Range;
 import com.stox.core.model.Bar;
 
@@ -18,6 +19,10 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		this.chartIndicator = chartIndicator;
 		config = chartIndicator.buildDefaultConfig();
 		getPlotInfoPane().setName(getName());
+	}
+	
+	public Object getConfig() {
+		return config;
 	}
 
 	@Override
@@ -36,6 +41,11 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 	@Override
 	public UnitType getUnitType() {
 		return chartIndicator.getUnitType(config);
+	}
+	
+	@Override
+	protected PlotInfoPanel<M> createPlotInfoPanel() {
+		return new IndicatorPlotInfoPanel<>(this);
 	}
 	
 }

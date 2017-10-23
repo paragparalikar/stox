@@ -35,6 +35,15 @@ public enum BarValueType implements HasId<String>, HasName {
 			return bar.getVolume();
 		}
 	};
+	
+	public static BarValueType findByName(final String name) {
+		for(final BarValueType type : values()) {
+			if(type.getName().equals(name)) {
+				return type;
+			}
+		}
+		return null;
+	}
 
 	private final String id, name;
 

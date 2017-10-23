@@ -21,7 +21,7 @@ public class SimpleMovingAverage implements Indicator<Config, DoubleRange> {
 		private BarValueType barValueType = BarValueType.CLOSE;
 		
 		public String toString() {
-			return String.valueOf(span)+","+barValueType.getName();
+			return "SMA("+String.valueOf(span)+","+(null == barValueType ? "" : barValueType.getName())+")";
 		}
 		
 	}

@@ -235,3 +235,18 @@
 	-fx-background-color: derive(background-danger, -25%);
 	-fx-border-color: derive(background-danger, -25%);
 }
+
+/* warning */
+.warning.button{
+	-fx-background-color: background-warning;
+	-fx-border-color: background-warning;
+	-fx-text-fill: text-warning;
+}
+.warning.button:hover{
+	-fx-background-color: derive(background-warning, -15%);
+	-fx-border-color: derive(background-warning, -15%);
+}
+.warning.button:selected, .warning.button:focused{
+	-fx-background-color: derive(background-warning, -25%);
+	-fx-border-color: derive(background-warning, -25%);
+}

@@ -36,6 +36,8 @@ public class Modal implements HasLifecycle, HasSpinner {
 	private final Stage stage = new Stage();
 	private final VBox spinner = UiUtil.classes(new VBox(new ProgressIndicator()), "center");
 	private final ResizableRelocatableWindowDecorator stageDecorator = new ResizableRelocatableWindowDecorator(stage);
+	
+	private Runnable onHide;
 
 	public Modal() {
 		stage.initModality(Modality.WINDOW_MODAL);
@@ -52,6 +54,10 @@ public class Modal implements HasLifecycle, HasSpinner {
 		scene.getStylesheets().addAll("styles/color-sceme.css", "fonts/open-sans/open-sans.css", "styles/bootstrap.css", "styles/common.css", "styles/workbench.css",
 				"styles/modal.css");
 		stage.setScene(scene);
+	}
+	
+	public void onHide(final Runnable runnable) {
+		this.onHide = runnable;
 	}
 	
 	public void setMessage(final Message message) {
@@ -122,6 +128,9 @@ public class Modal implements HasLifecycle, HasSpinner {
 		final ApplicationStage workbench = ApplicationStage.getInstance();
 		if (null != workbench) {
 			workbench.showGlass(false);
+		}
+		if(null != onHide) {
+			onHide.run();
 		}
 		stage.hide();
 	}
