@@ -7,37 +7,35 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Bar;
 import com.stox.core.model.Language;
-import com.stox.screen.Test.Config;
+import com.stox.screen.PinBarScreen.Config;
 
 import lombok.Data;
 
 @Lazy
 @Component
-public class Test implements Screen<Config> {
+public class PinBarScreen implements Screen<Config> {
 
 	@Data
 	public static class Config{
 		
-		private int span = 14;
-		
 		public String toString() {
-			return "Test("+span+")";
+			return "PinBar";
 		}
 	}
 
 	@Override
 	public String getId() {
-		return "TEST";
+		return "PinBar";
 	}
 
 	@Override
 	public String getName() {
-		return "Test";
+		return "Pin Bar";
 	}
 
 	@Override
 	public int getMinBarCount(Config config) {
-		return config.getSpan();
+		return 1;
 	}
 
 	@Override
@@ -52,7 +50,7 @@ public class Test implements Screen<Config> {
 
 	@Override
 	public ScreenType getScreenType() {
-		return ScreenType.BEARISH;
+		return ScreenType.BULLISH;
 	}
 
 	@Override
