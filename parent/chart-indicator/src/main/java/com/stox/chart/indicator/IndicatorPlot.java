@@ -17,6 +17,7 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		super(chart);
 		this.chartIndicator = chartIndicator;
 		config = chartIndicator.buildDefaultConfig();
+		getPlotInfoPane().setName(getName());
 	}
 
 	@Override

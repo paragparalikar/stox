@@ -54,7 +54,7 @@ public class BinaryFileBarRepository implements BarRepository {
 	@Override
 	public List<Bar> find(String instrumentId, BarSpan barSpan, Date from, Date to) {
 		BarSpan requstedBarSpan = null;
-		final List<Bar> bars = new ArrayList<>();
+		List<Bar> bars = new ArrayList<>();
 		if(BarSpan.W.equals(barSpan) || BarSpan.M.equals(barSpan)) {
 			requstedBarSpan = barSpan;
 			barSpan = BarSpan.D;
@@ -62,7 +62,6 @@ public class BinaryFileBarRepository implements BarRepository {
 		final String path = getPath(instrumentId, barSpan).intern();
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
-				
 				file.seek(file.length());
 				while (file.getFilePointer() >= Bar.BYTES) {
 					file.seek(file.getFilePointer() - Bar.BYTES);
@@ -81,15 +80,17 @@ public class BinaryFileBarRepository implements BarRepository {
 					}
 				}
 				if(null != requstedBarSpan) {
-					return requstedBarSpan.merge(bars);
-				}else {
-					return bars;
+					bars = requstedBarSpan.merge(bars);
 				}
 			} catch (final FileNotFoundException fileNotFoundException) {
-				return bars;
+				
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
+			if(1 == bars.size()) {
+				bars.clear();
+			}
+			return bars;
 		}
 	}
 
