@@ -20,7 +20,9 @@ import com.stox.core.ui.util.UiUtil;
 import com.stox.workbench.ui.view.View;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -62,6 +64,7 @@ public class ChartView extends View implements HasInstrument, HasBarSpan, HasDat
 		primaryChart = new PrimaryChart(this);
 		volumePlot = new VolumePlot(primaryChart);
 		dateAxis = new DateAxis(this);
+		splitPane.setOrientation(Orientation.VERTICAL);
 		content = new BorderPane(splitPane, null, null, dateAxis, null);
 		crosshair = new Crosshair(this);
 		contextMenu = new ContextMenu();
@@ -72,6 +75,26 @@ public class ChartView extends View implements HasInstrument, HasBarSpan, HasDat
 		getChildren().addAll(crosshair);
 		splitPane.getItems().add(primaryChart);
 		primaryChart.getPlots().add(volumePlot);
+		
+		charts.addListener(new ListChangeListener<Chart>() {
+            @Override
+            public void onChanged(
+                final javafx.collections.ListChangeListener.Change<? extends Chart> change) {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        splitPane.getItems().addAll(change.getAddedSubList());
+                    }
+                    if (change.wasRemoved()) {
+                        splitPane.getItems().removeAll(change.getRemoved());
+                    }
+                    final int size = charts.size();
+                    for (int index = 0; index < size; index++) {
+                        splitPane.setDividerPosition(index, 1 - ((size - index) * 0.2));
+                    }
+                }
+                requestLayout();
+            }
+        });
 	}
 
 	public void setDirty() {
