@@ -16,7 +16,7 @@ public class ChartUtil {
 			calendar.add(Calendar.YEAR, -1);
 			return calendar.getTime();
 		case W:
-			calendar.add(Calendar.YEAR, -1);
+			calendar.add(Calendar.YEAR, -10);
 			return calendar.getTime();
 		case M:
 			calendar.add(Calendar.YEAR, -25);
