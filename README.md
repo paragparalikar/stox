@@ -10,3 +10,6 @@
 <b>Bean Validation:</b> Hibernate validator<br>
 <b>Code Generation:</b> Lombok<br><br>
 
+![Component Diagram](https://github.com/paragparalikar/stox/blob/master/stox-component-diaram.jpg)
+
+![Layered architecture](https://github.com/paragparalikar/stox/blob/master/stox-system-design-diagram.jpg)
