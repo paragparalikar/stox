@@ -30,4 +30,6 @@
 
 
 <h3>Layered Architecute</h3><br><br><br><br>
+
 ![Layered architecture](https://github.com/paragparalikar/stox/blob/master/layered-architecture.png)
+
