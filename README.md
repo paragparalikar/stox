@@ -33,3 +33,20 @@
 
 ![Layered architecture](https://github.com/paragparalikar/stox/blob/master/layered-architecture.png)
 
+<h3>Screenshots</h3>
+
+Multiwindow docking layout
+
+![Bootstrap dialog](https://github.com/paragparalikar/stox/blob/master/screenshot-multiwindow.PNG)
+
+Various built in Indicators
+
+![Bootstrap form](https://github.com/paragparalikar/stox/blob/master/screenshot-indicators.PNG)
+
+Bootstrap css 
+
+![Bootstrap dialog](https://github.com/paragparalikar/stox/blob/master/screenshot-bootstrap-dialog.PNG)
+
+![Bootstrap form](https://github.com/paragparalikar/stox/blob/master/screenshot-bootstrap-form.PNG)
+
+
