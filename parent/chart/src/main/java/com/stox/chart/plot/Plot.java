@@ -46,7 +46,6 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 	public Plot(final Chart chart) {
 		setChart(chart);
 		plotInfoPane = createPlotInfoPanel();
-		plotInfoPane.setColor(color);
 		plotNodeProperty.addListener((observable, old, node) -> {
 			getChildren().remove(old);
 			if (null != node) {
@@ -108,7 +107,6 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 			final Unit<M> unit = create(index, model);
 			units.add(index, unit);
 			getChildren().add(unit);
-			unit.update();
 		});
 	}
 

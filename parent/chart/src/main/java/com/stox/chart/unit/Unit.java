@@ -19,6 +19,7 @@ public abstract class Unit<M extends Range> extends Group {
 		this.plot = plot;
 		this.model = model;
 		this.index = index;
+		update();
 	}
 
 	/**

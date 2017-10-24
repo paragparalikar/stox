@@ -26,6 +26,7 @@ public class PlotInfoPanel<M extends Range> extends HBox {
 		UiUtil.classes(this, "plot-info-pane");
 		getChildren().addAll(removeButton, nameLabel, valueLabel);
 		removeButton.addEventHandler(ActionEvent.ACTION, event -> removePlot());
+		setColor(plot.getColor());
 	}
 
 	public Plot<M> getPlot() {
