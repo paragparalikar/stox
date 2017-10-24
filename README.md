@@ -10,18 +10,3 @@
 <b>Bean Validation:</b> Hibernate validator<br>
 <b>Code Generation:</b> Lombok<br><br>
 
-<b>Design Patterns Used:</b>
-<ul>
-<li>Builder</li>
-<li>Factory</li>
-<li>Singleton</li><br>
-<li>Visitor</li><br>
-<li>Strategy</li>
-<li>Decorator</li>
-<li>More Design Patterns...</li>
-</ul>
-
-
-
-<br><br>
-<b>Screenshots:</b>
