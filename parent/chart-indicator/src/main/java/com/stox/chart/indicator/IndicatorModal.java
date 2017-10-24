@@ -8,6 +8,7 @@ import com.stox.core.ui.util.Icon;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.modal.Modal;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,7 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class IndicatorModal extends Modal {
 
 	private final ChartView chartView;
@@ -72,8 +73,10 @@ public class IndicatorModal extends Modal {
 			chart.getPlots().add(plot);
 			chartView.getCharts().add(chart);
 			plot.load();
-			chart.update();
 			chartView.setDirty();
+			Platform.runLater(() -> {
+				chart.update();
+			});
 			break;
 		case PRICE:
 			final Chart primaryChart = chartView.getPrimaryChart();
