@@ -23,7 +23,7 @@ public class ChartRelativeStrengthIndex extends RelativeStrengthIndex implements
 
 		private double upperBand = 70;
 		private double lowerBand = 30;
-		private Color background = Color.rgb(0, 0, 200, 0.2);
+		private Color background = Color.rgb(30, 10, 10, 0.1);
 
 		private final Rectangle backgroundRectangle = new Rectangle();
 

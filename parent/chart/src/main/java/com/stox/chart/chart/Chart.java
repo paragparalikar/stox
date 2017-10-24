@@ -64,7 +64,7 @@ public class Chart extends BorderPane {
 					area.getChildren().addAll(addedPlots);
 					IntStream.range(0, addedPlots.size()).forEachOrdered(index -> {
 						final Plot<?> plot = addedPlots.get(index);
-						plot.setColor(chartView.getPlotColors().get(index));
+						plot.setColor(chartView.getPlotColors().get(plots.size() + index));
 						chartInfoPane.getChildren().add(plot.getPlotInfoPane());
 					});
 				}

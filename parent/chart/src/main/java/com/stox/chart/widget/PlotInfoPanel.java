@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 public class PlotInfoPanel<M extends Range> extends HBox {
 
@@ -42,5 +43,10 @@ public class PlotInfoPanel<M extends Range> extends HBox {
 
 	public void setModel(final M model) {
 		valueLabel.setText(null == model ? null : Constant.currencyFormat.format(model.getValue()));
+	}
+	
+	public void setColor(final Color color) {
+		nameLabel.setTextFill(color);
+		valueLabel.setTextFill(color);
 	}
 }

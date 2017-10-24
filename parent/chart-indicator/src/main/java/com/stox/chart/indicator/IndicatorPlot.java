@@ -29,7 +29,7 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 
 	@Override
 	public String getName() {
-		return chartIndicator.getName();
+		return config.toString();
 	}
 
 	@Override
