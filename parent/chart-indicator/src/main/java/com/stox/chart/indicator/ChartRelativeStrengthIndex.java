@@ -26,29 +26,11 @@ public class ChartRelativeStrengthIndex extends RelativeStrengthIndex implements
 		private double lowerBand = 30;
 		private Color background = Color.rgb(0, 0, 200, 0.2);
 		
-		private final Line upperBandLine = new Line();
-		private final Line lowerBandLine = new Line();
 		private final Rectangle backgroundRectangle = new Rectangle();
 		
 		public RSIStyle() {
-			
-			upperBandLine.setOpacity(0.3);
-			upperBandLine.setStroke(Color.GRAY);
-			upperBandLine.getStrokeDashArray().addAll(25d, 10d);
-			lowerBandLine.setOpacity(0.3);
-			lowerBandLine.setStroke(Color.GRAY);
-			lowerBandLine.getStrokeDashArray().addAll(25d, 10d);
-			
-			upperBandLine.setStartX(0);
-			lowerBandLine.setStartX(0);
 			backgroundRectangle.setX(0);
-			upperBandLine.endYProperty().bind(upperBandLine.startYProperty());
-			lowerBandLine.endYProperty().bind(lowerBandLine.startYProperty());
-			lowerBandLine.endXProperty().bind(upperBandLine.endXProperty());
-			backgroundRectangle.yProperty().bind(upperBandLine.startYProperty());
-			backgroundRectangle.heightProperty().bind(lowerBandLine.startYProperty().subtract(upperBandLine.startYProperty()));
-			backgroundRectangle.widthProperty().bind(upperBandLine.endXProperty());
-			getChildren().addAll(upperBandLine, lowerBandLine, backgroundRectangle);
+			getChildren().addAll(backgroundRectangle);
 		}
 		
 		@Override
@@ -61,9 +43,9 @@ public class ChartRelativeStrengthIndex extends RelativeStrengthIndex implements
 			final double min = plot.getMin();
 			final double max = plot.getMax();
 			final ValueAxis valueAxis = plot.getChart().getValueAxis();
-			upperBandLine.setEndX(plot.getChart().getArea().getWidth());
-			upperBandLine.setStartY(valueAxis.getDisplayPosition(upperBand, min, max));
-			lowerBandLine.setStartY(valueAxis.getDisplayPosition(lowerBand, min, max));
+			final double upperBandY = valueAxis.getDisplayPosition(upperBand, min, max);
+			final double lowerBandY = valueAxis.getDisplayPosition(lowerBand, min, max);
+			backgroundRectangle.resizeRelocate(0, upperBandY, plot.getChart().getArea().getWidth(), lowerBandY - upperBandY);
 			backgroundRectangle.setFill(background);
 		}
 	}

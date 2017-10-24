@@ -11,6 +11,10 @@ public class AreaPlotNode extends Polygon implements PlotNode {
 
 	public AreaPlotNode(final Plot<?> plot) {
 		this.plot = plot;
+	}
+	
+	@Override
+	public void update() {
 		setFill(plot.getColor());
 		setOpacity(0.3);
 	}

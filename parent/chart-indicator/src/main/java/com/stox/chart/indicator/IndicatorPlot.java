@@ -9,6 +9,8 @@ import com.stox.chart.widget.PlotInfoPanel;
 import com.stox.core.intf.Range;
 import com.stox.core.model.Bar;
 
+import javafx.scene.Node;
+
 public class IndicatorPlot<M extends Range> extends Plot<M> {
 	
 	private final Object config;
@@ -19,11 +21,6 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		this.chartIndicator = chartIndicator;
 		config = chartIndicator.buildDefaultConfig();
 		getPlotInfoPane().setName(getName());
-		final Style style = chartIndicator.getStyle();
-		
-		if(null != style && null != style.getNode()) {
-			getChildren().add(style.getNode());
-		}
 	}
 	
 	public Object getConfig() {
@@ -43,6 +40,18 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		update();
 	}
 
+	@Override
+	public void createUnits(int from, int to) {
+		super.createUnits(from, to);
+		final Style style = chartIndicator.getStyle();
+		if(null != style) {
+			final Node node = style.getNode();
+			if(null != node && !getChildren().contains(node)) {
+				getChildren().add(node);
+			}
+		}
+	}
+	
 	@Override
 	public UnitType getUnitType() {
 		return chartIndicator.getUnitType(config);

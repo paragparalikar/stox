@@ -101,6 +101,7 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 			final Unit<M> unit = create(index, model);
 			units.add(index, unit);
 			getChildren().add(unit);
+			unit.update();
 		});
 	}
 

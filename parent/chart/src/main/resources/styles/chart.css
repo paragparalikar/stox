@@ -3,6 +3,10 @@
 	-fx-border-color:lighter;
 }
 
+.chart-view .split-pane *.split-pane-divider {  
+    -fx-padding: 0 1 0 1;  
+} 
+
 .crosshair Line {
 	-fx-stroke: dark;
 	-fx-stroke-width: 1px;

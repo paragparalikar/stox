@@ -10,8 +10,11 @@ public class LinePlotNode extends Polyline implements PlotNode {
 
 	public LinePlotNode(final Plot<?> plot) {
 		this.plot = plot;
+	}
+	
+	@Override
+	public void update() {
 		setStroke(plot.getColor());
-		setStrokeWidth(2);
 	}
 
 	@Override

@@ -8,6 +8,14 @@ public class LineUnit<M extends Range> extends Unit<M> {
 	public LineUnit(int index, M model, Plot<M> plot) {
 		super(index, model, plot);
 	}
+	
+	@Override
+	public void update() {
+		super.update();
+		final Plot<M> plot = getPlot();
+		final PlotNode plotNode = plot.getPlotNodeProperty().get();
+		plotNode.update();
+	}
 
 	@Override
 	public void layoutChartChildren(double x, double width) {

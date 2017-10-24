@@ -70,6 +70,7 @@ public class ScreenPlot extends Plot<Bar> {
 				final Unit<Bar> unit = create(index, model);
 				getUnits().add(index, unit);
 				getChildren().add(unit);
+				unit.update();
 			} else {
 				getUnits().add(null);
 			}

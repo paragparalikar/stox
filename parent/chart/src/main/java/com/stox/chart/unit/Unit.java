@@ -21,6 +21,14 @@ public abstract class Unit<M extends Range> extends Group {
 		this.index = index;
 	}
 
+	/**
+	 * This method should be overridden to update styles like color and other plot level stuff
+	 * in units
+	 */
+	public void update() {
+		
+	}
+	
 	@Override
 	protected final void layoutChildren() {
 

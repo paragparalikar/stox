@@ -10,4 +10,6 @@ public interface PlotNode {
 
 	ObservableList<Double> getPoints();
 
+	void update();
+
 }
