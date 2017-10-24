@@ -65,15 +65,15 @@ public class IndicatorModal extends Modal {
 
 	private void addIndicator(ChartIndicator indicator) {
 		final Object config = indicator.buildDefaultConfig();
-		// TODO show another modal for user to edit config
 		switch (indicator.getUnderlay(config)) {
 		case NONE:
 			final Chart chart = new Chart(chartView);
 			final IndicatorPlot plot = new IndicatorPlot(chart, indicator);
 			chart.getPlots().add(plot);
 			chartView.getCharts().add(chart);
-			chart.setDirty();
 			plot.load();
+			chart.update();
+			chartView.setDirty();
 			break;
 		case PRICE:
 			final Chart primaryChart = chartView.getPrimaryChart();

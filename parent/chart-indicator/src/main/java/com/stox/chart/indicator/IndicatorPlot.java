@@ -66,7 +66,7 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 	protected void postLayout() {
 		super.postLayout();
 		final Style style = chartIndicator.getStyle();
-		if(null != style) {
+		if(null != style && getChildren().contains(style.getNode())) {
 			style.apply(this);
 		}
 	}
