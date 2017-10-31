@@ -1,9 +1,11 @@
 package com.stox.chart.indicator;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.stox.chart.chart.Chart;
 import com.stox.chart.plot.Plot;
+import com.stox.chart.unit.Unit;
 import com.stox.chart.unit.UnitType;
 import com.stox.chart.widget.PlotInfoPanel;
 import com.stox.core.intf.Range;
@@ -53,6 +55,18 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 	}
 	
 	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected Unit<M> create(int index, M model) {
+		if(chartIndicator instanceof UnitFactory) {
+			final UnitFactory<M> unitFactory = (UnitFactory)chartIndicator;
+			return unitFactory.create(index, model, this);
+		}else {
+			return super.create(index, model);
+		}
+	}
+	
+	
+	@Override
 	public UnitType getUnitType() {
 		return chartIndicator.getUnitType(config);
 	}
@@ -71,4 +85,17 @@ public class IndicatorPlot<M extends Range> extends Plot<M> {
 		}
 	}
 	
+	@Override
+	@SuppressWarnings("unchecked")
+	protected void layoutChildren() {
+		if(chartIndicator instanceof LayoutDelegate) {
+			if(isDirty()) {
+				setDirty(false);
+				final LayoutDelegate<M> layoutDelegate = (LayoutDelegate<M>)chartIndicator;
+				layoutDelegate.layout(this);
+			}
+		}else {
+			super.layoutChildren();
+		}
+	}
 }

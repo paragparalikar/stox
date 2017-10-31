@@ -92,16 +92,20 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 	}
 
 	public void createUnits(final int from, final int to) {
-		switch (getUnitType()) {
-		case LINE:
-			plotNodeProperty.set(new LinePlotNode(this));
-			break;
-		case AREA:
-			plotNodeProperty.set(new AreaPlotNode(this));
-			break;
-		default:
-			plotNodeProperty.set(null);
+		final UnitType unitType = getUnitType();
+		if(null != unitType) {
+			switch (getUnitType()) {
+			case LINE:
+				plotNodeProperty.set(new LinePlotNode(this));
+				break;
+			case AREA:
+				plotNodeProperty.set(new AreaPlotNode(this));
+				break;
+			default:
+				plotNodeProperty.set(null);
+			}
 		}
+		
 		IntStream.range(from, to).forEach(index -> {
 			final M model = models.get(index);
 			final Unit<M> unit = create(index, model);
