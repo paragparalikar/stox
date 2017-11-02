@@ -28,10 +28,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true, exclude = { "primaryChart", "charts", "volumePlot", "dateAxis", "content" })
 public class ChartView extends View implements HasInstrument, HasBarSpan, HasDate {
 
 	private boolean semilog = false;
@@ -137,4 +135,14 @@ public class ChartView extends View implements HasInstrument, HasBarSpan, HasDat
 		return primaryChart.getPrimaryPricePlot().getInstrument();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
 }

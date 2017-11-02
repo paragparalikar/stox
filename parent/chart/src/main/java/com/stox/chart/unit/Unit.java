@@ -1,13 +1,15 @@
 package com.stox.chart.unit;
 
-import javafx.scene.Group;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import com.stox.chart.plot.Plot;
 import com.stox.core.intf.Range;
 
+import javafx.scene.Group;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 @Data
+@ToString(exclude= {"plot"})
 @EqualsAndHashCode(callSuper = true, exclude = { "plot", "model" })
 public abstract class Unit<M extends Range> extends Group {
 

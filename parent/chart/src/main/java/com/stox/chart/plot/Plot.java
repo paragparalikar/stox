@@ -27,10 +27,10 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(callSuper = true, exclude = { "chart", "units", "models" })
+@ToString(exclude= {"chart","units","models"})
 public abstract class Plot<M extends Range> extends Group implements HasName {
 
 	private Chart chart;
@@ -218,6 +218,16 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 			lastMaxIndex = maxIndex;
 			postLayout();
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }
