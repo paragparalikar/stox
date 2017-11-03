@@ -66,6 +66,10 @@ public class WatchlistEditorModal extends Modal {
 						? throwable.getMessage()
 						: "Failed to save watchlist \"" + watchlist.getName() + "\"";
 				setMessage(new Message(message, MessageType.ERROR));
+				
+				if(null != throwable) {
+					throwable.printStackTrace();
+				}
 			};
 		});
 	}

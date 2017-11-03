@@ -3,20 +3,17 @@ package com.stox.core.ui;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class PathMatchingMessageSource extends AbstractMessageSource {
 
-	private Map<String, Map<String, MessageFormat>> cache = new HashMap<>();
 	private final StringProperty languageProperty = new SimpleStringProperty("");
 	private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 

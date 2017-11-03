@@ -6,19 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.text.Font;
-import javafx.stage.Screen;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -37,6 +30,12 @@ import com.stox.workbench.ui.view.View;
 import com.stox.workbench.ui.view.event.RemoveViewRequestEvent;
 import com.stox.workbench.ui.view.event.ViewSelectedEvent;
 import com.stox.workbench.ui.widget.Tool;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
 @Component
 public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
@@ -62,9 +61,6 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	@Autowired
 	private ConfigurableApplicationContext applicatinoContext;
-
-	@Autowired
-	private ApplicationEventPublisher eventPublisher;
 
 	public WorkbenchPresenter() {
 		final WorkbenchTitleBar titleBar = workbench.getTitleBar();

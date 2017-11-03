@@ -1,7 +1,6 @@
 package com.stox.chart.indicator;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 import com.stox.chart.chart.Chart;
 import com.stox.chart.plot.Plot;

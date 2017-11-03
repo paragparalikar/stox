@@ -30,6 +30,7 @@ import com.stox.watchlist.model.WatchlistViewState;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.PublisherPresenter;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,14 +58,14 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 		watchlistComboBox.setConverter(new WatchlistStringConverter());
 		bind();
 	}
-	
+
 	@PostConstruct
 	public void postConstruct() {
 		watchlistClient.loadAll(new ResponseCallback<List<Watchlist>>() {
 			@Override
 			public void onSuccess(final Response<List<Watchlist>> response) {
 				final List<Watchlist> watchlists = response.getPayload();
-				if(null != watchlists && !watchlists.isEmpty()) {
+				if (null != watchlists && !watchlists.isEmpty()) {
 					view.getWatchlistComboBox().getItems().addAll(watchlists);
 					// TODO default selection should be handled after the state is set
 					view.getWatchlistComboBox().getSelectionModel().select(0);
@@ -72,7 +73,7 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 			}
 		});
 	}
-	
+
 	private void bind() {
 		view.getSearchButton().selectedProperty().addListener((observable, oldValue, value) -> {
 			showSearchBox(value);
@@ -86,9 +87,10 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 		view.getDeleteButton().addEventHandler(ActionEvent.ACTION, event -> {
 			deleteWatchlist(view.getWatchlistComboBox().getValue());
 		});
-		view.getWatchlistComboBox().getSelectionModel().selectedItemProperty().addListener((observable, old, watchlist) -> {
-			selectWatchlist(watchlist);
-		});
+		view.getWatchlistComboBox().getSelectionModel().selectedItemProperty()
+				.addListener((observable, old, watchlist) -> {
+					selectWatchlist(watchlist);
+				});
 		view.getEntryTableView().getSelectionModel().selectedItemProperty().addListener((observable, old, entry) -> {
 			selectWatchlistEntry(entry);
 		});
@@ -96,7 +98,7 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 			deleteWatchlistEntry(entry);
 		});
 	}
-	
+
 	private void showSearchBox(final boolean value) {
 		if (value) {
 			view.getTitleBar().add(Side.BOTTOM, 0, view.getSearchTextField());
@@ -104,21 +106,21 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 			view.getTitleBar().remove(Side.BOTTOM, view.getSearchTextField());
 		}
 	}
-	
+
 	private void createWatchlist() {
 		final WatchlistEditorModal modal = new WatchlistEditorModal(null, watchlistClient);
 		modal.show();
 	}
-	
+
 	private void editWatchlist(final Watchlist watchlist) {
-		if(null != watchlist) {
+		if (null != watchlist) {
 			final WatchlistEditorModal modal = new WatchlistEditorModal(watchlist, watchlistClient);
 			modal.show();
 		}
 	}
-	
+
 	private void deleteWatchlist(final Watchlist watchlist) {
-		if(null != watchlist && null != watchlist.getId()) {
+		if (null != watchlist && null != watchlist.getId()) {
 			final Confirmation confirmation = new Confirmation("Delete Watchlist",
 					"Are you sure you want to delete \"" + watchlist.getName() + "\"?");
 			confirmation.getStyleClass().add("danger");
@@ -129,45 +131,51 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 					@Override
 					public void onSuccess(Response<Watchlist> response) {
 						confirmation.hide();
-						if(!view.getWatchlistComboBox().getItems().isEmpty()) {
+						if (!view.getWatchlistComboBox().getItems().isEmpty()) {
 							view.getWatchlistComboBox().getSelectionModel().select(0);
 						}
 					}
+
 					@Override
 					public void onFailure(Response<Watchlist> response, Throwable throwable) {
-						final String message = null == throwable || null == throwable.getMessage() ? "Failed to delete watchlist" : throwable.getMessage();
+						final String message = null == throwable || null == throwable.getMessage()
+								? "Failed to delete watchlist"
+								: throwable.getMessage();
 						view.setMessage(new Message(message, MessageType.ERROR));
 					}
 				});
 			});
 		}
 	}
-	
+
 	private void selectWatchlist(final Watchlist watchlist) {
 		view.getEntryTableView().getItems().clear();
-		if(null != watchlist && null != watchlist.getId()) {
+		if (null != watchlist && null != watchlist.getId()) {
 			watchlistEntryClient.load(watchlist.getId(), new ResponseCallback<List<WatchlistEntry>>() {
 				@Override
 				public void onSuccess(Response<List<WatchlistEntry>> response) {
 					view.getEntryTableView().getItems().setAll(response.getPayload());
 				}
+
 				@Override
 				public void onFailure(Response<List<WatchlistEntry>> response, Throwable throwable) {
-					final String message = null == throwable || null == throwable.getMessage() ? "Failed to load entries" : throwable.getMessage();
+					final String message = null == throwable || null == throwable.getMessage()
+							? "Failed to load entries"
+							: throwable.getMessage();
 					view.setMessage(new Message(message, MessageType.ERROR));
 				}
 			});
 		}
 	}
-	
+
 	private void selectWatchlistEntry(final WatchlistEntry entry) {
-		if(null != entry) {
+		if (null != entry) {
 			publish(new State(entry.getInstrumentId(), entry.getBarSpan(), 0));
 		}
 	}
-	
+
 	private void deleteWatchlistEntry(final WatchlistEntry entry) {
-		if(null != entry && StringUtil.hasText(entry.getId())) {
+		if (null != entry && StringUtil.hasText(entry.getId())) {
 			final Watchlist watchlist = view.getWatchlistComboBox().getValue();
 			if (null != watchlist) {
 				watchlistEntryClient.delete(watchlist.getId(), entry.getId(), new ResponseCallback<WatchlistEntry>() {
@@ -179,46 +187,57 @@ public class WatchlistPresenter extends PublisherPresenter<WatchlistView, Watchl
 			}
 		}
 	}
-	
+
 	public void onWatchlistCreated(final WatchlistCreatedEvent event) {
-		final Watchlist watchlist = event.getWatchlist();
-		final ObservableList<Watchlist> items = view.getWatchlistComboBox().getItems();
-		items.add(watchlist);
-		FXCollections.sort(items, new HasNameComaparator<>());
-		if(1 == items.size()) {
-			view.getWatchlistComboBox().getSelectionModel().select(0);
-		}
+		Platform.runLater(() -> {
+			final Watchlist watchlist = event.getWatchlist();
+			final ObservableList<Watchlist> items = view.getWatchlistComboBox().getItems();
+			items.add(watchlist);
+			FXCollections.sort(items, new HasNameComaparator<>());
+			if (1 == items.size()) {
+				view.getWatchlistComboBox().getSelectionModel().select(0);
+			}
+		});
 	}
 
 	public void onWatchlistDeleted(final WatchlistDeletedEvent event) {
-		view.getWatchlistComboBox().getItems()
-				.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
+		Platform.runLater(() -> {
+			view.getWatchlistComboBox().getItems()
+					.removeIf(watchlist -> watchlist.getId().equals(event.getWatchlist().getId()));
+		});
 	}
 
 	public void onWatchlistEdited(final WatchlistEditedEvent event) {
-		final Watchlist watchlist = event.getWatchlist();
-		view.getWatchlistComboBox().getItems()
-				.removeIf(w -> w.getId().equals(watchlist.getId()));
-		view.getWatchlistComboBox().getItems().add(watchlist);
-		FXCollections.sort(view.getWatchlistComboBox().getItems(), new HasNameComaparator<>());
-		view.getWatchlistComboBox().getSelectionModel().select(watchlist);
+		Platform.runLater(() -> {
+			final Watchlist watchlist = event.getWatchlist();
+			view.getWatchlistComboBox().getItems().removeIf(w -> w.getId().equals(watchlist.getId()));
+			view.getWatchlistComboBox().getItems().add(watchlist);
+			FXCollections.sort(view.getWatchlistComboBox().getItems(), new HasNameComaparator<>());
+			view.getWatchlistComboBox().getSelectionModel().select(watchlist);
+		});
 	}
 
 	public void onWatchlistEntryCreated(final WatchlistEntryCreatedEvent event) {
-		final Watchlist watchlist = view.getWatchlistComboBox().getValue();
-		final WatchlistEntry watchlistEntry = event.getEntry();
-		if(null != watchlist && null != watchlistEntry && null != watchlist.getId() && watchlist.getId().equals(watchlistEntry.getWatchlistId())) {
-			view.getEntryTableView().getItems().add(watchlistEntry);
-			FXCollections.sort(view.getEntryTableView().getItems(), new HasNameComaparator<>());
-		}
+		Platform.runLater(() -> {
+			final Watchlist watchlist = view.getWatchlistComboBox().getValue();
+			final WatchlistEntry watchlistEntry = event.getEntry();
+			if (null != watchlist && null != watchlistEntry && null != watchlist.getId()
+					&& watchlist.getId().equals(watchlistEntry.getWatchlistId())) {
+				view.getEntryTableView().getItems().add(watchlistEntry);
+				FXCollections.sort(view.getEntryTableView().getItems(), new HasNameComaparator<>());
+			}
+		});
 	}
 
 	public void onWatchlistEntryDeleted(final WatchlistEntryDeletedEvent event) {
-		final Watchlist watchlist = view.getWatchlistComboBox().getValue();
-		final WatchlistEntry watchlistEntry = event.getEntry();
-		if(null != watchlist && null != watchlistEntry && null != watchlist.getId() && watchlist.getId().equals(watchlistEntry.getWatchlistId())) {
-			view.getEntryTableView().getItems().removeIf(entry -> entry.getId().equals(event.getEntry().getId()));
-		}
+		Platform.runLater(() -> {
+			final Watchlist watchlist = view.getWatchlistComboBox().getValue();
+			final WatchlistEntry watchlistEntry = event.getEntry();
+			if (null != watchlist && null != watchlistEntry && null != watchlist.getId()
+					&& watchlist.getId().equals(watchlistEntry.getWatchlistId())) {
+				view.getEntryTableView().getItems().removeIf(entry -> entry.getId().equals(event.getEntry().getId()));
+			}
+		});
 	}
 
 	@Override

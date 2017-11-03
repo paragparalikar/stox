@@ -36,7 +36,7 @@ public class Modal implements HasLifecycle, HasSpinner {
 	private final Stage stage = new Stage();
 	private final VBox spinner = UiUtil.classes(new VBox(new ProgressIndicator()), "center");
 	private final ResizableRelocatableWindowDecorator stageDecorator = new ResizableRelocatableWindowDecorator(stage);
-	
+
 	private Runnable onHide;
 
 	public Modal() {
@@ -51,21 +51,29 @@ public class Modal implements HasLifecycle, HasSpinner {
 
 		stageDecorator.bindTitleBar(titleBar.getNode());
 		final Scene scene = new Scene(root);
-		scene.getStylesheets().addAll("styles/color-sceme.css", "fonts/open-sans/open-sans.css", "styles/bootstrap.css", "styles/common.css", "styles/workbench.css",
-				"styles/modal.css");
+		scene.getStylesheets().addAll("styles/color-sceme.css", "fonts/open-sans/open-sans.css", "styles/bootstrap.css",
+				"styles/common.css", "styles/workbench.css", "styles/modal.css");
 		stage.setScene(scene);
 	}
-	
+
 	public void onHide(final Runnable runnable) {
 		this.onHide = runnable;
 	}
-	
+
 	public void setMessage(final Message message) {
 		clearMessages();
 		addMessage(message);
 	}
 
 	public void addMessage(final Message message) {
+		if (Platform.isFxApplicationThread()) {
+			doAddMessage(message);
+		} else {
+			Platform.runLater(() -> doAddMessage(message));
+		}
+	}
+
+	private void doAddMessage(final Message message) {
 		if (null != message && null != message.getType() && StringUtil.hasText(message.getText())) {
 			final MessagePane messagePane = new MessagePane();
 			top.getChildren().add(messagePane);
@@ -125,11 +133,21 @@ public class Modal implements HasLifecycle, HasSpinner {
 	}
 
 	public void hide() {
+		if (Platform.isFxApplicationThread()) {
+			doHide();
+		} else {
+			Platform.runLater(() -> {
+				doHide();
+			});
+		}
+	}
+
+	private void doHide() {
 		final ApplicationStage workbench = ApplicationStage.getInstance();
 		if (null != workbench) {
 			workbench.showGlass(false);
 		}
-		if(null != onHide) {
+		if (null != onHide) {
 			onHide.run();
 		}
 		stage.hide();

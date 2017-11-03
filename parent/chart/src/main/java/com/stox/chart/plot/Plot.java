@@ -47,7 +47,7 @@ public abstract class Plot<M extends Range> extends Group implements HasName {
 		setChart(chart);
 		plotInfoPane = createPlotInfoPanel();
 		plotNodeProperty.addListener((observable, old, node) -> {
-			getChildren().remove(old);
+			getChildren().remove((Node) old);
 			if (null != node) {
 				getChildren().add((Node) node);
 			}

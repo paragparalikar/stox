@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
@@ -44,6 +46,11 @@ public class CsvFileWatchlistRepository implements WatchlistRepository {
 		return WatchlistConstant.PATH + "csv";
 	}
 
+	@PostConstruct
+	public void postConstruct() throws Exception{
+		load();
+	}
+	
 	private synchronized void load() throws Exception {
 		if (null == cache) {
 			cache = cacheManager.getCache(CACHE);

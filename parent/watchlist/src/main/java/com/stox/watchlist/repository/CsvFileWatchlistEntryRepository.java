@@ -21,8 +21,6 @@ import com.stox.watchlist.model.WatchlistEntryExistsException;
 @Lazy
 @Component
 public class CsvFileWatchlistEntryRepository implements WatchlistEntryRepository {
-	private static final String ALL = "all";
-	private static final String CACHE = "watchlists";
 	
 	@Autowired
 	private InstrumentRepository instrumentRepository;

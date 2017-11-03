@@ -41,6 +41,16 @@ public abstract class View extends StackPane implements HasSpinner {
 	}
 
 	public void addMessage(final Message message) {
+		if(Platform.isFxApplicationThread()) {
+			doAddMessage(message);
+		}else {
+			Platform.runLater(() -> {
+				doAddMessage(message);
+			});
+		}
+	}
+	
+	private void doAddMessage(final Message message) {
 		if (null != message && null != message.getType() && StringUtil.hasText(message.getText())) {
 			final MessagePane messagePane = new MessagePane();
 			top.getChildren().add(messagePane);

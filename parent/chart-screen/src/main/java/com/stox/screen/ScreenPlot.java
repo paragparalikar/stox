@@ -37,10 +37,10 @@ public class ScreenPlot extends Plot<Bar> {
 	}
 
 	@Override
-	public PlotInfoPanel<Bar> getPlotInfoPane() {
+	protected PlotInfoPanel<Bar> createPlotInfoPanel() {
 		return new ScreenPlotInfoPanel(this);
 	}
-
+	
 	@Override
 	public void load() {
 		final List<Bar> bars = getChart().getChartView().getPrimaryChart().getPrimaryPricePlot().getModels();
