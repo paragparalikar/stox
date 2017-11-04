@@ -5,7 +5,7 @@ import javafx.geometry.Side;
 import com.stox.workbench.model.ViewState;
 import com.stox.workbench.ui.view.Link.State;
 
-public abstract class LinkedPresenter<V extends View, S extends ViewState> extends Presenter<V, S> {
+public abstract class LinkedPresenter<V extends View, S extends ViewState> extends AbstractDockablePublishingPresenter<V, S> {
 
 	private final LinkButton linkButton = new LinkButton();
 

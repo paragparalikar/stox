@@ -8,14 +8,14 @@ import org.springframework.context.event.EventListener;
 
 import com.stox.chart.view.ChartPresenter;
 import com.stox.chart.view.ChartView;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.event.ViewSelectedEvent;
 import com.stox.workbench.ui.widget.Tool;
 
 public abstract class ChartingTool implements Tool {
 
 	private ChartView chartView;
-	private List<Presenter<?, ?>> presenters;
+	private List<AbstractDockablePublishingPresenter<?, ?>> presenters;
 
 	@EventListener(ViewSelectedEvent.class)
 	public void onViewSelected(final ViewSelectedEvent event) {
@@ -43,7 +43,7 @@ public abstract class ChartingTool implements Tool {
 	public abstract void onChartViewSelected(final ChartView chartView);
 
 	@Override
-	public void setPresenters(List<Presenter<?, ?>> presenters) {
+	public void setPresenters(List<AbstractDockablePublishingPresenter<?, ?>> presenters) {
 		this.presenters = presenters;
 	}
 

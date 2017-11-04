@@ -7,16 +7,16 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.View;
 
 public class MaximizeDecorator implements EventHandler<MouseEvent> {
 
 	private boolean maximized = false;
 	private Rectangle2D backupBounds = null;
-	private final Presenter<?, ?> presenter;
+	private final AbstractDockablePublishingPresenter<?, ?> presenter;
 
-	public MaximizeDecorator(final Presenter<?, ?> presenter) {
+	public MaximizeDecorator(final AbstractDockablePublishingPresenter<?, ?> presenter) {
 		this.presenter = presenter;
 	}
 

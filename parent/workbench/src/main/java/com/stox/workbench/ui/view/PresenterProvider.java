@@ -8,6 +8,6 @@ public interface PresenterProvider {
 
 	String getViewIcon();
 
-	Presenter<?, ?> create();
+	AbstractDockablePublishingPresenter<?, ?> create();
 
 }

@@ -25,7 +25,7 @@ public class ScreenModal extends Modal {
 	public ScreenModal(final ChartView chartView) {
 		this.chartView = chartView;
 		getStyleClass().add("primary");
-		setTitle("Indicators");
+		setTitle("Screens");
 		setContent(listView);
 		listView.setCellFactory(new Callback<ListView<Screen>, ListCell<Screen>>() {
 			@Override

@@ -4,12 +4,12 @@ import java.util.List;
 
 import javafx.scene.Node;
 
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 
 public interface Tool {
 
 	Node getNode();
 
-	void setPresenters(final List<Presenter<?, ?>> presenters);
+	void setPresenters(final List<AbstractDockablePublishingPresenter<?, ?>> presenters);
 
 }

@@ -6,7 +6,7 @@ import javafx.beans.value.ObservableValue;
 import com.stox.workbench.model.ViewState;
 import com.stox.workbench.ui.view.Link.State;
 
-public abstract class SubscriberPresenter<V extends View, S extends ViewState> extends LinkedPresenter<V, S> {
+public abstract class StateSubscriberPresenter<V extends View, S extends ViewState> extends LinkedPresenter<V, S> {
 
 	private ChangeListener<State> stateChangeListener = new ChangeListener<State>() {
 		@Override

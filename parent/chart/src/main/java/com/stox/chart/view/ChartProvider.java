@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.chart.util.ChartConstant;
 import com.stox.core.ui.StylesheetProvider;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
@@ -36,7 +36,7 @@ public class ChartProvider implements PresenterProvider, StylesheetProvider {
 	}
 
 	@Override
-	public Presenter<?, ?> create() {
+	public AbstractDockablePublishingPresenter<?, ?> create() {
 		return context.getBean(ChartPresenter.class);
 	}
 

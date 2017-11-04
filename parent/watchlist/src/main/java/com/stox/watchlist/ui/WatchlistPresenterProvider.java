@@ -14,7 +14,7 @@ import com.stox.watchlist.event.WatchlistDeletedEvent;
 import com.stox.watchlist.event.WatchlistEditedEvent;
 import com.stox.watchlist.event.WatchlistEntryCreatedEvent;
 import com.stox.watchlist.event.WatchlistEntryDeletedEvent;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
@@ -46,7 +46,7 @@ public class WatchlistPresenterProvider implements PresenterProvider, Stylesheet
 	}
 
 	@Override
-	public Presenter<?, ?> create() {
+	public AbstractDockablePublishingPresenter<?, ?> create() {
 		final WatchlistPresenter watchlistPresenter = beanFactory.getBean(WatchlistPresenter.class);
 		cache.put(watchlistPresenter, watchlistPresenter);
 		return watchlistPresenter;

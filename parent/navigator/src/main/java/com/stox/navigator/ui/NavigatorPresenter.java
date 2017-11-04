@@ -19,7 +19,7 @@ import com.stox.core.model.Instrument;
 import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.ui.filter.FilterPresenter;
 import com.stox.workbench.ui.view.Link.State;
-import com.stox.workbench.ui.view.PublisherPresenter;
+import com.stox.workbench.ui.view.StatePublisherPresenter;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,7 +28,7 @@ import javafx.scene.layout.Pane;
 
 @Component
 @Scope("prototype")
-public class NavigatorPresenter extends PublisherPresenter<NavigatorView, NavigatorViewState> {
+public class NavigatorPresenter extends StatePublisherPresenter<NavigatorView, NavigatorViewState> {
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;

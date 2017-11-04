@@ -28,7 +28,7 @@ import com.stox.watchlist.model.Watchlist;
 import com.stox.watchlist.model.WatchlistEntry;
 import com.stox.watchlist.model.WatchlistViewState;
 import com.stox.workbench.ui.view.Link.State;
-import com.stox.workbench.ui.view.PublisherPresenter;
+import com.stox.workbench.ui.view.StatePublisherPresenter;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -40,7 +40,7 @@ import javafx.scene.layout.Pane;
 
 @Component
 @Scope("prototype")
-public class WatchlistPresenter extends PublisherPresenter<WatchlistView, WatchlistViewState> {
+public class WatchlistPresenter extends StatePublisherPresenter<WatchlistView, WatchlistViewState> {
 
 	@Autowired
 	private WatchlistClient watchlistClient;

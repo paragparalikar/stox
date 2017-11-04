@@ -28,7 +28,7 @@ import com.stox.example.model.Example;
 import com.stox.example.model.ExampleGroup;
 import com.stox.example.model.ExampleViewState;
 import com.stox.workbench.ui.view.Link.State;
-import com.stox.workbench.ui.view.PublisherPresenter;
+import com.stox.workbench.ui.view.StatePublisherPresenter;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,7 +39,7 @@ import javafx.scene.layout.Pane;
 
 @Component
 @Scope("prototype")
-public class ExamplePresenter extends PublisherPresenter<ExampleView, ExampleViewState> {
+public class ExamplePresenter extends StatePublisherPresenter<ExampleView, ExampleViewState> {
 
 	@Autowired
 	private ExampleGroupClient exampleGroupClient;

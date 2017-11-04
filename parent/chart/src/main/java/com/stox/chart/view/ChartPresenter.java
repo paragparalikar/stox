@@ -36,7 +36,7 @@ import com.stox.core.ui.TargetAwareMenuItemProvider;
 import com.stox.core.util.StringUtil;
 import com.stox.data.DataClient;
 import com.stox.workbench.ui.view.Link.State;
-import com.stox.workbench.ui.view.SubscriberPresenter;
+import com.stox.workbench.ui.view.StateSubscriberPresenter;
 
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
@@ -47,7 +47,7 @@ import javafx.scene.layout.Pane;
 
 @Component
 @Scope("prototype")
-public class ChartPresenter extends SubscriberPresenter<ChartView, ChartViewState> {
+public class ChartPresenter extends StateSubscriberPresenter<ChartView, ChartViewState> {
 
 	private final ChartView view = new ChartView();
 

@@ -9,7 +9,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.event.InstrumentsChangedEvent;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
@@ -36,7 +36,7 @@ public class NavigatorPresenterProvider implements PresenterProvider {
 	}
 
 	@Override
-	public Presenter<?, ?> create() {
+	public AbstractDockablePublishingPresenter<?, ?> create() {
 		final NavigatorPresenter navigatorPresenter = beanFactory.getBean(NavigatorPresenter.class);
 		cache.put(navigatorPresenter, navigatorPresenter);
 		return navigatorPresenter;

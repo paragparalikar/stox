@@ -1,12 +1,5 @@
 package com.stox.workbench.ui.view;
 
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-
 import com.stox.core.model.Message;
 import com.stox.core.ui.HasSpinner;
 import com.stox.core.ui.util.UiUtil;
@@ -14,7 +7,14 @@ import com.stox.core.ui.widget.MessagePane;
 import com.stox.core.ui.widget.titlebar.TitleBar;
 import com.stox.core.util.StringUtil;
 
-public abstract class View extends StackPane implements HasSpinner {
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+public abstract class View extends StackPane implements HasSpinner, Container{
 
 	public static final int NONE = 0;
 	public static final int MOVE = 1;
@@ -64,7 +64,20 @@ public abstract class View extends StackPane implements HasSpinner {
 		top.getChildren().removeIf(node -> node instanceof MessagePane);
 	}
 
-	public void setContent(final Node node) {
+	@Override
+	public boolean contains(Node content) {
+		return container.getCenter() == content;
+	}
+	
+	@Override
+	public void remove(Node content) {
+		if(contains(content)) {
+			container.setCenter(null);
+		}
+	}
+	
+	@Override
+	public void add(final Node node) {
 		container.setCenter(node);
 	}
 

@@ -50,7 +50,7 @@ public class ExampleView extends View {
 	public ExampleView() {
 		super(ExampleUiConstant.CODE, ExampleUiConstant.NAME, ExampleUiConstant.ICON);
 		getTitleBar().add(Side.RIGHT, 0, searchButton);
-		setContent(new BorderPane(exampleTableView, UiUtil.classes(new HBox(exampleGroupComboBox, addButton, editButton, deleteButton),"example-group-combobox-panel"), null, null, null));
+		add(new BorderPane(exampleTableView, UiUtil.classes(new HBox(exampleGroupComboBox, addButton, editButton, deleteButton),"example-group-combobox-panel"), null, null, null));
 		createColumns();
 	}
 	

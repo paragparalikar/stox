@@ -68,7 +68,7 @@ public class ChartView extends View implements HasInstrument, HasBarSpan, HasDat
 		contextMenu = new ContextMenu();
 
 		UiUtil.classes(this, "chart-view");
-		setContent(content);
+		add(content);
 		setMouseHandler(defaultMouseHandler);
 		getChildren().addAll(crosshair);
 		splitPane.getItems().add(primaryChart);

@@ -49,7 +49,7 @@ public class WatchlistView extends View {
 	public WatchlistView() {
 		super(WatchlistUiConstant.CODE, WatchlistUiConstant.NAME, WatchlistUiConstant.ICON);
 		getTitleBar().add(Side.RIGHT, 0, searchButton);
-		setContent(new BorderPane(entryTableView, UiUtil.classes(new HBox(watchlistComboBox, addButton, editButton, deleteButton),"watchlist-combobox-panel"), null, null, null));
+		add(new BorderPane(entryTableView, UiUtil.classes(new HBox(watchlistComboBox, addButton, editButton, deleteButton),"watchlist-combobox-panel"), null, null, null));
 		createColumns();
 	}
 	

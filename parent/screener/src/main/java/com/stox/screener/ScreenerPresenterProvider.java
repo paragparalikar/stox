@@ -8,7 +8,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
@@ -35,7 +35,7 @@ public class ScreenerPresenterProvider implements PresenterProvider {
 	}
 
 	@Override
-	public Presenter<?, ?> create() {
+	public AbstractDockablePublishingPresenter<?, ?> create() {
 		final ScreenerPresenter screenerPresenter = beanFactory.getBean(ScreenerPresenter.class);
 		cache.add(screenerPresenter);
 		return screenerPresenter;

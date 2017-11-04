@@ -5,14 +5,14 @@ import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
 
 import com.stox.workbench.ui.stage.SnapToGridPane;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.View;
 
 public class ViewPositionHelper {
 
-	private final Presenter<?, ?> presenter;
+	private final AbstractDockablePublishingPresenter<?, ?> presenter;
 
-	public ViewPositionHelper(final Presenter<?, ?> presenter) {
+	public ViewPositionHelper(final AbstractDockablePublishingPresenter<?, ?> presenter) {
 		this.presenter = presenter;
 	}
 

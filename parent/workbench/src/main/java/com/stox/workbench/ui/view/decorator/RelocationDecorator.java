@@ -6,16 +6,16 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.View;
 
 public class RelocationDecorator implements EventHandler<MouseEvent> {
 
 	private double offsetX;
 	private double offsetY;
-	private final Presenter<?, ?> presenter;
+	private final AbstractDockablePublishingPresenter<?, ?> presenter;
 
-	public RelocationDecorator(final Presenter<?, ?> presenter) {
+	public RelocationDecorator(final AbstractDockablePublishingPresenter<?, ?> presenter) {
 		this.presenter = presenter;
 	}
 

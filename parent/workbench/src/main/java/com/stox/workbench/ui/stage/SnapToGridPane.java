@@ -1,15 +1,18 @@
 package com.stox.workbench.ui.stage;
 
+import com.stox.workbench.ui.view.Container;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-public class SnapToGridPane extends Pane {
+public class SnapToGridPane extends Pane implements Container {
 
 	private double xSize;
 	private double ySize;
@@ -21,6 +24,23 @@ public class SnapToGridPane extends Pane {
 	public SnapToGridPane() {
 		build();
 		bind();
+	}
+	
+	@Override
+	public boolean contains(Node content) {
+		return getChildren().contains(content);
+	}
+	
+	@Override
+	public void add(Node content) {
+		if(!contains(content)) {
+			getChildren().add(content);
+		}
+	}
+	
+	@Override
+	public void remove(Node content) {
+		getChildren().remove(content);
 	}
 
 	private void build() {

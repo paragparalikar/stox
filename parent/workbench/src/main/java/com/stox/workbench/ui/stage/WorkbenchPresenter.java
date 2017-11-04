@@ -23,10 +23,10 @@ import com.stox.core.ui.ToastCallback;
 import com.stox.workbench.client.WorkbenchClient;
 import com.stox.workbench.model.ViewState;
 import com.stox.workbench.model.WorkbenchState;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.Link;
 import com.stox.workbench.ui.view.Presenter;
 import com.stox.workbench.ui.view.PresenterProvider;
-import com.stox.workbench.ui.view.View;
 import com.stox.workbench.ui.view.event.RemoveViewRequestEvent;
 import com.stox.workbench.ui.view.event.ViewSelectedEvent;
 import com.stox.workbench.ui.widget.Tool;
@@ -53,7 +53,7 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 
 	private boolean maximized = false;
 	private Rectangle2D backupBounds = null;
-	private final List<Presenter<?, ?>> presenters = new LinkedList<Presenter<?, ?>>();
+	private final List<AbstractDockablePublishingPresenter<?, ?>> presenters = new LinkedList<AbstractDockablePublishingPresenter<?, ?>>();
 	private final Workbench workbench = new Workbench();
 
 	@Autowired
@@ -133,32 +133,23 @@ public class WorkbenchPresenter implements HasLifecycle, StylesheetProvider {
 					.forEach(viewState -> providers.stream()
 							.filter(provider -> provider.getViewCode().equals(viewState.getCode())).findFirst()
 							.ifPresent(provider -> {
-								final Presenter presenter = provider.create();
+								final AbstractDockablePublishingPresenter presenter = provider.create();
 								add(presenter, viewState);
 							}));
 		}));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void add(final Presenter presenter, final ViewState viewState) {
-		final View view = presenter.getView();
-		Platform.runLater(() -> {
-			workbench.getContentPane().getChildren().add(view);
-			presenter.start();
-			presenters.add(presenter);
-			if (null != viewState) {
-				presenter.setViewSate(viewState);
-			} else {
-				presenter.setDefaultPosition();
-			}
-		});
+	public void add(final AbstractDockablePublishingPresenter presenter, final ViewState viewState) {
+		presenter.present(workbench.getContainer(), viewState);
+		presenters.add(presenter);
 	}
 
 	@EventListener(RemoveViewRequestEvent.class)
 	public void onRemoveViewRequest(final RemoveViewRequestEvent event) {
-		workbench.getContentPane().getChildren().remove(event.getView());
-		presenters.stream().filter(presenter -> presenter.getView() == event.getView()).findFirst()
-				.ifPresent(presenter -> presenters.remove(presenter));
+		final Presenter<?,?> presenter = event.getPresenter();
+		presenter.remove(workbench.getContainer());
+		presenters.remove(presenter);
 	}
 
 	private Rectangle2D getVisualRectangle() {

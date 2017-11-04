@@ -7,13 +7,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
-import com.stox.workbench.ui.view.PublisherPresenter;
+import com.stox.workbench.ui.view.StatePublisherPresenter;
 
 import javafx.scene.layout.Pane;
 
 @Component
 @Scope("prototype")
-public class ScreenerPresenter extends PublisherPresenter<ScreenerView, ScreenerViewState>{
+public class ScreenerPresenter extends StatePublisherPresenter<ScreenerView, ScreenerViewState>{
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -22,15 +22,15 @@ public class ScreenerPresenter extends PublisherPresenter<ScreenerView, Screener
 	private TaskExecutor taskExecutor;
 	
 	private final ScreenerView view = new ScreenerView();
+	private final ScreenerViewState screenerViewState = new ScreenerViewState();
 	
 	@Override
 	public ScreenerView getView() {
 		return view;
 	}
-
+	
 	@Override
 	public ScreenerViewState getViewState() {
-		final ScreenerViewState screenerViewState = new ScreenerViewState();
 		populateViewState(screenerViewState);
 		return screenerViewState;
 	}

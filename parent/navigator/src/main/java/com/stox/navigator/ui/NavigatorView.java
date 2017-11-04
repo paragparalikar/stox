@@ -23,7 +23,7 @@ public class NavigatorView extends View {
 
 	public NavigatorView() {
 		super(NavigatorUiConstant.CODE, NavigatorUiConstant.NAME, NavigatorUiConstant.ICON);
-		setContent(listView);
+		add(listView);
 		getTitleBar().add(Side.RIGHT, 0, filterButton);
 		getTitleBar().add(Side.RIGHT, 0, searchButton);
 	}

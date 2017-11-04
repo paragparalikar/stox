@@ -5,14 +5,14 @@ import javafx.event.EventType;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.View;
 
 public class ResizeDecorator implements EventHandler<MouseEvent> {
 
-	private final Presenter<?, ?> presenter;
+	private final AbstractDockablePublishingPresenter<?, ?> presenter;
 
-	public ResizeDecorator(final Presenter<?, ?> presenter) {
+	public ResizeDecorator(final AbstractDockablePublishingPresenter<?, ?> presenter) {
 		this.presenter = presenter;
 	}
 

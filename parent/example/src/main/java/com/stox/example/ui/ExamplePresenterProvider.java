@@ -14,7 +14,7 @@ import com.stox.example.event.ExampleGroupDeletedEvent;
 import com.stox.example.event.ExampleGroupEditedEvent;
 import com.stox.example.event.ExampleCreatedEvent;
 import com.stox.example.event.ExampleDeletedEvent;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.PresenterProvider;
 
 @Component
@@ -46,7 +46,7 @@ public class ExamplePresenterProvider implements PresenterProvider, StylesheetPr
 	}
 
 	@Override
-	public Presenter<?, ?> create() {
+	public AbstractDockablePublishingPresenter<?, ?> create() {
 		final ExamplePresenter examplePresenter = beanFactory.getBean(ExamplePresenter.class);
 		cache.put(examplePresenter, examplePresenter);
 		return examplePresenter;

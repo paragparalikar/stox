@@ -5,7 +5,7 @@ import lombok.Value;
 
 import org.springframework.context.ApplicationEvent;
 
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.View;
 
 @Value
@@ -15,9 +15,9 @@ public class ViewSelectedEvent extends ApplicationEvent {
 	private static final long serialVersionUID = 1L;
 
 	private final View view;
-	private final Presenter<?, ?> presenter;
+	private final AbstractDockablePublishingPresenter<?, ?> presenter;
 
-	public ViewSelectedEvent(final Presenter<?, ?> presenter, final View view) {
+	public ViewSelectedEvent(final AbstractDockablePublishingPresenter<?, ?> presenter, final View view) {
 		super(view);
 		this.view = view;
 		this.presenter = presenter;

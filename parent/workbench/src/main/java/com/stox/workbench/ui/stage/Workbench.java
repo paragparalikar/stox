@@ -1,9 +1,10 @@
 package com.stox.workbench.ui.stage;
 
-import javafx.scene.layout.BorderPane;
-
 import com.stox.core.ui.ResizableRelocatableWindowDecorator;
 import com.stox.core.ui.widget.ApplicationStage;
+import com.stox.workbench.ui.view.Container;
+
+import javafx.scene.layout.BorderPane;
 
 public class Workbench extends ApplicationStage {
 
@@ -25,7 +26,7 @@ public class Workbench extends ApplicationStage {
 		decorator.bindTitleBar(titleBar);
 	}
 
-	public SnapToGridPane getContentPane() {
+	public Container getContainer() {
 		return contentPane;
 	}
 

@@ -9,15 +9,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 import com.stox.core.intf.Persistable;
-import com.stox.workbench.ui.view.Presenter;
+import com.stox.workbench.ui.view.AbstractDockablePublishingPresenter;
 import com.stox.workbench.ui.view.View;
 
 public class ViewPersistanceHelper implements Persistable {
 
 	private final View view;
-	private final Presenter<?, ?> presenter;
+	private final AbstractDockablePublishingPresenter<?, ?> presenter;
 
-	public ViewPersistanceHelper(final Presenter<?, ?> presenter) {
+	public ViewPersistanceHelper(final AbstractDockablePublishingPresenter<?, ?> presenter) {
 		this.view = presenter.getView();
 		this.presenter = presenter;
 	}

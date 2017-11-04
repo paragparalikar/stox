@@ -15,6 +15,8 @@ public interface Icon {
 	String ARROW_UP = "\uf062";
 	String ARROW_DOWN = "\uf063";
 	String ARROW_DOWN_CIRCLED = "\uf0ab";
+	String ARROW_RIGHT = "\uf061";
+	String ARROW_LEFT = "\uf060";
 	String CAMERA = "\uf030";
 	String FLOPPY = "\uf0c7";
 	String PRINT = "\uf02f";
