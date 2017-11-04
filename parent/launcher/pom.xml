@@ -54,6 +54,11 @@
 			<artifactId>chart-screen</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.stox</groupId>
+			<artifactId>screener</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	
 	
