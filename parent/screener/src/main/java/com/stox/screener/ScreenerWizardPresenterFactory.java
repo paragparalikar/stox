@@ -5,7 +5,7 @@ import org.springframework.core.task.TaskExecutor;
 
 import com.stox.core.ui.HasSpinner;
 import com.stox.screener.selection.ScreenSelectionPresenter;
-import com.stox.workbench.ui.view.WizardPresenter;
+import com.stox.workbench.ui.view.Presenter;
 
 import lombok.NonNull;
 
@@ -22,7 +22,7 @@ public class ScreenerWizardPresenterFactory {
 	private ScreenerWizardPresenterFactory() {
 	}
 
-	public WizardPresenter get(@NonNull final String code, final ApplicationContext applicationContext,
+	public Presenter<?,String> get(@NonNull final String code, final ApplicationContext applicationContext,
 			final HasSpinner hasSpinner, final TaskExecutor taskExecutor) {
 		switch (code) {
 		case ScreenerUiConstant.SCREEN_CONFIGURATION_PRESENTER:

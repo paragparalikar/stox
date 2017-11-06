@@ -3,7 +3,7 @@ package com.stox.workbench.ui.view;
 import com.stox.core.intf.HasLifecycle;
 import com.stox.core.intf.Persistable;
 
-public interface Presenter<V extends View, S> extends HasLifecycle, Persistable {
+public interface Presenter<V, S> extends HasLifecycle, Persistable {
 	
 	void present(Container container, S viewState);
 	

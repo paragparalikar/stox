@@ -1,5 +1,9 @@
 package com.stox.screener.selection;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 
@@ -7,11 +11,11 @@ import com.stox.core.ui.HasSpinner;
 import com.stox.screen.Screen;
 import com.stox.screener.ScreenerUiConstant;
 import com.stox.workbench.ui.view.Container;
-import com.stox.workbench.ui.view.WizardPresenter;
+import com.stox.workbench.ui.view.Presenter;
 
 import lombok.NonNull;
 
-public class ScreenSelectionPresenter implements WizardPresenter {
+public class ScreenSelectionPresenter implements Presenter<ScreenSelectionView, String> {
 
 	private final HasSpinner hasSpinner;
 	private final TaskExecutor taskExecutor;
@@ -26,7 +30,7 @@ public class ScreenSelectionPresenter implements WizardPresenter {
 	}
 
 	@Override
-	public void present(Container container) {
+	public void present(Container container, String viewState) {
 		container.add(view);
 		hasSpinner.showSpinner(true);
 		taskExecutor.execute(() -> {
@@ -38,19 +42,57 @@ public class ScreenSelectionPresenter implements WizardPresenter {
 		});
 	}
 
-	@Override
 	public String getCode() {
 		return ScreenerUiConstant.SCREEN_SELECTION_PRESENTER;
 	}
 
 	@Override
-	public String getViewState() {
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void read(DataInput input) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void write(DataOutput output) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void remove(Container container) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ScreenSelectionView getView() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setViewState(String state) {
-
+	public String getViewState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	public void setViewSate(String viewState) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

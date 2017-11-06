@@ -30,6 +30,7 @@ import com.stox.example.model.ExampleViewState;
 import com.stox.workbench.ui.view.Link.State;
 import com.stox.workbench.ui.view.StatePublisherPresenter;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -90,9 +91,10 @@ public class ExamplePresenter extends StatePublisherPresenter<ExampleView, Examp
 				.addListener((observable, old, exampleGroup) -> {
 					selectExampleGroup(exampleGroup);
 				});
-		view.getExampleTableView().getSelectionModel().selectedItemProperty().addListener((observable, old, example) -> {
-			selectExample(example);
-		});
+		view.getExampleTableView().getSelectionModel().selectedItemProperty()
+				.addListener((observable, old, example) -> {
+					selectExample(example);
+				});
 		view.setDeleteConsumer(example -> {
 			deleteExample(example);
 		});
@@ -130,9 +132,6 @@ public class ExamplePresenter extends StatePublisherPresenter<ExampleView, Examp
 					@Override
 					public void onSuccess(Response<ExampleGroup> response) {
 						confirmation.hide();
-						if (!view.getExampleGroupComboBox().getItems().isEmpty()) {
-							view.getExampleGroupComboBox().getSelectionModel().select(0);
-						}
 					}
 
 					@Override
@@ -189,6 +188,14 @@ public class ExamplePresenter extends StatePublisherPresenter<ExampleView, Examp
 
 	public void onExampleGroupCreated(final ExampleGroupCreatedEvent event) {
 		final ExampleGroup exampleGroup = event.getExampleGroup();
+		if (Platform.isFxApplicationThread()) {
+			createExampleGroup(exampleGroup);
+		} else {
+			Platform.runLater(() -> createExampleGroup(exampleGroup));
+		}
+	}
+
+	private void createExampleGroup(final ExampleGroup exampleGroup) {
 		final ObservableList<ExampleGroup> items = view.getExampleGroupComboBox().getItems();
 		items.add(exampleGroup);
 		FXCollections.sort(items, new HasNameComaparator<>());
@@ -198,12 +205,29 @@ public class ExamplePresenter extends StatePublisherPresenter<ExampleView, Examp
 	}
 
 	public void onExampleGroupDeleted(final ExampleGroupDeletedEvent event) {
-		view.getExampleGroupComboBox().getItems()
-				.removeIf(exampleGroup -> exampleGroup.getId().equals(event.getExampleGroup().getId()));
+		if (Platform.isFxApplicationThread()) {
+			doDeleteExampleGroup(event.getExampleGroup());
+		} else {
+			Platform.runLater(() -> doDeleteExampleGroup(event.getExampleGroup()));
+		}
+	}
+
+	private void doDeleteExampleGroup(final ExampleGroup exampleGroup) {
+		view.getExampleGroupComboBox().getItems().removeIf(group -> group.getId().equals(exampleGroup.getId()));
+		if (!view.getExampleGroupComboBox().getItems().isEmpty()) {
+			view.getExampleGroupComboBox().getSelectionModel().select(0);
+		}
 	}
 
 	public void onExampleGroupEdited(final ExampleGroupEditedEvent event) {
-		final ExampleGroup exampleGroup = event.getExampleGroup();
+		if(Platform.isFxApplicationThread()) {
+			doEditExampleGroup(event.getExampleGroup());
+		}else {
+			Platform.runLater(() -> doEditExampleGroup(event.getExampleGroup()));
+		}
+	}
+	
+	private void doEditExampleGroup(final ExampleGroup exampleGroup) {
 		final ObservableList<ExampleGroup> exampleGroups = view.getExampleGroupComboBox().getItems();
 		exampleGroups.removeIf(w -> w.getId().equals(exampleGroup.getId()));
 		exampleGroups.add(exampleGroup);
@@ -212,8 +236,15 @@ public class ExamplePresenter extends StatePublisherPresenter<ExampleView, Examp
 	}
 
 	public void onExampleCreated(final ExampleCreatedEvent event) {
+		if(Platform.isFxApplicationThread()) {
+			createExample(event.getExample());
+		}else {
+			Platform.runLater(() -> createExample(event.getExample()));
+		}
+	}
+	
+	private void createExample(final Example example) {
 		final ExampleGroup exampleGroup = view.getExampleGroupComboBox().getValue();
-		final Example example = event.getExample();
 		if (null != exampleGroup && null != example && null != exampleGroup.getId()
 				&& exampleGroup.getId().equals(example.getExampleGroupId())) {
 			view.getExampleTableView().getItems().add(example);
@@ -222,11 +253,18 @@ public class ExamplePresenter extends StatePublisherPresenter<ExampleView, Examp
 	}
 
 	public void onExampleDeleted(final ExampleDeletedEvent event) {
+		if(Platform.isFxApplicationThread()) {
+			doDeleteExample(event.getExample());
+		}else {
+			Platform.runLater(() -> doDeleteExample(event.getExample()));
+		}
+	}
+	
+	private void doDeleteExample(final Example example) {
 		final ExampleGroup exampleGroup = view.getExampleGroupComboBox().getValue();
-		final Example example = event.getExample();
 		if (null != exampleGroup && null != example && null != exampleGroup.getId()
 				&& exampleGroup.getId().equals(example.getExampleGroupId())) {
-			view.getExampleTableView().getItems().removeIf(entry -> entry.getId().equals(event.getExample().getId()));
+			view.getExampleTableView().getItems().removeIf(entry -> entry.getId().equals(example.getId()));
 		}
 	}
 
