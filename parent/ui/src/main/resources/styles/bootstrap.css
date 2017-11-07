@@ -164,6 +164,10 @@
 	-fx-font-size: 16px;
 	-fx-padding: 0.5em;
 }
+.h2{
+	-fx-font-size: 14px;
+	-fx-padding: 0.3em;
+}
 
 /*  default  */
 .button, .menu-button, .choice-box, .list-cell, .table-row-cell

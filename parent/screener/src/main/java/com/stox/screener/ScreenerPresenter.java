@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Message;
 import com.stox.core.util.StringUtil;
+import com.stox.screener.configuration.ScreenConfigurationPresenter;
 import com.stox.screener.selection.ScreenSelectionPresenter;
 import com.stox.workbench.ui.view.StatePublisherPresenter;
 import com.stox.workbench.ui.view.WizardController;
@@ -39,6 +40,7 @@ public class ScreenerPresenter extends StatePublisherPresenter<ScreenerView, Scr
 		view.getNextButton().addEventHandler(ActionEvent.ACTION, event -> {
 			final Message message = currentPresenter.validate();
 			if(null == message) {
+				view.clearMessages();
 				next(currentPresenter.getNextPresenterId());
 			}else {
 				view.setMessage(message);
@@ -70,12 +72,14 @@ public class ScreenerPresenter extends StatePublisherPresenter<ScreenerView, Scr
 			view.getNextButton().setVisible(true);
 			view.getPreviousButton().setVisible(false);
 			currentPresenter = new ScreenSelectionPresenter(screenerViewState, taskExecutor, applicationContext);
-			currentPresenter.present(view);
-			view.getTitleLabel().setText(currentPresenter.getTitleText());
 		}else if(ScreenerUiConstant.SCREEN_CONFIGURATION_PRESENTER.equals(presenterId)) {
 			view.getNextButton().setVisible(true);
 			view.getPreviousButton().setVisible(true);
+			currentPresenter = new ScreenConfigurationPresenter(screenerViewState);
 		}
+		
+		currentPresenter.present(view);
+		view.getTitleLabel().setText(currentPresenter.getTitleText());
 	}
 	
 

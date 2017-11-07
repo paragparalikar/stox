@@ -12,16 +12,16 @@ import com.stox.core.ui.util.UiUtil;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public class AutoView<T> extends VBox implements Container{
+public class AutoView extends VBox implements Container{
 
 	private final List<AutoPresenter> presenters = new LinkedList<>();
 
-	public AutoView(final T model) {
+	public AutoView(final Object model) {
 		build(model);
 		UiUtil.classes(this, "container");
 	}
 
-	private void build(T model) {
+	private void build(Object model) {
 		final AutoPresenterFactory autoPresenterFactory = new AutoPresenterFactory();
 		final Field[] fields = model.getClass().getDeclaredFields();
 		Arrays.stream(fields)

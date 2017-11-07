@@ -11,6 +11,7 @@ import javax.script.ScriptEngineManager;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 
 public class Constant {
@@ -31,6 +32,7 @@ public class Constant {
 
 		Constant.objectMapper.enableDefaultTyping();
 		Constant.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		Constant.objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Constant.objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 		Constant.csvMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 	}

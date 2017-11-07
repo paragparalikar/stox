@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 
 public class ScreenConfigEditorModal extends Modal {
 	
-	private final AutoView<Object> autoView;
+	private final AutoView autoView;
 	private final Button actionButton = UiUtil.classes(new Button("Edit"), "primary");
 	private final Button cancelButton = UiUtil.classes(new Button("Cancel"), "");
 	private final HBox buttonBox = UiUtil.classes(new HBox(cancelButton, actionButton), "button-group", "right");
@@ -21,7 +21,7 @@ public class ScreenConfigEditorModal extends Modal {
 		setButtonGroup(buttonBox);
 		addStylesheets("styles/screen.css");
 		getStyleClass().add("screen-config-modal");
-		autoView = new AutoView<>(plot.getConfig());
+		autoView = new AutoView(plot.getConfig());
 		setContent(autoView);
 		
 		cancelButton.addEventHandler(ActionEvent.ACTION, event -> hide());

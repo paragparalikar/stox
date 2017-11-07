@@ -33,8 +33,10 @@ class ScreenSelectionCell extends ListCell<Screen> {
 		checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue) {
 				if(null == screenConfiguration) {
-					screenConfiguration = ScreenConfiguration.builder().screen(getItem())
-							.configuration(getItem().buildDefaultConfig()).build();
+					final Screen screen = getItem();
+					screenConfiguration = new ScreenConfiguration();
+					screenConfiguration.setScreen(screen);
+					screenConfiguration.setConfiguration(screen.buildDefaultConfig());
 				}
 				screenConfigurations.add(screenConfiguration);
 			}else {

@@ -38,6 +38,7 @@ public class ScreenSelectionPresenter implements WizardPresenter<String> {
 	public void present(Container container) {
 		container.add(view);
 		container.showSpinner(true);
+		screenerViewState.getScreenConfigurations().clear();
 		taskExecutor.execute(() -> {
 			try {
 				view.getItems().setAll(applicationContext.getBeansOfType(Screen.class).values());
