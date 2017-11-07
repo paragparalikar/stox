@@ -1,14 +1,19 @@
 package com.stox.workbench.ui.stage;
 
-import com.stox.workbench.ui.view.Container;
+import com.stox.core.ui.Container;
+import com.stox.core.ui.HasGlass;
+import com.stox.core.ui.util.UiUtil;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
@@ -20,10 +25,32 @@ public class SnapToGridPane extends Pane implements Container {
 	private final double boxSize = 30;
 	private final Group group = new Group();
 	private final Rectangle rectangle = new Rectangle();
+	private final HasGlass hasGlass;
+	private final VBox spinner = UiUtil.classes(new VBox(new ProgressIndicator()), "center");
 
-	public SnapToGridPane() {
+	public SnapToGridPane(final HasGlass hasGlass) {
+		this.hasGlass = hasGlass;
 		build();
 		bind();
+	}
+	
+	@Override
+	public void showSpinner(final boolean value) {
+		if(Platform.isFxApplicationThread()) {
+			doShowSpinner(value);
+		}else {
+			Platform.runLater(() -> doShowSpinner(value));
+		}
+	}
+	
+	private void doShowSpinner(final boolean value) {
+		setDisable(value);
+		hasGlass.showGlass(value);
+		if (value && !getChildren().contains(spinner)) {
+			getChildren().add(spinner);
+		} else if (!value) {
+			getChildren().remove(spinner);
+		}
 	}
 	
 	@Override

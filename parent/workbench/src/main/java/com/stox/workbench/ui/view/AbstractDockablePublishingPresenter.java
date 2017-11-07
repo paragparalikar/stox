@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.stox.core.ui.Container;
 import com.stox.core.ui.widget.titlebar.decorator.CloseDecorator;
 import com.stox.workbench.model.ViewState;
 import com.stox.workbench.ui.view.decorator.MaximizeDecorator;

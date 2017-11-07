@@ -1,5 +1,8 @@
 package com.stox.core.ui.widget;
 
+import com.stox.core.ui.HasGlass;
+import com.stox.core.ui.util.UiUtil;
+
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -8,9 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import com.stox.core.ui.util.UiUtil;
-
-public class ApplicationStage extends Stage {
+public class ApplicationStage extends Stage implements HasGlass{
 
 	private static ApplicationStage instance;
 
@@ -42,6 +43,7 @@ public class ApplicationStage extends Stage {
 		modalPane.getChildren().remove(node);
 	}
 
+	@Override
 	public void showGlass(final boolean value) {
 		if (value) {
 			if (!root.getChildren().contains(glass)) {

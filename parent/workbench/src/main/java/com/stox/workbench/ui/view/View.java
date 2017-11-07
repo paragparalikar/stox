@@ -1,6 +1,7 @@
 package com.stox.workbench.ui.view;
 
 import com.stox.core.model.Message;
+import com.stox.core.ui.Container;
 import com.stox.core.ui.HasSpinner;
 import com.stox.core.ui.util.UiUtil;
 import com.stox.core.ui.widget.MessagePane;
@@ -81,16 +82,26 @@ public abstract class View extends StackPane implements HasSpinner, Container{
 		container.setCenter(node);
 	}
 
+	public void setButtonBar(final Node node) {
+		container.setBottom(node);
+	}
+		
 	@Override
 	public void showSpinner(final boolean value) {
-		Platform.runLater(() -> {
-			container.setDisable(value);
-			if (value && !getChildren().contains(spinner)) {
-				getChildren().add(spinner);
-			} else if (!value) {
-				getChildren().remove(spinner);
-			}
-		});
+		if(Platform.isFxApplicationThread()) {
+			doShowSpinner(value);
+		}else {
+			Platform.runLater(() -> doShowSpinner(value));
+		}
+	}
+	
+	private void doShowSpinner(final boolean value) {
+		container.setDisable(value);
+		if (value && !getChildren().contains(spinner)) {
+			getChildren().add(spinner);
+		} else if (!value) {
+			getChildren().remove(spinner);
+		}
 	}
 
 	public int getMode() {

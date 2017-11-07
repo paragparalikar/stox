@@ -1,8 +1,8 @@
 package com.stox.workbench.ui.stage;
 
+import com.stox.core.ui.Container;
 import com.stox.core.ui.ResizableRelocatableWindowDecorator;
 import com.stox.core.ui.widget.ApplicationStage;
-import com.stox.workbench.ui.view.Container;
 
 import javafx.scene.layout.BorderPane;
 
@@ -14,7 +14,7 @@ public class Workbench extends ApplicationStage {
 		return instance;
 	}
 
-	private final SnapToGridPane contentPane = new SnapToGridPane();
+	private final SnapToGridPane contentPane = new SnapToGridPane(this);
 	private final WorkbenchTitleBar titleBar = new WorkbenchTitleBar();
 	private final WorkbenchToolBar toolBar = new WorkbenchToolBar();
 	private final BorderPane container = new BorderPane(contentPane, titleBar, null, toolBar, null);

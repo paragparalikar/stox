@@ -1,28 +1,58 @@
 package com.stox.screener.selection;
 
-import com.stox.core.ui.util.Icon;
-import com.stox.core.ui.util.UiUtil;
-import com.stox.screen.Screen;
+import java.util.List;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import com.stox.screen.Screen;
+import com.stox.screener.ScreenConfiguration;
+
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import lombok.Getter;
 
 @Getter
-public class ScreenSelectionView extends BorderPane {
+@SuppressWarnings("rawtypes")
+public class ScreenSelectionView extends ListView<Screen> {
 
-	private final Label titleLabel = UiUtil.classes(new Label("Select Screen"));
-	private final ListView<Screen> listView = new ListView<>();
-	private final Button nextButton = UiUtil.classes(new Button(Icon.ARROW_RIGHT), "icon", "primary");
-	private final HBox buttonBar = UiUtil.classes(new HBox(UiUtil.spacer(), nextButton), "button-group", "right");
-	
-	public ScreenSelectionView() {
-		setTop(titleLabel);
-		setBottom(buttonBar);
-		setCenter(listView);
+	private final List<ScreenConfiguration> screenConfigurations;
+
+	public ScreenSelectionView(final List<ScreenConfiguration> screenConfigurations) {
+		this.screenConfigurations = screenConfigurations;
+		setCellFactory(param -> new ScreenSelectionCell(screenConfigurations));
 	}
-	
+
+}
+
+@SuppressWarnings("rawtypes")
+class ScreenSelectionCell extends ListCell<Screen> {
+
+	private ScreenConfiguration screenConfiguration;
+	private final CheckBox checkBox = new CheckBox();
+
+	public ScreenSelectionCell(final List<ScreenConfiguration> screenConfigurations) {
+		checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue) {
+				if(null == screenConfiguration) {
+					screenConfiguration = ScreenConfiguration.builder().screen(getItem())
+							.configuration(getItem().buildDefaultConfig()).build();
+				}
+				screenConfigurations.add(screenConfiguration);
+			}else {
+				screenConfigurations.remove(screenConfiguration);
+			}
+		});
+	}
+
+	@Override
+	protected void updateItem(Screen item, boolean empty) {
+		super.updateItem(item, empty);
+		if (!empty && null != item) {
+			setGraphic(checkBox);
+			setText(item.getName());
+		} else {
+			setGraphic(null);
+			setText(null);
+		}
+	}
+
 }

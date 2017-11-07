@@ -1,8 +1,8 @@
-package com.stox.workbench.ui.view;
+package com.stox.core.ui;
 
 import javafx.scene.Node;
 
-public interface Container {
+public interface Container extends HasSpinner{
 	
 	boolean contains(final Node content);
 	

@@ -1,13 +1,19 @@
 package com.stox.workbench.ui.view;
 
-public interface WizardPresenter {
-	
-	String getCode();
-	
-	String getViewState();
-	
-	void setViewState(final String state);
+import com.stox.core.intf.HasId;
+import com.stox.core.model.Message;
+import com.stox.core.ui.Container;
 
-	void present(final Container container);
+public interface WizardPresenter<ID> extends HasId<ID> {
+	
+	void present(Container container);
+	
+	String getTitleText();
+	
+	Message validate();
+	
+	ID getNextPresenterId();
+	
+	ID getPreviousPresenterId();
 	
 }

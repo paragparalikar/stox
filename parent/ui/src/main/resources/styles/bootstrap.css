@@ -158,6 +158,11 @@
 
 .container {
 	-fx-padding: 0.5em;
+	-fx-spacing: 1em;
+}
+.h1{
+	-fx-font-size: 16px;
+	-fx-padding: 0.5em;
 }
 
 /*  default  */

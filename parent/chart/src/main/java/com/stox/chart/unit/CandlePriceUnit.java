@@ -32,7 +32,7 @@ public class CandlePriceUnit extends PriceUnit {
 		line.setEndY(getDisplayPosition(bar.getLow()));
 		final double open = getDisplayPosition(bar.getOpen());
 		final double close = getDisplayPosition(bar.getClose());
-		body.resizeRelocate(x + width / 8, Math.min(open, close), width * 3 / 4, Math.abs(open - close));
+		body.resizeRelocate(((int)(x + width / 8))+0.5, Math.min(open, close), width * 3 / 4, Math.abs(open - close));
 	}
 
 }
