@@ -9,6 +9,8 @@ import com.stox.core.model.Instrument;
 
 public interface BarRepository {
 
+	List<Bar> find(final String instrumentId, final BarSpan barSpan, final int count);
+	
 	List<Bar> find(final String instrumentId, final BarSpan barSpan, final Date from, final Date to);
 
 	void save(final List<Bar> bars, final String instrumentId, final BarSpan barSpan);

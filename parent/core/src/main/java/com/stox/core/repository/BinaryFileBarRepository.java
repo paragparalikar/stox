@@ -50,6 +50,39 @@ public class BinaryFileBarRepository implements BarRepository {
 			return null;
 		}
 	}
+	
+	@Override
+	public List<Bar> find(String instrumentId, BarSpan barSpan, int count) {
+		BarSpan requstedBarSpan = null;
+		List<Bar> bars = new ArrayList<>();
+		if(BarSpan.W.equals(barSpan) || BarSpan.M.equals(barSpan)) {
+			requstedBarSpan = barSpan;
+			barSpan = BarSpan.D;
+			count *= BarSpan.W.equals(barSpan) ? 5 : 20;
+		}
+		
+		final String path = getPath(instrumentId, barSpan).intern();
+		synchronized (path) {
+			try (final RandomAccessFile file = new RandomAccessFile(path, "r")) {
+				if(file.length() >= count*Bar.BYTES) {
+					file.seek(file.length() - Bar.BYTES);
+					for(int index = 0; index < count; index++) {
+						bars.add(read(file));
+						file.seek(file.getFilePointer() - 2*Bar.BYTES);
+					}
+				}
+			}catch (final FileNotFoundException fileNotFoundException) {
+				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		if(null != requstedBarSpan) {
+			bars = requstedBarSpan.merge(bars);
+		}
+		return bars;
+	}
 
 	@Override
 	public List<Bar> find(String instrumentId, BarSpan barSpan, Date from, Date to) {
@@ -67,7 +100,6 @@ public class BinaryFileBarRepository implements BarRepository {
 					file.seek(file.getFilePointer() - Bar.BYTES);
 					final Bar bar = read(file);
 					if (bar.getDate().before(from)) {
-						//bars.add(bar); // One extra bar, to make things easier for loadExtra in PricePlot
 						break;
 					}
 					if (bar.getDate().before(to) || bar.getDate().equals(to)) {

@@ -23,6 +23,7 @@ public class ScreenSelectionView extends ListView<Screen> {
 
 }
 
+@Getter
 @SuppressWarnings("rawtypes")
 class ScreenSelectionCell extends ListCell<Screen> {
 
@@ -30,8 +31,16 @@ class ScreenSelectionCell extends ListCell<Screen> {
 	private final CheckBox checkBox = new CheckBox();
 
 	public ScreenSelectionCell(final List<ScreenConfiguration> screenConfigurations) {
+		selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if(!newValue.equals(checkBox.isSelected())) {
+				checkBox.setSelected(newValue);
+			}
+		});
 		checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue) {
+				if(!newValue.equals(isSelected())) {
+					getListView().getSelectionModel().select(getIndex());
+				}
 				if(null == screenConfiguration) {
 					final Screen screen = getItem();
 					screenConfiguration = new ScreenConfiguration();

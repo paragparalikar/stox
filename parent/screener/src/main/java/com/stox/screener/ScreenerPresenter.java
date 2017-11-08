@@ -9,8 +9,11 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.stox.core.model.Message;
+import com.stox.core.repository.BarRepository;
+import com.stox.core.repository.InstrumentRepository;
 import com.stox.core.util.StringUtil;
 import com.stox.screener.configuration.ScreenConfigurationPresenter;
+import com.stox.screener.execution.ScreenExecutionPresenter;
 import com.stox.screener.selection.ScreenSelectionPresenter;
 import com.stox.workbench.ui.view.StatePublisherPresenter;
 import com.stox.workbench.ui.view.WizardController;
@@ -32,6 +35,12 @@ public class ScreenerPresenter extends StatePublisherPresenter<ScreenerView, Scr
 	@Autowired
 	private TaskExecutor taskExecutor;
 
+	@Autowired
+	private BarRepository barRepository;
+	
+	@Autowired
+	private InstrumentRepository instrumentRepository;
+	
 	private WizardPresenter<String> currentPresenter;
 	private final ScreenerView view = new ScreenerView();
 	private final ScreenerViewState screenerViewState = new ScreenerViewState();
@@ -76,6 +85,10 @@ public class ScreenerPresenter extends StatePublisherPresenter<ScreenerView, Scr
 			view.getNextButton().setVisible(true);
 			view.getPreviousButton().setVisible(true);
 			currentPresenter = new ScreenConfigurationPresenter(screenerViewState);
+		}else if(ScreenerUiConstant.SCREEN_EXECUTION_PRESENTER.equals(presenterId)) {
+			view.getNextButton().setVisible(false);
+			view.getPreviousButton().setVisible(true);
+			currentPresenter = new ScreenExecutionPresenter(screenerViewState, instrumentRepository, barRepository, taskExecutor);
 		}
 		
 		currentPresenter.present(view);

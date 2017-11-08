@@ -11,7 +11,8 @@ public class ScreenConfiguration {
 	
 	private int offset = 0;
 	
-	private Screen<?> screen;
+	@SuppressWarnings("rawtypes")
+	private Screen screen;
 	
 	private Object configuration;
 
