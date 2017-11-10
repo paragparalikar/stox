@@ -60,13 +60,12 @@ class BollingerUnit extends Unit<Bollinger> {
 		final int index = getIndex();
 		final Plot<Bollinger> plot = getPlot();
 		if (index < plot.getModels().size() - 1) {
+			final Bollinger currentModel = getModel();
 			final Bollinger previousModel = plot.getModels().get(index + 1);
-			if(null != previousModel) {
+			if(null != previousModel && null != currentModel) {
 				final double min = plot.getMin();
 				final double max = plot.getMax();
-				final Bollinger currentModel = getModel();
 				final ValueAxis valueAxis = plot.getChart().getValueAxis();
-
 				area.getPoints().clear();
 				area.getPoints().addAll(x, valueAxis.getDisplayPosition(previousModel.getHigh(), min, max));
 				area.getPoints().addAll(x + width, valueAxis.getDisplayPosition(currentModel.getHigh(), min, max));
