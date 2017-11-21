@@ -21,7 +21,7 @@ import com.stox.example.model.ExampleExistsException;
 @Lazy
 @Component
 public class CsvFileExampleRepository implements ExampleRepository {
-	
+
 	@Autowired
 	private InstrumentRepository instrumentRepository;
 
@@ -30,9 +30,10 @@ public class CsvFileExampleRepository implements ExampleRepository {
 	@Override
 	public List<Example> load(Integer exampleGroupId) throws Exception {
 		final File file = FileUtil.getFile(ExampleRepositoryUtil.getExampleGroupFilePath(exampleGroupId));
-		final List<Example> examples = Constant.csvMapper.reader(schema).forType(Example.class).<Example>readValues(file)
-				.readAll();
-		examples.forEach(example -> example.setInstrument(instrumentRepository.getInstrument(example.getInstrumentId())));
+		final List<Example> examples = Constant.csvMapper.reader(schema).forType(Example.class)
+				.<Example>readValues(file).readAll();
+		examples.forEach(
+				example -> example.setInstrument(instrumentRepository.getInstrument(example.getInstrumentId())));
 		return examples;
 	}
 
@@ -40,8 +41,8 @@ public class CsvFileExampleRepository implements ExampleRepository {
 	public Example save(Example example) throws Exception {
 		final List<Example> examples = load(example.getExampleGroupId());
 		if (!StringUtil.hasText(example.getId())) {
-			final Predicate<Example> predicate = e -> e.getInstrumentId()
-					.equals(example.getInstrumentId()) && e.getBarSpan().equals(example.getBarSpan());
+			final Predicate<Example> predicate = e -> e.getInstrumentId().equals(example.getInstrumentId())
+					&& e.getBarSpan().equals(example.getBarSpan()) && e.getDate().equals(example.getDate());
 			examples.stream().filter(predicate).findFirst().ifPresent(e -> {
 				throw new ExampleExistsException(example);
 			});

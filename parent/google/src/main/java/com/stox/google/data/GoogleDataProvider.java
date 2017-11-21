@@ -24,7 +24,7 @@ import com.stox.google.data.bar.GoogleBarDownloader;
 import com.stox.google.data.tick.GoogleTick;
 import com.stox.google.data.tick.GoogleTickDownloader;
 
-@Component
+@Component("googleDataProvider")
 public class GoogleDataProvider implements DataProvider {
 
 	@Autowired

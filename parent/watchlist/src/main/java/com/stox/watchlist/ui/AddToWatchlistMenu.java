@@ -66,7 +66,7 @@ public class AddToWatchlistMenu<T extends HasInstrument & HasBarSpan> extends Me
 							item.addEventHandler(ActionEvent.ACTION, event -> addToWatchlist(watchlist));
 							return item;
 						}).collect(Collectors.toList());
-				getItems().setAll(items);
+				Platform.runLater(() -> getItems().setAll(items));
 			}
 		});
 	}

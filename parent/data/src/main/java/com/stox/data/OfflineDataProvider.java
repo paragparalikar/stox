@@ -13,7 +13,7 @@ import com.stox.core.repository.BarRepository;
 import com.stox.data.tick.TickConsumer;
 
 @Component
-public class DefaultDataProvider implements DataProvider {
+public class OfflineDataProvider implements DataProvider {
 	
 	@Autowired
 	private BarRepository barRepository;
@@ -35,12 +35,12 @@ public class DefaultDataProvider implements DataProvider {
 
 	@Override
 	public String getName() {
-		return "None";
+		return "Offline";
 	}
 
 	@Override
 	public String getCode() {
-		return "DEFAULT";
+		return "OFFLINE";
 	}
 
 	@Override

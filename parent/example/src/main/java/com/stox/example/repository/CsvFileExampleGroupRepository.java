@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
@@ -39,7 +41,12 @@ public class CsvFileExampleGroupRepository implements ExampleGroupRepository {
 	private volatile Cache cache;
 
 	private final AtomicInteger idGenerator = new AtomicInteger(0);
-
+	
+	@PostConstruct
+	public void postConstruct() throws Exception{
+		load();
+	}
+	
 	private String getPath() {
 		return ExampleConstant.PATH + "csv";
 	}

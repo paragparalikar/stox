@@ -10,6 +10,44 @@ import lombok.Data;
 @Data
 public class Swing implements Range {
 
+	public static List<Swing> parse(final List<Bar> bars, final double percentage, final int count) {
+		final List<Swing> swings = new ArrayList<>();
+		boolean up = false;
+		int lastIndex = 0;
+		Bar pivot = bars.get(lastIndex);
+		double previousValue = pivot.getClose();
+		double max = pivot.getClose() * (1 + (percentage / 100));
+		double min = pivot.getClose() * (1 - (percentage / 100));
+		for (int index = 1; index < bars.size() && count > swings.size(); index++) {
+			final double value = bars.get(index).getClose();
+
+			if (up) {
+				if (value > max) {
+					swings.add(new Swing(bars.subList(lastIndex, index)));
+					up = false;
+					lastIndex = index;
+					previousValue = value;
+					min = value * (1 - (percentage / 100));
+				} else if (value < previousValue) {
+					previousValue = value;
+					max = value * (1 + (percentage / 100));
+				}
+			} else {
+				if (value < min) {
+					swings.add(new Swing(bars.subList(lastIndex, index)));
+					up = true;
+					lastIndex = index;
+					previousValue = value;
+					max = value * (1 + (percentage / 100));
+				} else if (value > previousValue) {
+					min = value * (1 - (percentage / 100));
+					previousValue = value;
+				}
+			}
+		}
+		return swings;
+	}
+
 	public static List<Integer> parseIndices(final List<Bar> bars, final double percentage) {
 		final List<Integer> indices = new ArrayList<Integer>();
 		int pivot = bars.size() - 1;
@@ -76,8 +114,10 @@ public class Swing implements Range {
 	private Bar end;
 	private int span;
 	private double volume;
+	private List<Bar> bars;
 
 	public Swing(final List<Bar> bars) {
+		this.bars = bars;
 		for (final Bar bar : bars) {
 			if (null == end) {
 				end = bar;

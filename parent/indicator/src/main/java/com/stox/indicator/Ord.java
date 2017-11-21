@@ -45,7 +45,7 @@ public class Ord implements Indicator<Config, Swing>{
 
 	@Override
 	public Swing computeSingle(Config config, List<Bar> bars) {
-		final List<Swing> swings = Swing.parse(bars, config.getTolerance());
+		final List<Swing> swings = Swing.parse(bars, config.getTolerance(), Integer.MAX_VALUE);
 		return null == swings || swings.isEmpty() ? null : swings.get(0);
 	}
 	

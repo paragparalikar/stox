@@ -105,7 +105,8 @@ public class NseLegthBarDownloadManager {
 		allInstruments.stream().parallel().forEach(instrument -> {
 			if (!cancel && StringUtil.hasText(instrument.getSymbol())) {
 				try {
-					final NseBarLengthDownloader downloader = new NseBarLengthDownloader(url, instrument);
+					final NseBarLengthDownloader downloader = new NseBarLengthDownloader(url, instrument,
+							NseBarLengthDownloader.PERIODICITY_DAY, NseBarLengthDownloader.PERIOD_TYPE_HISTORICAL);
 					final List<Bar> bars = downloader.download();
 					barRepository.save(bars, instrument.getId(), BarSpan.D);
 				} catch (Exception e) {

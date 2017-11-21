@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,6 +95,11 @@ public class ZerodhaInstrumentRepository {
 	public ZerodhaInstrument findBySymbol(final String symbol) throws Exception {
 		load();
 		return cache.get(symbol);
+	}
+	
+	public Collection<ZerodhaInstrument> findAll() throws Exception{
+		load();
+		return cache.values();
 	}
 
 }

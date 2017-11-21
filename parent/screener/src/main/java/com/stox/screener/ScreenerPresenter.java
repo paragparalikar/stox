@@ -88,7 +88,7 @@ public class ScreenerPresenter extends StatePublisherPresenter<ScreenerView, Scr
 		}else if(ScreenerUiConstant.SCREEN_EXECUTION_PRESENTER.equals(presenterId)) {
 			view.getNextButton().setVisible(false);
 			view.getPreviousButton().setVisible(true);
-			currentPresenter = new ScreenExecutionPresenter(screenerViewState, instrumentRepository, barRepository, taskExecutor);
+			currentPresenter = new ScreenExecutionPresenter(screenerViewState, instrumentRepository, barRepository, taskExecutor, this);
 		}
 		
 		currentPresenter.present(view);

@@ -26,7 +26,7 @@ public class JsonFileDrawingStateRepository implements DrawingStateRepository {
 	public List<Drawing.State<?>> load(Instrument instrument) {
 		try {
 			final File file = new File(getPath(instrument));
-			if(file.exists()) {
+			if(file.exists() && 0 < file.length()) {
 				return Constant.objectMapper.readValue(file, new TypeReference<ArrayList<Drawing.State<?>>>() {});
 			}
 			return Collections.emptyList();

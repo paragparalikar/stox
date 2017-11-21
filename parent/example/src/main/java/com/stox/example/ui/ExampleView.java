@@ -1,6 +1,7 @@
 package com.stox.example.ui;
 
 
+import java.util.Date;
 import java.util.function.Consumer;
 
 import com.stox.core.ui.util.Icon;
@@ -55,7 +56,6 @@ public class ExampleView extends View {
 	}
 	
 	private void createColumns() {
-		exampleTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		createDeleteColumn();
 		createNameColumn();
 		createBarSpanColumn();
@@ -133,15 +133,25 @@ public class ExampleView extends View {
 	}
 	
 	private void createDateColumn() {
-		final TableColumn<Example, String> column = new TableColumn<Example, String>("Date");
-		column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Example, String>, ObservableValue<String>>() {
-
+		final TableColumn<Example, Date> column = new TableColumn<Example, Date>("Date");
+		column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Example, Date>, ObservableValue<Date>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Example, String> param) {
-				if (null != param && null != param.getValue() && null != param.getValue().getDate()) {
-					return StringConstant.valueOf(Constant.dateFormatFull.format(param.getValue().getDate()));
+			public ObservableValue<Date> call(CellDataFeatures<Example, Date> param) {
+				if (null != param && null != param.getValue()) {
+					return ObjectConstant.valueOf(param.getValue().getDate());
 				}
 				return null;
+			}
+		});
+		column.setCellFactory(c -> new TableCell<Example,Date>() {
+			@Override
+			protected void updateItem(Date item, boolean empty) {
+				super.updateItem(item, empty);
+				if(null != item && !empty) {
+					setText(Constant.dateFormatFull.format(item));
+				}else {
+					setText(null);
+				}
 			}
 		});
 		column.setMinWidth(200);

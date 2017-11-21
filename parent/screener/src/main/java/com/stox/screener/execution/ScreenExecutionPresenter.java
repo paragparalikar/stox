@@ -17,6 +17,8 @@ import com.stox.core.ui.util.Icon;
 import com.stox.screener.ScreenConfiguration;
 import com.stox.screener.ScreenerUiConstant;
 import com.stox.screener.ScreenerViewState;
+import com.stox.workbench.ui.view.Link.State;
+import com.stox.workbench.ui.view.StatePublisherPresenter;
 import com.stox.workbench.ui.view.WizardPresenter;
 
 import javafx.application.Platform;
@@ -33,7 +35,7 @@ public class ScreenExecutionPresenter implements WizardPresenter<String> {
 
 	public ScreenExecutionPresenter(final ScreenerViewState screenerViewState,
 			final InstrumentRepository instrumentRepository, final BarRepository barRepository,
-			final TaskExecutor taskExecutor) {
+			final TaskExecutor taskExecutor, final StatePublisherPresenter<?,?> publisherPresenter) {
 		this.barRepository = barRepository;
 		this.taskExecutor = taskExecutor;
 		this.screenerViewState = screenerViewState;
@@ -46,6 +48,11 @@ public class ScreenExecutionPresenter implements WizardPresenter<String> {
 				start();
 			} else {
 				stop();
+			}
+		});
+		view.getMatches().getSelectionModel().selectedItemProperty().addListener((observable, old, instrument) -> {
+			if (null != instrument) {
+				publisherPresenter.publish(new State(instrument.getId(), null, 0));
 			}
 		});
 	}
